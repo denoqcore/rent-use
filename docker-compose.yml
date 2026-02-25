@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rent_use_app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - .:/app
+    environment:
+      - SERVER_NAME=:80
+      - APP_RUNTIME=Laravel\Octane\FrankenPhp\FrankenPhpRuntime
+      - APP_ENV=local
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_DATABASE=rent_db
+      - DB_USERNAME=user
+      - DB_PASSWORD=password
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mysql:
+    image: mysql:8.0
+    container_name: rent_mysql
+    environment:
+      MYSQL_DATABASE: rent_db
+      MYSQL_USER: rentdeni
+      MYSQL_PASSWORD: 8877
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    container_name: rent_redis
+
+volumes:
+  mysql_data:
