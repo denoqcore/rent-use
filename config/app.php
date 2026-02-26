@@ -12,6 +12,8 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
+    'locale' => 'en',
+    'fallback_locale' => 'en',
 
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -122,5 +124,6 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
 
 ];
