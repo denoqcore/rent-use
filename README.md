@@ -7,3 +7,7 @@ Rental & Booking Platform built with Laravel, Octane (FrankenPHP), Redis, Livewi
 Commands
 
 docker exec -it rent_use_app
+
+docker exec -it rent_use_app php artisan route:clear
+docker exec -it rent_use_app php artisan cache:clear
+docker restart rent_use_app
