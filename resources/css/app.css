@@ -1,25 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
 @import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@import "../../vendor/livewire/flux/dist/flux.css";
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-sans:
+        "Rethink Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+}
 
-    --color-bg: #ffffff;
-    --color-text: #000000;
-    --color-nav: #424242;
-    --color-nav-alt: #2a2a2a;
+:root {
     --color-accent: #f7b829;
-    --color-gray: #a6a6a6;
-    --color-gray-2: #d2d2d2;
-    --color-gray-3: #e4e4e4;
-    --color-product: #2b2b2b;
-    --color-product-alt: #343434;
 }
 
 .dark {
@@ -33,4 +31,8 @@
     --color-gray-3: #4a4a4a;
     --color-product: #1e1e1e;
     --color-product-alt: #2b2b2b;
+}
+
+[x-cloak] {
+    display: none !important;
 }
