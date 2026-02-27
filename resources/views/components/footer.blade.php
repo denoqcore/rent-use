@@ -1,1 +1,10 @@
-<h1>Footer</h1>
+<?php
+
+use Livewire\Component;
+
+new class extends Component {};
+?>
+
+<footer>
+
+</footer>
