@@ -48,4 +48,25 @@
 
         </div>
     </section>
+
+
+    <section class="w-full py-14" style="background-color: var(--background)">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-8">What people say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                @foreach ([['name' => 'Anna K.', 'text' => 'Rented a camera for the weekend — super easy process, great condition!', 'rating' => 5], ['name' => 'Maxim R.', 'text' => "Listed my old drill and made €40 in two weeks. Didn't expect it to be this simple.", 'rating' => 5], ['name' => 'Laura M.', 'text' => 'Clean interface, trustworthy platform. Will definitely use again.', 'rating' => 4]] as $review)
+                    <div class="p-6 rounded-sm flex flex-col gap-4 border border-transparent hover:border-(--background-3) transition-all"
+                        style="background-color: var(--background-2)">
+                        <div class="flex gap-0.5 text-sm">
+                            @for ($i = 0; $i < $review['rating']; $i++)
+                                ⭐
+                            @endfor
+                        </div>
+                        <p class="text-sm text-(--text-muted) leading-relaxed">"{{ $review['text'] }}"</p>
+                        <p class="text-xs font-semibold text-(--text-primary)">— {{ $review['name'] }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 @endsection
