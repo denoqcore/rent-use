@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
-    @fluxAppearance
+
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 
-<body class="bg-bg text-text transition-colors duration-300">
+<body class="bg-(--background) transition-colors duration-300">
 
     <livewire:header />
 
@@ -21,7 +21,7 @@
 
     <livewire:footer />
     @livewireScripts
-    @fluxScripts
+
 </body>
 
 </html>

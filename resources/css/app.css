@@ -3,7 +3,7 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
-@import "../../vendor/livewire/flux/dist/flux.css";
+/* @import "../../vendor/livewire/flux/dist/flux.css"; */
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
@@ -17,22 +17,28 @@
 }
 
 :root {
-    --color-accent: #f7b829;
-}
+    --background: #222831;
+    --background-2: #393e46;
+    --background-3: #948979;
+    --background-4: #dfd0b8;
 
-.dark {
-    --color-bg: #121212;
-    --color-text: #ffffff;
-    --color-nav: #2a2a2a;
-    --color-nav-alt: #1f1f1f;
-    --color-accent: #f7b829;
-    --color-gray: #8c8c8c;
-    --color-gray-2: #6e6e6e;
-    --color-gray-3: #4a4a4a;
-    --color-product: #1e1e1e;
-    --color-product-alt: #2b2b2b;
+    --button: #535441;
+    --button-h: #6d6047;
+    --button-text: #fffffe;
+
+    --text-primary: #dfd0b8;
+    --text-muted: #948979;
+    --text-accent: #dfd0b8;
 }
 
 [x-cloak] {
     display: none !important;
+}
+
+ol,
+li,
+a,
+ul {
+    list-style: none;
+    text-decoration: none;
 }
