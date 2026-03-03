@@ -13,12 +13,6 @@ services:
     environment:
       - SERVER_NAME=:80
       - APP_RUNTIME=Laravel\Octane\FrankenPhp\FrankenPhpRuntime
-      - APP_ENV=local
-      - DB_CONNECTION=mysql
-      - DB_HOST=mysql
-      - DB_DATABASE=rent_db
-      - DB_USERNAME=user
-      - DB_PASSWORD=password
     depends_on:
       mysql:
         condition: service_healthy
@@ -28,6 +22,8 @@ services:
   mysql:
     image: mysql:8.0
     container_name: rent_mysql
+    ports:
+      - "3308:3306"
     environment:
       MYSQL_DATABASE: rent_db
       MYSQL_USER: rentdeni
