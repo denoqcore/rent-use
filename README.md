@@ -11,3 +11,7 @@ docker exec -it rent_use_app
 docker exec -it rent_use_app php artisan route:clear
 docker exec -it rent_use_app php artisan cache:clear
 docker restart rent_use_app
+
+# Перезапускаем Octane, чтобы он перечитал .env
+
+docker exec -it rent_use_app php artisan octane:reload

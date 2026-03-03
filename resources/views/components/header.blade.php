@@ -7,16 +7,14 @@ new class extends Component {};
 
 <div x-data="{ open: false, scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })">
 
-    {{-- Desktop --}}
     <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         :class="scrolled ? 'border-b border-(--background-2)' : 'bg-transparent'"
         style="background-color: var(--background);">
         <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 
-            {{-- Logo + Nav вместе --}}
             <div class="flex items-center gap-6">
                 <a href="/" class="text-xl font-black tracking-wide text-(--text-primary)">
-                    rent<span class="text-(--text-muted) font-normal">.pls</span>
+                    rent<span class="text-(--text-muted) font-normal">.use</span>
                 </a>
 
                 <div class="w-px h-4 bg-(--background-2)"></div>
@@ -35,7 +33,6 @@ new class extends Component {};
                 </nav>
             </div>
 
-            {{-- Right --}}
             <div class="flex items-center gap-6">
 
                 <nav class="flex items-center gap-0.5">
@@ -81,7 +78,7 @@ new class extends Component {};
         <div class="flex items-center justify-between px-4" style="height:52px">
 
             <a href="/" class="text-sm font-black tracking-wide text-(--text-primary)">
-                rent<span class="text-(--text-muted) font-normal">.pls</span>
+                rent<span class="text-(--text-muted) font-normal">.use</span>
             </a>
 
             <button @click="open = !open"

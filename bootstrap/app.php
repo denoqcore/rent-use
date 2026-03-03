@@ -13,6 +13,17 @@ return Application::configure(basePath: dirname(__DIR__))
    ->withMiddleware(function (Middleware $middleware) {
     $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
 })
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
+
+    $middleware->alias([
+        'auth'  => \Illuminate\Auth\Middleware\Authenticate::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    ]);
+})
+
+
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
