@@ -7,8 +7,8 @@ new class extends Component {};
 
 <div x-data="{ open: false, scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })">
 
-    <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        :class="scrolled ? 'border-b border-(--background-2)' : 'bg-transparent'"
+    <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b"
+        :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent bg-transparent'"
         style="background-color: var(--background);">
         <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 

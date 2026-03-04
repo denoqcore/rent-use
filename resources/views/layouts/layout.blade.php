@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -15,13 +16,13 @@
 
     <livewire:header />
 
-    <main class="max-w-6xl mx-auto px-4 py-10">
+    <main>
         @yield('content')
     </main>
 
     <livewire:footer />
     @livewireScripts
-
+    @stack('scripts')
 </body>
 
 </html>
