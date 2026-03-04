@@ -145,7 +145,7 @@
                         </a>
                     @endguest
                     @auth
-                        <a href="{{ route('listings.create') }}"
+                        <a href="/"
                             class="inline-block border border-(--background-3) text-(--text-primary) px-6 py-2.5 text-sm font-medium rounded-sm
                                    hover:bg-(--background-2) transition-all">
                             {{ __('messages.post-listing') }}

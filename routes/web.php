@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
 
 // lagn
 Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'ro'])) {
+    if (!in_array($locale, ['en', 'md'])) {
         abort(400);
     }
     session(['locale' => $locale]);
