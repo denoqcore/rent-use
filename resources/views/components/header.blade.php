@@ -5,19 +5,19 @@ use Livewire\Component;
 new class extends Component {};
 ?>
 
-<div x-data="{ open: false, scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })">
+<div x-data="{ open: false, scrolled: false, userMenu: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })">
 
-    <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        :class="scrolled ? 'border-b border-(--background-2)' : 'bg-transparent'"
-        style="background-color: var(--background);">
+    <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
+        :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent'">
         <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 
             <div class="flex items-center gap-6">
                 <a href="/" class="text-xl font-black tracking-wide text-(--text-primary)">
                     rent<span class="text-(--text-muted) font-normal">.use</span>
+                    <span class="text-[11px] font-normal text-(--text-muted) ml-1">by Denis Beccev</span>
                 </a>
 
-                <div class="w-px h-4 bg-(--background-2)"></div>
+                <div class="w-px h-4 bg-(--background-3)"></div>
 
                 <nav class="flex items-center gap-0.5">
                     <a href="/search"
@@ -52,19 +52,65 @@ new class extends Component {};
                         {{ __('messages.started') }}
                     </a>
                 @endguest
+
                 @auth
-                    <a href="/profile"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
-                        {{ Auth::user()->name }}
-                    </a>
+                    <div class="relative">
+                        <button @click="userMenu = !userMenu"
+                            class="flex items-center gap-2 px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all cursor-pointer">
+                            <x-heroicon-o-user class="w-4 h-4" />
+                            {{ Auth::user()->name }}
+                        </button>
+
+                        <div x-show="userMenu" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-2" @click.away="userMenu = false"
+                            class="absolute right-0 top-full mt-2 w-52 rounded-sm border border-(--background-3) bg-(--background-2) shadow-xl z-50 overflow-hidden">
+
+                            <div
+                                class="absolute -top-1.5 right-4 w-3 h-3 bg-(--background-2) border-l border-t border-(--background-3) rotate-45">
+                            </div>
+
+                            <div class="p-3 border-b border-(--background-3)">
+                                <p class="text-xs font-semibold text-(--text-primary)">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-(--text-muted) truncate">{{ Auth::user()->email }}</p>
+                            </div>
+
+                            <div class="p-1.5">
+                                <a href="/profile"
+                                    class="flex items-center gap-2 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all">
+                                    <x-heroicon-o-user class="w-4 h-4 shrink-0" />
+                                    Profile
+                                </a>
+                                <a href="/post"
+                                    class="flex items-center gap-2 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all">
+                                    <x-heroicon-o-plus-circle class="w-4 h-4 shrink-0" />
+                                    {{ __('messages.post') }}
+                                </a>
+                            </div>
+
+                            <div class="p-1.5 border-t border-(--background-3)">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-(--background-3) rounded-sm transition-all cursor-pointer">
+                                        <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 shrink-0" />
+                                        Sign out
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
                 @endauth
 
-                <div class="flex items-center rounded-sm p-0.5 text-xs font-medium"
-                    style="background-color: var(--background-2)">
+                <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
                     <a href="{{ route('lang.switch', 'en') }}"
                         class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</a>
-                    <a href="{{ route('lang.switch', 'ro') }}"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">RO</a>
+                    <a href="{{ route('lang.switch', 'md') }}"
+                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</a>
                 </div>
 
             </div>
@@ -73,8 +119,7 @@ new class extends Component {};
 
     <div class="hidden md:block" style="height:72px"></div>
 
-    <header class="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2)"
-        style="background-color: var(--background);">
+    <header class="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between px-4" style="height:52px">
 
             <a href="/" class="text-sm font-black tracking-wide text-(--text-primary)">
@@ -92,8 +137,7 @@ new class extends Component {};
             x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-2" @click.away="open = false"
-            class="border-t border-(--background-2) px-4 pt-3 pb-5 space-y-1"
-            style="background-color: var(--background);">
+            class="border-t border-(--background-2) px-4 pt-3 pb-5 space-y-1 bg-(--background)">
 
             <a href="/search" @click="open = false"
                 class="block px-2 py-2.5 rounded-md text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
@@ -117,6 +161,13 @@ new class extends Component {};
                     class="block px-2 py-2.5 rounded-md text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
                     {{ Auth::user()->name }}
                 </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="block w-full text-left px-2 py-2.5 rounded-md text-sm text-red-400 hover:text-red-300 hover:bg-(--background-2) transition-all cursor-pointer">
+                        Sign out
+                    </button>
+                </form>
             @endauth
 
             @guest
@@ -132,8 +183,8 @@ new class extends Component {};
                 <a href="{{ route('lang.switch', 'en') }}"
                     class="px-3 py-1.5 rounded-sm text-xs font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">EN</a>
                 <span class="text-(--text-muted) text-xs opacity-30">/</span>
-                <a href="{{ route('lang.switch', 'ro') }}"
-                    class="px-3 py-1.5 rounded-sm text-xs font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">RO</a>
+                <a href="{{ route('lang.switch', 'md') }}"
+                    class="px-3 py-1.5 rounded-sm text-xs font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">MD</a>
             </div>
 
         </div>

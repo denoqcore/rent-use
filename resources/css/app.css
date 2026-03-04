@@ -17,18 +17,17 @@
 }
 
 :root {
-    --background: #222831;
-    --background-2: #393e46;
-    --background-3: #948979;
-    --background-4: #dfd0b8;
+    --background: #121212;
+    --background-2: #1e1e1e;
+    --background-3: #2a2a2a;
+    --background-4: #c9a84c;
 
-    --button: #535441;
-    --button-h: #6d6047;
-    --button-text: #fffffe;
+    --button: #c9a84c;
+    --button-h: #d4b86a;
+    --button-text: #121212;
 
-    --text-primary: #dfd0b8;
-    --text-muted: #948979;
-    --text-accent: #dfd0b8;
+    --text-primary: #e5e5e5;
+    --text-muted: #a0a0a0;
 }
 
 [x-cloak] {

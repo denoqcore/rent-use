@@ -34,7 +34,7 @@
                     <div class="flex flex-col gap-1.5">
                         <label
                             class="text-xs font-medium text-(--text-muted)">{{ __('messages.register-username') }}</label>
-                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Ben890"
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder=""
                             class="px-4 py-3 rounded-sm text-sm text-(--text-primary) placeholder:text-(--text-muted)
                                    border border-transparent focus:border-(--background-3) focus:outline-none transition-all
                                    @error('name') @enderror"
