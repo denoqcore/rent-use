@@ -2,6 +2,7 @@
 
 return [
     // Header + home + hero
+    //
     'welcome' => 'Bun venit',
     'home' => 'Acasă',
     'browse' => 'Răsfoi',
@@ -12,6 +13,10 @@ return [
     'rent-hero' => 'Închiriați ceea ce aveți nevoie',
     'rent-hero-2' => 'Când ai nevoie de el',
     'hero-sub' => 'Nu cumpărați. Închiriați.',
+    'hero-sub-2' => 'Închiriere Moldova',
+    'hero-down-sub' => 'Navigare gratuită',
+    'hero-down-sub-2' => 'Fără taxe ascunse',
+    'hero-down-sub-3' => 'Contact direct',
 
     //
     'benefits' => 'Beneficii',

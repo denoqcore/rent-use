@@ -2,6 +2,7 @@
 
 return [
     // Header + home + hero
+    //
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',
@@ -12,6 +13,10 @@ return [
     'rent-hero' => 'Rent What You Need',
     'rent-hero-2' => 'When You Need It',
     'hero-sub' => 'Don’t Buy. Just Rent.',
+    'hero-sub-2' => 'Rent Moldova',
+    'hero-down-sub' => 'Free to browse',
+    'hero-down-sub-2' => 'No hidden fees',
+    'hero-down-sub-3' => 'Direct contact',
 
     // Benefits
     'benefits' => 'Benefits',
