@@ -54,11 +54,25 @@ new class extends Component {};
                 @endguest
 
                 @auth
+
+                    <div class="w-px h-4 bg-(--background-3)"></div>
                     <div class="relative">
                         <button @click="userMenu = !userMenu"
-                            class="flex items-center gap-2 px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all cursor-pointer">
-                            <x-heroicon-o-user class="w-4 h-4" />
-                            {{ Auth::user()->name }}
+                            class="flex items-center gap-2.5 px-3 py-1.5 text-sm font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm transition-all cursor-pointer group">
+                            <div
+                                class="w-7 h-7 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 overflow-hidden shadow-sm group-hover:shadow-(--background-3)/20">
+                                @if (Auth::user()->avatar)
+                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <x-heroicon-s-user class="w-4 h-4 text-(--text-primary)" />
+                                @endif
+                            </div>
+
+                            <span class="truncate max-w-30">{{ Auth::user()->name }}</span>
+
+                            <x-heroicon-o-chevron-down
+                                class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />
                         </button>
 
                         <div x-show="userMenu" x-cloak x-transition:enter="transition ease-out duration-200"
