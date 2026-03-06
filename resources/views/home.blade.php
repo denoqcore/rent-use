@@ -1,8 +1,10 @@
 @extends('layouts.layout')
 
+@section('title', 'rent.use | Home')
+
 @section('content')
     <section id="vanta-hero" class="min-h-[calc(70vh-72px)] w-full flex items-center py-20 relative">
-        <div class="absolute inset-0 bg-linear-to-b from-transparent to-[#121212] pointer-events-none z-10"></div>
+        <div class="absolute inset-0 pointer-events-none z-10"></div>
         <div class="relative z-20 w-full max-w-4xl mx-auto px-6">
 
             <div

@@ -191,5 +191,4 @@ new class extends Component {};
     </header>
 
     <div class="md:hidden" style="height:52px"></div>
-
 </div>
