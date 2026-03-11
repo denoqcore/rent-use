@@ -3,10 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [CategoryController::class, 'index']);
 
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
@@ -23,7 +22,7 @@ Route::middleware('auth')->group(function () {
 
 // lang
 Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'md'])) {
+    if (!in_array($locale, ['en', 'ro'])) {
         abort(400);
     }
     session(['locale' => $locale]);

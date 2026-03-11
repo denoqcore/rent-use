@@ -1,8 +1,8 @@
 <?php
 
 return [
+
     // Header + home + hero
-    //
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',
@@ -10,15 +10,58 @@ return [
     'close' => 'Close',
     'started' => 'Get Started',
     'search' => 'Search',
+    'sign-out' => 'Sign out',
+
     'rent-hero' => 'Rent What You Need',
     'rent-hero-2' => 'When You Need It',
     'hero-sub' => 'Don’t Buy. Just Rent.',
     'hero-sub-2' => 'Rent Moldova',
+
     'hero-down-sub' => 'Free to browse',
     'hero-down-sub-2' => 'No hidden fees',
     'hero-down-sub-3' => 'Direct contact',
 
-    // Benefits
+    'subcategories' => 'subcategories',
+    'categories' => 'categories',
+    'more' => 'see more',
+
+    // profile page
+
+    'profile' => 'Profile',
+
+    'prof-personal-details' => 'Personal details',
+    'prof-edit' => 'Edit',
+    'prof-member-since'=> 'Member since',
+
+    'prof-name'=> 'Name',
+    'prof-phone'=> 'Phone',
+    'prof-identity' => 'Identity',
+
+    'prof-verify' => 'Not verified',
+    'prof-current' => 'Current',
+    'prof-verifed' => 'Verified',
+    'prof-noverifed' => 'Not verified',
+
+    'prof-listing' => 'Listings',
+    'prof-rating' => 'Rating',
+    'prof-reviews' => 'Reviews',
+
+    'prof-mylisting' => 'My listings',
+    'prof-nolisting' => 'You have no listings yet',
+    'prof-create-listing' => 'Create listing',
+
+    'prof-bookings' => 'My bookings',
+    'prof-nobookings' => 'No bookings yet',
+
+    'prof-support' => 'Support',
+    'prof-notickets' => 'No support tickets yet',
+    'prof-create-ticket' => 'Create ticket',
+
+    'email' => 'Email',
+    'password' => 'Password',
+
+    // benefits
+
     'benefits' => 'Benefits',
     'benefits-title' => 'Why rent.use?',
     'benefits-desc' => 'Save money, reduce clutter, and access anything you need — from people around you.',
@@ -32,8 +75,10 @@ return [
     'benefit-3-title' => 'Flexible Duration',
     'benefit-3-desc' => 'Rent for a day, a week, or longer. Agree on terms that work for you.',
 
-    //
+    // how it works
+
     'how-it-works' => 'How it works',
+
     'step-1-title' => 'Find an item',
     'step-1-desc' => 'Search by category or keyword to find what you need nearby.',
 
@@ -43,14 +88,17 @@ return [
     'step-3-title' => 'Rent & return',
     'step-3-desc' => 'Pick it up, use it, return it. Simple as that.',
 
-    //
+    // CTA
+
     'cta-title' => 'Make money from your unused items with',
     'cta-desc' => 'Turn your clutter into cash. List items in minutes and start earning today.',
     'get-started' => 'Get Started',
     'post-listing' => 'Post a listing',
 
-    //
+    // reviews
+
     'reviews-title' => 'What people say',
+
     'review-1' => 'Rented a camera for the weekend — super easy process, great condition!',
     'review-2' => 'Listed my old drill and made €40 in two weeks. Didn\'t expect it to be this simple.',
     'review-3' => 'Clean interface, trustworthy platform. Will definitely use again.',
@@ -62,30 +110,37 @@ return [
     'terms' => 'Terms of Service',
     'cookies' => 'Cookie Policy',
 
+    // register
 
-    // register page
     'register-create' => 'Create account',
     'register-login' => 'Already have one?',
     'register-login-link' => 'Sign in',
+
     'register-username' => 'Username',
     'register-phone' => 'Telephone',
     'register-phone-optional' => 'optional',
+
     'register-pass' => 'Password',
     'register-conf-pass' => 'Confirm password',
     'register-max-pass' => 'Min. 8 characters',
     'register-repeat-pass' => 'Repeat password',
+
     'register-board' => 'Welcome aboard',
     'register-desc' => 'Create your account and unlock a world of rental opportunities around you.',
 
-    // login page
-    'login-title'           => 'Login',
-    'login-subtitle'        => "Don't have an account?",
-    'login-subtitle-link'   => 'Sign Up',
-    'login-email'           => 'Email',
-    'login-pass'            => 'Password',
-    'login-remember'        => 'Remember me',
-    'login-forgot'          => "Forgot your password?",
-    'login-submit'          => 'Sign in',
-    'login-board'           => 'Welcome back',
-    'login-desc'            => 'Rent what you need, when you need it. Everything in one place.',
+    // login
+
+    'login-title' => 'Login',
+    'login-subtitle' => "Don't have an account?",
+    'login-subtitle-link' => 'Sign Up',
+
+    'login-email' => 'Email',
+    'login-pass' => 'Password',
+    'login-remember' => 'Remember me',
+
+    'login-forgot' => 'Forgot your password?',
+    'login-submit' => 'Sign in',
+
+    'login-board' => 'Welcome back',
+    'login-desc' => 'Rent what you need, when you need it. Everything in one place.',
 ];
