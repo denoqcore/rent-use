@@ -10,6 +10,8 @@ class Category extends Model
 {
     protected $fillable = ['parent_id', 'name_en', 'name_ro', 'slug', 'icon'];
 
+    protected $appends = ['name'];
+
     public function getNameAttribute(): string
     {
         $locale = app()->getLocale();

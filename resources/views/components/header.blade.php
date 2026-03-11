@@ -111,7 +111,7 @@ new class extends Component {};
                                     <button type="submit"
                                         class="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-(--background-3) rounded-sm transition-all cursor-pointer">
                                         <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 shrink-0" />
-                                        Sign out
+                                        {{ __('messages.sign-out') }}
                                     </button>
                                 </form>
                             </div>
@@ -123,7 +123,7 @@ new class extends Component {};
                 <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
                     <a href="{{ route('lang.switch', 'en') }}"
                         class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</a>
-                    <a href="{{ route('lang.switch', 'md') }}"
+                    <a href="{{ route('lang.switch', 'ro') }}"
                         class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</a>
                 </div>
 
@@ -179,7 +179,7 @@ new class extends Component {};
                     @csrf
                     <button type="submit"
                         class="block w-full text-left px-2 py-2.5 rounded-md text-sm text-red-400 hover:text-red-300 hover:bg-(--background-2) transition-all cursor-pointer">
-                        Sign out
+                        {{ __('messages.sign-out') }}
                     </button>
                 </form>
             @endauth
