@@ -6,6 +6,9 @@
 /* @import "../../vendor/livewire/flux/dist/flux.css"; */
 @source '../**/*.blade.php';
 @source '../**/*.js';
+/* @import "node_modules/swiper/swiper";
+@import "node_modules/swiper/modules/navigation/navigation";
+@import "node_modules/swiper/modules/pagination/pagination"; */
 
 @custom-variant dark (&:where(.dark, .dark *));
 

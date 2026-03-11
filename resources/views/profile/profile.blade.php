@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@section('title', 'rent.use | Profile')
+@section('title', 'rent.use | ' . $user->name)
 
 @section('content')
     <section class="min-h-[calc(100vh-72px)] w-full py-12 bg-(--background)" x-data="{ tab: 'profile' }">

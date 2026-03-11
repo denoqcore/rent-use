@@ -3,7 +3,7 @@
 @section('title', 'rent.use | Home')
 
 @section('content')
-    <section id="vanta-hero" class="min-h-[calc(80vh-72px)] w-full flex items-center relative overflow-hidden">
+    <section id="vanta-hero" class="min-h-[calc(60vh-72px)] w-full flex items-center relative overflow-hidden">
 
         <div class="relative z-20 w-full max-w-3xl mx-auto px-6 py-24 flex flex-col items-center text-center">
 
@@ -14,7 +14,8 @@
                 {{ __('messages.hero-sub-2') }}
             </div>
 
-            <h1 class="text-4xl md:text-6xl xl:text-7xl font-black text-(--text-primary) leading-[1] mb-6 tracking-tight">
+            <h1
+                class="text-4xl md:text-6xl xl:text-7xl font-black text-(--text-primary) leading-none mb-6 tracking-tight select-none">
                 {{ __('messages.rent-hero') }}<br>
                 <span x-data="{
                     full: '{{ __('messages.rent-hero-2') }}',
@@ -52,30 +53,28 @@
                         {{ __('messages.search') }}
                     </button>
                 </div>
-
-                <div class="flex items-center justify-center gap-8 mt-5">
+                {{-- <div class="flex items-center justify-center gap-8 mt-5">
                     @foreach (['hero-down-sub', 'hero-down-sub-2', 'hero-down-sub-3'] as $key)
                         <div class="flex items-center gap-1.5 text-xs text-(--text-muted)">
                             <x-heroicon-o-check-circle class="w-3.5 h-3.5 text-(--button)" />
                             {{ __('messages.' . $key) }}
                         </div>
                     @endforeach
-                </div>
+                </div> --}}
             </div>
 
         </div>
     </section>
 
-    <section class="w-full pb-16 bg-(--background)">
+    <section class="w-full pb-8 bg-(--background)">
         <div class="max-w-6xl mx-auto px-6">
-
             <div class="flex items-center justify-between mb-6">
                 <span class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
                     {{ __('messages.categories') }}
                 </span>
                 <a href="/search"
                     class="text-xs text-(--text-muted) hover:text-(--text-primary) transition-all flex items-center gap-1">
-                    {{ __('messages.browse') }}
+                    {{ __('messages.more') }}
                     <x-heroicon-o-arrow-right class="w-3 h-3" />
                 </a>
             </div>
@@ -83,7 +82,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                 @foreach ($categories as $category)
                     <a href="/"
-                        class="group relative flex flex-col justify-between gap-8 p-4 rounded-sm border border-(--background-3) bg-(--background-2)
+                        class="group relative flex flex-col justify-between gap-8 p-4 rounded-sm bg-(--background-2)
                                hover:border-(--button)/50 transition-all duration-300 overflow-hidden">
 
                         <div
@@ -107,7 +106,6 @@
 
     <section class="w-full py-20 bg-(--background-2)">
         <div class="max-w-6xl mx-auto px-6">
-
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
                     <span
@@ -276,3 +274,25 @@
         })
     </script>
 @endpush
+
+
+{{-- <script>
+    new Swiper('.listings-swiper', {
+        slidesPerView: 1.2,
+        spaceBetween: 12,
+        navigation: {
+            nextEl: '.swiper-next-listings',
+            prevEl: '.swiper-prev-listings',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2.2,
+                spaceBetween: 12
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 12
+            },
+        },
+    });
+</script> --}}

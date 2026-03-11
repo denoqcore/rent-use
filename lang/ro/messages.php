@@ -23,6 +23,7 @@ return [
 
     'subcategories' => 'subcategorii',
     'categories' => 'categorii',
+    'more' => 'vezi mai mult',
 
     // profile page
 

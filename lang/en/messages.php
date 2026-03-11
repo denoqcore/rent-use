@@ -23,6 +23,7 @@ return [
 
     'subcategories' => 'subcategories',
     'categories' => 'categories',
+    'more' => 'see more',
 
     // profile page
 
