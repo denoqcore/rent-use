@@ -25,7 +25,7 @@ new class extends Component {};
                         {{ __('messages.browse') }}
                     </a>
                     @auth
-                        <a href="/post"
+                        <a href="{{ route('listings.create') }}"
                             class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
                             {{ __('messages.post') }}
                         </a>
@@ -98,9 +98,8 @@ new class extends Component {};
                                     <x-heroicon-o-user class="w-4 h-4 shrink-0" />
                                     Profile
                                 </a>
-                                <a href="/post"
-                                    class="flex items-center gap-2 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all">
-                                    <x-heroicon-o-plus-circle class="w-4 h-4 shrink-0" />
+                                <a href="{{ route('listings.create') }}" @click="open = false"
+                                    class="block px-2 py-2.5 rounded-md text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
                                     {{ __('messages.post') }}
                                 </a>
                             </div>
@@ -167,8 +166,9 @@ new class extends Component {};
             </a>
 
             @auth
-                <a href="/post" @click="open = false"
-                    class="block px-2 py-2.5 rounded-md text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                <a href="{{ route('listings.create') }}" @click="userMenu = false"
+                    class="flex items-center gap-2 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all">
+                    <x-heroicon-o-plus class="w-4 h-4 shrink-0" />
                     {{ __('messages.post') }}
                 </a>
                 <a href="/profile" @click="open = false"
