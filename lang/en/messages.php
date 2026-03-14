@@ -24,6 +24,7 @@ return [
     'subcategories' => 'subcategories',
     'categories' => 'categories',
     'more' => 'see more',
+    'latest' => 'Latest announcements',
 
     // profile page
 
