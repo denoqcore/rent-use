@@ -21,6 +21,7 @@ class CategorySeeder extends Seeder
                     ['name_en' => 'Motorcycles', 'name_ro' => 'Motociclete',  'slug' => 'motorcycles'],
                     ['name_en' => 'Trailers',    'name_ro' => 'Remorci',      'slug' => 'trailers'],
                     ['name_en' => 'Watercraft',  'name_ro' => 'Ambarcațiuni', 'slug' => 'watercraft'],
+                    ['name_en' => 'Other',       'name_ro' => 'Altele',       'slug' => 'transport-other'],
                 ],
             ],
             [
@@ -31,7 +32,7 @@ class CategorySeeder extends Seeder
                 'children' => [
                     ['name_en' => 'Audio',            'name_ro' => 'Audio',             'slug' => 'audio'],
                     ['name_en' => 'Video',            'name_ro' => 'Video',             'slug' => 'video'],
-                    ['name_en' => 'Other electronics','name_ro' => 'Alte electronice',  'slug' => 'other-electronics'],
+                    ['name_en' => 'Other electronics','name_ro' => 'Alte electronice',  'slug' => 'electronics-other'],
                 ],
             ],
             [
@@ -55,6 +56,7 @@ class CategorySeeder extends Seeder
                     ['name_en' => 'Toys',          'name_ro' => 'Jucării',         'slug' => 'toys'],
                     ['name_en' => 'Baby gear',     'name_ro' => 'Accesorii bebeluș','slug' => 'baby-gear'],
                     ['name_en' => 'Kids clothing', 'name_ro' => 'Haine copii',     'slug' => 'kids-clothing'],
+                    ['name_en' => 'Other',         'name_ro' => 'Altele',          'slug' => 'baby-other'],
                 ],
             ],
             [
@@ -66,6 +68,7 @@ class CategorySeeder extends Seeder
                     ['name_en' => 'Excavators',  'name_ro' => 'Excavatoare',  'slug' => 'excavators'],
                     ['name_en' => 'Cranes',      'name_ro' => 'Macarale',     'slug' => 'cranes'],
                     ['name_en' => 'Compressors', 'name_ro' => 'Compresoare',  'slug' => 'compressors'],
+                    ['name_en' => 'Other',       'name_ro' => 'Altele',     'slug' => 'construction-other'],
                 ],
             ],
         ];

@@ -24,6 +24,7 @@ return [
     'subcategories' => 'subcategorii',
     'categories' => 'categorii',
     'more' => 'vezi mai mult',
+    'latest' => 'Cele mai recente anunțuri',
 
     // profile page
 
