@@ -19,17 +19,19 @@ class ListingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'              => 'required|string|max:255',
-            'description'        => 'required|string',
-            'category_id'        => 'required|exists:categories,id',
-            'city'               => 'required|string|max:100',
-            'price_per_day'      => 'required|integer|min:1',
-            'price_per_hour'     => 'nullable|integer|min:1',
-            'deposit'            => 'nullable|integer|min:0',
+            'category_id'      => 'required|exists:categories,id',
+            'title'            => 'required|string|min:5|max:100',
+            'description'      => 'required|string|min:20|max:2000',
+            'city'             => 'required|string|max:60',
+            'price_per_day'    => 'required|numeric|min:1|max:999999',
+            'price_per_hour'   => 'nullable|numeric|min:1|max:999999',
+            'deposit'          => 'nullable|numeric|min:0|max:999999',
+            'currency'         => 'required|in:MDL,EUR,USD',
+            'delivery_price'   => 'nullable|numeric|min:0|max:99999',
             'delivery_available' => 'nullable|boolean',
-            'delivery_price'     => 'nullable|integer|min:0',
             'requires_document'  => 'nullable|boolean',
-            'images.*'           => 'nullable|image|max:4096',
+            'images'           => 'nullable|array|max:8',
+            'images.*'         => 'image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $listing = Listing::create([
@@ -48,7 +50,6 @@ class ListingController extends Controller
             'status'             => 'active',
         ]);
 
-        // Images
         if ($request->hasFile('images')) {
             foreach (array_slice($request->file('images'), 0, 8) as $index => $image) {
                 $path = $image->store('listings', 'public');

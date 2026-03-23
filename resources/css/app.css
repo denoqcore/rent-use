@@ -19,7 +19,7 @@
         "Noto Color Emoji";
 }
 
-:root {
+/* :root {
     --background: #121212;
     --background-2: #1e1e1e;
     --background-3: #2a2a2a;
@@ -31,6 +31,17 @@
 
     --text-primary: #e5e5e5;
     --text-muted: #a0a0a0;
+} */
+
+:root {
+    --background: #f5f0e8;
+    --background-2: #ede8dc;
+    --background-3: #d9d0be;
+    --button: #b8922e;
+    --button-h: #c9a84c;
+    --button-text: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-muted: #6b6560;
 }
 
 [x-cloak] {
@@ -43,4 +54,12 @@ a,
 ul {
     list-style: none;
     text-decoration: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px var(--background-2) inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
 }

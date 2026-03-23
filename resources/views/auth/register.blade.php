@@ -20,15 +20,24 @@
                     </p>
                 </div>
 
+                <div class="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5">
+                    <span class="mt-0.5 shrink-0">
+                        <x-heroicon-o-exclamation-triangle class="h-4 w-4 text-red-700" />
+                    </span>
+                    <p class="text-sm leading-relaxed text-red-700">
+                        {!! __('messages.register-disclaimer') !!}
+                    </p>
+                </div>
+
                 @if ($errors->any())
-                    <div class="mb-6 p-4 rounded-sm border border-red-400/20 bg-red-400/5">
+                    <div class="mb-6 p-4 rounded-sm border border-red-500/30 bg-red-500/10 mt-1">
                         @foreach ($errors->all() as $error)
-                            <p class="text-sm text-red-400">{{ $error }}</p>
+                            <p class="text-sm text-red-300">{{ $error }}</p>
                         @endforeach
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-4">
+                <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-4 mt-4">
                     @csrf
 
                     <div class="flex flex-col gap-1.5">

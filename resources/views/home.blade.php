@@ -283,12 +283,10 @@
             gyroControls: false,
             minHeight: 200.00,
             minWidth: 200.00,
-            scale: 0.00,
+            scale: 1.00,
             scaleMobile: 1.00,
-            color: 0xdcd1c7,
-            color2: 0xffffff,
-            backgroundColor: 0x121212,
-            spacing: 100.00,
+            backgroundColor: 0xffede8dc,
+            size: 3.50,
             showLines: false
         })
     </script>

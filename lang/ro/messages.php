@@ -113,6 +113,7 @@ return [
 
     // register
 
+    'register-disclaimer' => "Vă rugăm să utilizați <span class='text-red-900'>date nereale</span> la înregistrare. Nu furnizați informațiile dvs. personale reale.",
     'register-create' => 'Creează cont',
     'register-login' => 'Ai deja cont?',
     'register-login-link' => 'Autentifică-te',
@@ -144,4 +145,47 @@ return [
 
     'login-board' => 'Bine ai revenit',
     'login-desc' => 'Închiriază ce ai nevoie, când ai nevoie. Totul într-un singur loc.',
+
+    //post listing
+
+    // Create listing
+    'create_listing' => 'Creează anunț',
+    'create_listing_sub' => 'Completează detaliile pentru a publica anunțul',
+
+    // Steps
+    'step_category' => 'Categorie',
+    'step_details' => 'Detalii',
+    'step_photos' => 'Fotografii',
+
+    // Step 1
+    'choose_main_category' => 'Alege o categorie principală',
+    'choose_main_category_sub' => 'Selectează tipul obiectului pe care îl închiriezi',
+    'choose_subcategory' => 'Alege o subcategorie',
+    'continue' => 'Continuă',
+
+    // Step 2
+    'title' => 'Titlu',
+    'description' => 'Descriere',
+    'city' => 'Oraș',
+    'currency' => 'Valută',
+
+    'price_per_day' => 'Preț / zi',
+    'price_per_hour' => 'Preț / oră',
+    'deposit' => 'Garanție',
+
+    'optional' => 'opțional',
+
+    'delivery_available' => 'Livrare disponibilă',
+    'delivery_price' => 'Preț livrare',
+
+    'requires_document' => 'Necesită act / permis',
+
+    'back' => 'Înapoi',
+
+    'upload_photos' => 'Încarcă fotografii',
+    'upload_photos_sub' => 'Până la 8 fotografii. Prima va fi coperta.',
+    'click_to_upload' => 'Apasă pentru a încărca',
+    'photos_selected' => 'fotografie(i) selectată(e)',
+
+    'publish_listing' => 'Publică anunțul',
 ];

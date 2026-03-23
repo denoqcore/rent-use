@@ -9,6 +9,13 @@
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
     @livewireStyles
 </head>
 
