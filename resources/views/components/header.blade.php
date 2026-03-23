@@ -92,15 +92,16 @@ new class extends Component {};
                                 <p class="text-xs text-(--text-muted) truncate">{{ Auth::user()->email }}</p>
                             </div>
 
-                            <div class="p-1.5">
+                            <div class="p-1.5 flex flex-col gap-0.5">
                                 <a href="/profile"
-                                    class="flex items-center gap-2 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all">
-                                    <x-heroicon-o-user class="w-4 h-4 shrink-0" />
-                                    Profile
+                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all group">
+                                    <x-heroicon-o-user class="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
+                                    <span>Profile</span>
                                 </a>
                                 <a href="{{ route('listings.create') }}" @click="open = false"
-                                    class="block px-2 py-2.5 rounded-md text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
-                                    {{ __('messages.post') }}
+                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all group">
+                                    <x-heroicon-o-plus class="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
+                                    <span>{{ __('messages.post') }}</span>
                                 </a>
                             </div>
 
@@ -125,6 +126,11 @@ new class extends Component {};
                     <a href="{{ route('lang.switch', 'ro') }}"
                         class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</a>
                 </div>
+
+                <button onclick="toggleTheme()" class="...">
+                    <x-heroicon-o-sun class="h-5 w-5 hidden dark:block" />
+                    <x-heroicon-o-moon class="h-5 w-5 dark:hidden" />
+                </button>
 
             </div>
         </div>

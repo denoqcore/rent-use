@@ -113,6 +113,7 @@ return [
 
     // register
 
+    'register-disclaimer' => "Please use <span class='text-red-900'>non-real</span> data when registering. Do not provide your actual personal information.",
     'register-create' => 'Create account',
     'register-login' => 'Already have one?',
     'register-login-link' => 'Sign in',
@@ -144,4 +145,48 @@ return [
 
     'login-board' => 'Welcome back',
     'login-desc' => 'Rent what you need, when you need it. Everything in one place.',
+
+    //post listing
+
+        // Create listing
+    'create_listing' => 'Create listing',
+    'create_listing_sub' => 'Fill in the details to publish your rental',
+
+    // Steps
+    'step_category' => 'Category',
+    'step_details' => 'Details',
+    'step_photos' => 'Photos',
+
+    // Step 1
+    'choose_main_category' => 'Choose a main category',
+    'choose_main_category_sub' => 'Select what type of item you\'re renting out',
+    'choose_subcategory' => 'Choose a subcategory',
+    'continue' => 'Continue',
+
+    // Step 2
+    'title' => 'Title',
+    'description' => 'Description',
+    'city' => 'City',
+    'currency' => 'Currency',
+
+    'price_per_day' => 'Price / day',
+    'price_per_hour' => 'Price / hour',
+    'deposit' => 'Deposit',
+
+    'optional' => 'optional',
+
+    'delivery_available' => 'Delivery available',
+    'delivery_price' => 'Delivery price',
+
+    'requires_document' => 'Require ID / license',
+
+    'back' => 'Back',
+
+    // Step 3
+    'upload_photos' => 'Upload photos',
+    'upload_photos_sub' => 'Up to 8 photos. First photo will be the cover.',
+    'click_to_upload' => 'Click to upload',
+    'photos_selected' => 'photo(s) selected',
+
+    'publish_listing' => 'Publish listing',
 ];

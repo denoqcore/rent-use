@@ -248,7 +248,7 @@
                                 {{ __('messages.prof-nolisting') }}
                             </p>
 
-                            <a href="/post"
+                            <a href="{{ route('listings.create') }}"
                                 class="mt-2 px-4 py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all active:scale-95">
 
                                 {{ __('messages.prof-create-listing') }}
