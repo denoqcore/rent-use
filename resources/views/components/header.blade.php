@@ -5,7 +5,7 @@ use Livewire\Component;
 new class extends Component {};
 ?>
 
-<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })">
+<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })" x-cloak>
 
     <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
         :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent'">
