@@ -11,6 +11,8 @@ return [
     'started' => 'Get Started',
     'search' => 'Search',
     'sign-out' => 'Sign out',
+    'dark-mode' => 'Dark mode',
+    'light-mode' => 'Light mode',
 
     'rent-hero' => 'Rent What You Need',
     'rent-hero-2' => 'When You Need It',

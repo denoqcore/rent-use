@@ -11,6 +11,8 @@ return [
     'started' => 'Începe',
     'search' => 'Caută',
     'sign-out' => 'Deconectare',
+    'dark-mode' => 'Mod întunecat',
+    'light-mode' => 'Mod luminos',
 
     'rent-hero' => 'Închiriază ceea ce ai nevoie',
     'rent-hero-2' => 'Atunci când ai nevoie',

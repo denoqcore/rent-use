@@ -11,11 +11,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script>
-        const saved = localStorage.getItem('theme');
-        if (saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     </script>
+
     @livewireStyles
 </head>
 

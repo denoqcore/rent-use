@@ -124,7 +124,8 @@
                     class="flex flex-col gap-5">
 
                     <div class="flex flex-col gap-2">
-                        <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.choose_main_category') }}/p>
+                        <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.choose_main_category') }}
+                        </p>
                         <p class="text-xs text-(--text-muted)">{{ __('messages.choose_main_category_sub') }}</p>
                     </div>
 
@@ -223,7 +224,7 @@
                             class="text-xs text-(--text-muted)">{{ __('messages.description') }}</label>
                         <textarea id="description" name="description" rows="3"
                             class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all resize-none
-                             @error('description') @enderror">{{ old('description') }}</textarea>
+                             @error('description') @enderror"></textarea>
                     </div>
 
                     <div class="flex flex-col gap-1">
@@ -253,8 +254,7 @@
                                 {{ __('messages.price_per_day') }} (<span x-text="currency"></span>)
                             </label>
                             <div class="relative">
-                                <input id="price_per_day" type="number" name="price_per_day"
-                                    value="{{ old('price_per_day') }}" x-model="pricePerDay"
+                                <input id="price_per_day" type="number" name="price_per_day" x-model="pricePerDay"
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all @error('price_per_day') @enderror">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
@@ -268,7 +268,6 @@
                             </label>
                             <div class="relative">
                                 <input id="price_per_hour" type="number" name="price_per_hour"
-                                    value="{{ old('price_per_hour') }}"
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
@@ -304,7 +303,6 @@
                             </label>
                             <div class="relative">
                                 <input id="delivery_price" type="number" name="delivery_price"
-                                    value="{{ old('delivery_price') }}"
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
