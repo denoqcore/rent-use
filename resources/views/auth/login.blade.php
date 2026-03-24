@@ -78,7 +78,7 @@
                 <div
                     class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
                     <span class="text-[100px] lg:text-[140px] font-black leading-none tracking-tight whitespace-nowrap"
-                        style="color: var(--background-3); opacity: 0.15">
+                        style="color: var(--background-1); opacity: 0.05">
                         rent<span class="text-(--text-accent) font-normal">.use</span>
                     </span>
                 </div>

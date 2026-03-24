@@ -9,13 +9,19 @@
         <div class="relative z-20 w-full max-w-2xl mx-auto px-6 flex flex-col items-center text-center">
 
             <div
-                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-medium mb-8 bg-(--background-2) text-(--text-muted) border border-(--background-3)">
+                class="absolute -inset-10 bg-radial from-white/60 via-white/30 to-transparent -z-10 blur-3xl pointer-events-none">
+            </div>
+
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-medium mb-8
+                bg-(--background-2)/80 backdrop-blur-md text-(--text-muted) border border-(--background-3) shadow-sm select-none">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
                     alt="moldova" class="h-3">
                 {{ __('messages.hero-sub-2') }}
             </div>
 
-            <h1 class="text-5xl md:text-6xl xl:text-7xl font-black text-(--text-primary) leading-none mb-5 tracking-tight">
+            <h1
+                class="text-5xl md:text-6xl xl:text-7xl font-black text-(--text-primary) leading-none mb-5 tracking-tight drop-shadow-sm select-none">
                 {{ __('messages.rent-hero') }}<br>
                 <span x-data="{
                     full: '{{ __('messages.rent-hero-2') }}',
@@ -37,22 +43,22 @@
                 </span>
             </h1>
 
-            <p class="text-(--text-muted) text-sm mb-8 max-w-xs leading-relaxed">
+            <p class="text-(--text-muted) text-sm mb-8 max-w-xs leading-relaxed font-black select-none">
                 {{ __('messages.hero-sub') }}
             </p>
 
             <div class="w-full max-w-md">
-                <div class="flex gap-2 p-1.5 rounded-sm bg-(--background-2) border border-(--background-3)">
+                <div
+                    class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
                     <input type="text" placeholder="Camera, car, guitar..."
                         class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                     <button
-                        class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-sm hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap">
+                        class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">
                         <x-heroicon-o-magnifying-glass class="w-4 h-4" />
                         {{ __('messages.search') }}
                     </button>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -62,7 +68,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                 @foreach ($categories as $category)
                     <a href="/"
-                        class="group relative flex flex-col justify-between gap-6 p-4 rounded-sm border border-(--background-3) bg-(--background-2) hover:border-(--button)/40 transition-all duration-200 overflow-hidden">
+                        class="group relative flex flex-col justify-between gap-6 p-4 rounded-sm border border-(--background-3) bg-(--background-2) transition-all duration-200 overflow-hidden">
                         <div
                             class="absolute top-0 left-0 w-full h-px bg-(--button) opacity-0 group-hover:opacity-100 transition-all duration-300">
                         </div>
@@ -285,7 +291,9 @@
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            backgroundColor: 0xffede8dc,
+            color: 0x6550ff,
+            color2: 0x828282,
+            backgroundColor: 0xffffff,
             size: 3.50,
             showLines: false
         })
