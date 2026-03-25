@@ -33,7 +33,7 @@
                 this.step--;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-        }">
+        }" x-cloak>
 
             <div>
                 <h1 class="text-xl font-black text-(--text-primary)">{{ __('messages.create_listing') }}</h1>
@@ -152,7 +152,8 @@
                             x-transition:enter-end="opacity-100 translate-y-0" class="flex flex-col gap-2">
 
                             <p class="text-sm font-semibold text-(--text-primary)">
-                                {{ __('messages.choose_subcategory') }}/p>
+                                {{ __('messages.choose_subcategory') }}
+                            </p>
 
                             <div class="flex flex-col gap-1">
                                 @foreach ($category->children as $child)
@@ -195,19 +196,19 @@
                         x-transition:enter-end="opacity-100 translate-y-0">
                         <x-heroicon-s-tag class="w-3 h-3 text-(--text-muted)/60" />
                         <div class="flex items-center gap-1.5 text-[11px] tracking-tight">
+
                             <span class="text-(--text-muted) font-medium"
-                                x-text="
-                                    @foreach ($categories as $category)
-                                        parent == '{{ $category->id }}' ? '{{ $category->name }}' : @endforeach ''
-                                "></span>
+                                x-text="@foreach ($categories as $category) parent == '{{ $category->id }}' ? '{{ $category->name }}' : @endforeach ''">
+                            </span>
+
                             <span class="text-(--background-3) font-black">/</span>
                             <span class="text-(--text-primary) font-bold"
                                 x-text="
                                     @foreach ($categories as $category)
                                         @foreach ($category->children as $child)
                                             categoryId == '{{ $child->id }}' ? '{{ $child->name }}' : @endforeach
-                                    @endforeach ''
-                                "></span>
+                                    @endforeach ''">
+                            </span>
                         </div>
                     </div>
 
@@ -242,7 +243,8 @@
                                     :class="currency === c ?
                                         'bg-(--button) text-(--button-text)' :
                                         'text-(--text-muted) hover:text-(--text-primary)'"
-                                    class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all" x-text="c">
+                                    class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer"
+                                    x-text="c">
                                 </button>
                             </template>
                         </div>

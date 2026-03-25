@@ -11,9 +11,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Listing extends Model
 {
     protected $fillable = [
-        'user_id', 'category_id', 'title', 'description', 'slug',
-        'city', 'price_per_day', 'price_per_hour', 'deposit',
-        'delivery_available', 'delivery_price', 'requires_document', 'status',
+        'user_id',
+        'category_id',
+        'title',
+        'description',
+        'slug',
+        'city',
+        'price_per_day',
+        'price_per_hour',
+        'deposit',
+        'currency',
+        'delivery_available',
+        'delivery_price',
+        'requires_document',
+        'status',
     ];
 
     protected $casts = [

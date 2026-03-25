@@ -21,12 +21,12 @@ new class extends Component {};
 
                 <nav class="flex items-center gap-0.5">
                     <a href="/search"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
+                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md">
                         {{ __('messages.browse') }}
                     </a>
                     @auth
                         <a href="{{ route('listings.create') }}"
-                            class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
+                            class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md">
                             {{ __('messages.post') }}
                         </a>
                     @endauth
@@ -279,29 +279,26 @@ new class extends Component {};
                 x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
                 class="relative z-10 w-full sm:max-w-sm p-6 bg-(--background-2) border border-(--background-3) rounded-lg shadow-2xl">
 
-                <div class="flex items-start gap-4 mb-5">
-                    <div class="w-9 h-9 rounded-sm bg-red-400/10 flex items-center justify-center shrink-0">
-                        <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 text-red-400" />
+                <div class="flex items-center gap-4 mb-6">
+                    <div
+                        class="w-10 h-10 rounded-sm bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/10">
+                        <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 text-red-500" />
                     </div>
-                    <div>
-                        <h2 class="text-sm font-semibold text-(--text-primary)">
-                            {{ __('messages.sign-out-confirm-title') }}
-                        </h2>
-                        <p class="mt-0.5 text-sm text-(--text-muted)">
-                            {{ __('messages.sign-out-confirm-description') }}
-                        </p>
-                    </div>
+
+                    <h2 class="text-base font-bold text-(--text-primary) leading-tight">
+                        {{ __('messages.sign-out-confirm-title') }}
+                    </h2>
                 </div>
 
                 <div class="flex gap-2">
                     <button type="button" @click="logoutModal = false"
-                        class="flex-1 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all cursor-pointer">
-                        {{ __('messages.cancel') }}
+                        class="flex-1 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm cursor-pointer">
+                        {{ __('messages.back') }}
                     </button>
                     <form method="POST" action="{{ route('logout') }}" class="flex-1">
                         @csrf
                         <button type="submit"
-                            class="w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 rounded-sm transition-all cursor-pointer">
+                            class="w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 rounded-sm cursor-pointer">
                             {{ __('messages.sign-out') }}
                         </button>
                     </form>

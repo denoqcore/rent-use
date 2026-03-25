@@ -10,9 +10,13 @@ return [
     'close' => 'Închide',
     'started' => 'Începe',
     'search' => 'Caută',
+    'cancel' => 'Înapoi',
     'sign-out' => 'Deconectare',
     'dark-mode' => 'Mod întunecat',
     'light-mode' => 'Mod luminos',
+    'sign-out-confirm-title' => 'Ești sigur că vrei să ieși?',
+    'sign-out-confirm-description' => '',
+
 
     'rent-hero' => 'Închiriază ceea ce ai nevoie',
     'rent-hero-2' => 'Atunci când ai nevoie',

@@ -13,6 +13,7 @@ return [
     'sign-out' => 'Sign out',
     'dark-mode' => 'Dark mode',
     'light-mode' => 'Light mode',
+    'sign-out-confirm-title' => 'Are you sure you want to log out?',
 
     'rent-hero' => 'Rent What You Need',
     'rent-hero-2' => 'When You Need It',
