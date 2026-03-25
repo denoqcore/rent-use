@@ -10,18 +10,55 @@
             categoryId: '{{ old('category_id') }}',
             currency: 'MDL',
             currencies: ['MDL', 'EUR', 'USD'],
-        
+            transportCategoryId: '1',
+            pricePerDay: '',
+            pricePerHour: '',
+            delivery: false,
+            deliveryPrice: '',
+            deposit: '',
+            pricingMode: 'day',
             title: '{{ old('title') }}',
             city: '{{ old('city') }}',
-            pricePerDay: '{{ old('price_per_day') }}',
+            description: '{{ old('description') }}',
+            isSubmitting: false,
+            images: [],
         
-            get canProceedStep1() {
-                return this.parent !== '' && this.categoryId !== '';
+            init() {
+                // Загрузка из sessionStorage для защиты от рефреша
+                if (sessionStorage.getItem('listing_draft')) {
+                    let data = JSON.parse(sessionStorage.getItem('listing_draft'));
+                    this.title = data.title || '';
+                    this.city = data.city || '';
+                    this.description = data.description || '';
+                }
+                this.$watch('title', v => this.saveDraft());
+                this.$watch('city', v => this.saveDraft());
+                this.$watch('description', v => this.saveDraft());
             },
+            saveDraft() {
+                sessionStorage.setItem('listing_draft', JSON.stringify({
+                    title: this.title,
+                    city: this.city,
+                    description: this.description
+                }));
+            },
+            handleFiles(event) {
+                const files = Array.from(event.target.files);
+                this.images = [];
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => { this.images.push(e.target.result); };
+                    reader.readAsDataURL(file);
+                });
+            },
+            get canProceedStep1() { return this.parent !== '' && this.categoryId !== ''; },
             get canProceedStep2() {
-                return this.title.trim().length >= 5 &&
-                    this.city.trim().length >= 2 &&
-                    this.pricePerDay > 0;
+                if (this.title.trim().length < 5) return false;
+                if (this.city.trim().length < 2) return false;
+                if (this.pricingMode === 'day') return this.pricePerDay > 0;
+                if (this.pricingMode === 'hour') return this.pricePerHour > 0;
+                if (this.pricingMode === 'both') return this.pricePerDay > 0 && this.pricePerHour > 0;
+                return false;
             },
             nextStep() {
                 if (this.step === 1 && !this.canProceedStep1) return;
@@ -40,12 +77,11 @@
                 <p class="text-xs text-(--text-muted) mt-1">{{ __('messages.create_listing_sub') }}</p>
             </div>
 
+            {{-- Stepper (оставлен без изменений для сохранения дизайна) --}}
             <div class="flex items-center gap-0">
-
                 <div class="flex flex-col items-center gap-1.5">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
-                        :class="step >= 1 ?
-                            'bg-(--button) text-(--button-text)' :
+                        :class="step >= 1 ? 'bg-(--button) text-(--button-text)' :
                             'bg-(--background-2) text-(--text-muted) border border-(--background-3)'">
                         <template x-if="step > 1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -53,23 +89,16 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                         </template>
-                        <template x-if="step <= 1">
-                            <span>1</span>
-                        </template>
+                        <template x-if="step <= 1"><span>1</span></template>
                     </div>
                     <span class="text-[10px] font-medium transition-colors duration-300"
-                        :class="step >= 1 ? 'text-(--text-primary)' : 'text-(--text-muted)'">
-                        {{ __('messages.step_category') }}
-                    </span>
+                        :class="step >= 1 ? 'text-(--text-primary)' : 'text-(--text-muted)'">{{ __('messages.step_category') }}</span>
                 </div>
-
                 <div class="flex-1 h-px mb-4 mx-2 transition-all duration-500"
                     :class="step >= 2 ? 'bg-(--button)' : 'bg-(--background-3)'"></div>
-
                 <div class="flex flex-col items-center gap-1.5">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
-                        :class="step >= 2 ?
-                            'bg-(--button) text-(--button-text)' :
+                        :class="step >= 2 ? 'bg-(--button) text-(--button-text)' :
                             'bg-(--background-2) text-(--text-muted) border border-(--background-3)'">
                         <template x-if="step > 2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -77,32 +106,22 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                         </template>
-                        <template x-if="step <= 2">
-                            <span>2</span>
-                        </template>
+                        <template x-if="step <= 2"><span>2</span></template>
                     </div>
                     <span class="text-[10px] font-medium transition-colors duration-300"
-                        :class="step >= 2 ? 'text-(--text-primary)' : 'text-(--text-muted)'">
-                        {{ __('messages.step_details') }}
-                    </span>
+                        :class="step >= 2 ? 'text-(--text-primary)' : 'text-(--text-muted)'">{{ __('messages.step_details') }}</span>
                 </div>
-
                 <div class="flex-1 h-px mb-4 mx-2 transition-all duration-500"
                     :class="step >= 3 ? 'bg-(--button)' : 'bg-(--background-3)'"></div>
-
                 <div class="flex flex-col items-center gap-1.5">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
-                        :class="step >= 3 ?
-                            'bg-(--button) text-(--button-text)' :
+                        :class="step >= 3 ? 'bg-(--button) text-(--button-text)' :
                             'bg-(--background-2) text-(--text-muted) border border-(--background-3)'">
                         <span>3</span>
                     </div>
                     <span class="text-[10px] font-medium transition-colors duration-300"
-                        :class="step >= 3 ? 'text-(--text-primary)' : 'text-(--text-muted)'">
-                        {{ __('messages.step_photos') }}
-                    </span>
+                        :class="step >= 3 ? 'text-(--text-primary)' : 'text-(--text-muted)'">{{ __('messages.step_photos') }}</span>
                 </div>
-
             </div>
 
             @if ($errors->any())
@@ -114,21 +133,19 @@
             @endif
 
             <form action="{{ route('listings.store') }}" method="POST" enctype="multipart/form-data"
-                class="flex flex-col gap-6">
+                class="flex flex-col gap-6" @submit="isSubmitting = true; sessionStorage.removeItem('listing_draft')">
                 @csrf
-
                 <input type="hidden" name="currency" :value="currency">
 
+                {{-- STEP 1 --}}
                 <div x-show="step === 1" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-5">
-
                     <div class="flex flex-col gap-2">
                         <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.choose_main_category') }}
                         </p>
                         <p class="text-xs text-(--text-muted)">{{ __('messages.choose_main_category_sub') }}</p>
                     </div>
-
                     <div class="grid grid-cols-2 gap-2">
                         @foreach ($categories as $category)
                             <button type="button" @click="parent = '{{ $category->id }}'; categoryId = ''"
@@ -137,24 +154,16 @@
                                     'border-(--background-3) bg-(--background-2) text-(--text-muted) hover:border-(--text-muted)'"
                                 class="flex items-center gap-3 px-4 py-3 rounded-sm border text-sm font-medium transition-all text-left cursor-pointer">
                                 <span class="w-2 h-2 rounded-full shrink-0 transition-all"
-                                    :class="parent == '{{ $category->id }}' ? 'bg-(--button)' : 'bg-(--background-3)'">
-                                </span>
+                                    :class="parent == '{{ $category->id }}' ? 'bg-(--button)' : 'bg-(--background-3)'"></span>
                                 {{ $category->name }}
                             </button>
                         @endforeach
                     </div>
-
                     <input type="hidden" name="parent_category" :value="parent">
-
                     @foreach ($categories as $category)
-                        <div x-show="parent == '{{ $category->id }}'" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 -translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0" class="flex flex-col gap-2">
-
-                            <p class="text-sm font-semibold text-(--text-primary)">
-                                {{ __('messages.choose_subcategory') }}
+                        <div x-show="parent == '{{ $category->id }}'" class="flex flex-col gap-2">
+                            <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.choose_subcategory') }}
                             </p>
-
                             <div class="flex flex-col gap-1">
                                 @foreach ($category->children as $child)
                                     <button type="button" @click="categoryId = '{{ $child->id }}'"
@@ -173,66 +182,98 @@
                             </div>
                         </div>
                     @endforeach
-
                     <input type="hidden" name="category_id" :value="categoryId">
-
                     <button type="button" @click="nextStep()" :disabled="!canProceedStep1"
-                        :class="canProceedStep1 ?
-                            'bg-(--button) text-(--button-text) hover:bg-(--button-h) cursor-pointer' :
-                            'bg-(--background-3) text-(--text-muted) cursor-not-allowed opacity-50'"
-                        class="w-full py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95">
-                        {{ __('messages.continue') }}
-                    </button>
-
+                        :class="canProceedStep1 ? 'bg-(--button) text-(--button-text)' :
+                            'bg-(--background-3) text-(--text-muted) opacity-50 cursor-not-allowed'"
+                        class="w-full py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95">{{ __('messages.continue') }}</button>
                 </div>
 
+                {{-- STEP 2 --}}
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-4">
-
+                    {{-- Категория (Badge) --}}
                     <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-(--background-3)/30 border border-(--background-3)"
-                        x-show="categoryId !== ''" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 translate-y-1"
-                        x-transition:enter-end="opacity-100 translate-y-0">
+                        x-show="categoryId !== ''">
                         <x-heroicon-s-tag class="w-3 h-3 text-(--text-muted)/60" />
                         <div class="flex items-center gap-1.5 text-[11px] tracking-tight">
-
                             <span class="text-(--text-muted) font-medium"
-                                x-text="@foreach ($categories as $category) parent == '{{ $category->id }}' ? '{{ $category->name }}' : @endforeach ''">
-                            </span>
-
+                                x-text="@foreach ($categories as $category) parent == '{{ $category->id }}' ? '{{ $category->name }}' : @endforeach ''"></span>
                             <span class="text-(--background-3) font-black">/</span>
                             <span class="text-(--text-primary) font-bold"
-                                x-text="
-                                    @foreach ($categories as $category)
-                                        @foreach ($category->children as $child)
-                                            categoryId == '{{ $child->id }}' ? '{{ $child->name }}' : @endforeach
-                                    @endforeach ''">
-                            </span>
+                                x-text="@foreach ($categories as $category) @foreach ($category->children as $child) categoryId == '{{ $child->id }}' ? '{{ $child->name }}' : @endforeach @endforeach ''"></span>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <label for="title" class="text-xs text-(--text-muted)">{{ __('messages.title') }}</label>
-                        <input id="title" type="text" name="title" x-model="title"
-                            value="{{ old('title') }}" autocomplete="off"
-                            class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all
-                             @error('title') @enderror">
+                        <label class="text-xs text-(--text-muted)">{{ __('messages.title') }}</label>
+                        <input type="text" name="title" x-model="title" autocomplete="off"
+                            class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <label for="description"
-                            class="text-xs text-(--text-muted)">{{ __('messages.description') }}</label>
-                        <textarea id="description" name="description" rows="3"
-                            class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all resize-none
-                             @error('description') @enderror"></textarea>
+                        <label class="text-xs text-(--text-muted)">{{ __('messages.description') }}</label>
+                        <textarea name="description" x-model="description" rows="3"
+                            class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all resize-none"></textarea>
                     </div>
 
-                    <div class="flex flex-col gap-1">
-                        <label for="city" class="text-xs text-(--text-muted)">{{ __('messages.city') }}</label>
-                        <input id="city" type="text" name="city" x-model="city" value="{{ old('city') }}"
-                            class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all
-                             @error('city') @enderror">
+                    <div class="flex flex-col gap-1" x-data="{
+                        open: false,
+                        search: '',
+                        cities: [
+                            'Chișinău', 'Bălți', 'Tiraspol', 'Tighina (Bender)', 'Rîbnița', 'Cahul', 'Ungheni', 'Soroca', 'Orhei', 'Comrat', 'Strășeni', 'Drochia', 'Edineț', 'Căușeni', 'Fălești', 'Hîncești', 'Călărași', 'Anenii Noi', 'Ialoveni', 'Florești', 'Rezina', 'Ceadîr-Lunga',
+                            'Durlești (suburbie)', 'Stăuceni (suburbie)', 'Grătiești (suburbie)', 'Codru (suburbie)', 'Vadul lui Vodă (suburbie)', 'Cricova (suburbie)', 'Bubuieci (suburbie)', 'Trușeni (suburbie)', 'Vatra (suburbie)', 'Ciorescu (suburbie)'
+                        ],
+                        get filteredCities() {
+                            return this.cities.filter(i => i.toLowerCase().includes(this.search.toLowerCase()));
+                        }
+                    }">
+                        <label class="text-xs text-(--text-muted)">{{ __('messages.city') }}</label>
+
+                        <div class="relative">
+                            <button type="button"
+                                @click="open = !open; if(open) $nextTick(() => $refs.citySearch.focus())"
+                                class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all text-left flex justify-between items-center">
+                                <span x-text="city ? city : 'Selectați orașul'"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-4 h-4 text-(--text-muted) transition-transform"
+                                    :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                class="absolute z-50 w-full mt-1 bg-(--background-2) border border-(--background-3) rounded-sm shadow-xl overflow-hidden">
+
+                                <div class="p-2 border-b border-(--background-3) bg-(--background)">
+                                    <input type="text" x-model="search" x-ref="citySearch"
+                                        class="w-full bg-(--background-2) border border-(--background-3) text-xs px-2 py-1.5 rounded-sm focus:outline-none focus:border-(--button)">
+                                </div>
+
+                                <div class="max-h-60 overflow-y-auto custom-scrollbar">
+                                    <template x-for="item in filteredCities" :key="item">
+                                        <div @click="city = item; open = false; search = ''"
+                                            class="px-3 py-2 text-sm text-(--text-primary) hover:bg-(--button) hover:text-(--button-text) cursor-pointer transition-colors"
+                                            :class="city === item ? 'bg-(--background-3)' : ''">
+                                            <span x-text="item"></span>
+                                        </div>
+                                    </template>
+
+                                    <div x-show="filteredCities.length === 0"
+                                        class="px-3 py-4 text-xs text-(--text-muted) text-center">
+                                        {{ __('messages.not_found') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="city" :value="city">
                     </div>
 
                     <div class="flex flex-col gap-2">
@@ -240,136 +281,156 @@
                         <div class="flex gap-1 p-1 rounded-sm bg-(--background-2) border border-(--background-3) w-fit">
                             <template x-for="c in currencies" :key="c">
                                 <button type="button" @click="currency = c"
-                                    :class="currency === c ?
-                                        'bg-(--button) text-(--button-text)' :
+                                    :class="currency === c ? 'bg-(--button) text-(--button-text)' :
                                         'text-(--text-muted) hover:text-(--text-primary)'"
                                     class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer"
-                                    x-text="c">
-                                </button>
+                                    x-text="c"></button>
                             </template>
                         </div>
                     </div>
 
-                    <div class="flex gap-3">
-                        <div class="flex flex-col gap-1 flex-1">
-                            <label for="price_per_day" class="text-xs text-(--text-muted)">
-                                {{ __('messages.price_per_day') }} (<span x-text="currency"></span>)
-                            </label>
-                            <div class="relative">
-                                <input id="price_per_day" type="number" name="price_per_day" x-model="pricePerDay"
-                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all @error('price_per_day') @enderror">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs text-(--text-muted)">{{ __('messages.pricing_type') }}</label>
+                        <div class="flex gap-1 p-1 rounded-sm bg-(--background-2) border border-(--background-3) w-fit">
+                            <button type="button" @click="pricingMode = 'day'; pricePerHour = ''"
+                                :class="pricingMode === 'day' ? 'bg-(--button) text-(--button-text)' :
+                                    'text-(--text-muted)'"
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.per_day') }}</button>
+                            <button type="button" @click="pricingMode = 'hour'; pricePerDay = ''"
+                                :class="pricingMode === 'hour' ? 'bg-(--button) text-(--button-text)' :
+                                    'text-(--text-muted)'"
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.per_hour') }}</button>
+                            <button type="button" @click="pricingMode = 'both'"
+                                :class="pricingMode === 'both' ? 'bg-(--button) text-(--button-text)' :
+                                    'text-(--text-muted)'"
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.both') }}</button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row gap-4 items-start">
+                        <div class="flex flex-col gap-1 min-w-35"
+                            x-show="pricingMode === 'day' || pricingMode === 'both'">
+                            <label class="text-xs text-(--text-muted)">{{ __('messages.price_per_day') }}</label>
+                            <div class="relative max-w-35">
+                                <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
+                                    x-model="pricePerDay" name="price_per_day"
+                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
                                     x-text="currency"></span>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-1 flex-1">
-                            <label for="price_per_hour" class="text-xs text-(--text-muted)">
-                                {{ __('messages.price_per_hour') }} (<span x-text="currency"></span>) <span
-                                    class="opacity-40">{{ __('messages.optional') }}</span>
-                            </label>
-                            <div class="relative">
-                                <input id="price_per_hour" type="number" name="price_per_hour"
-                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
+
+                        <div class="flex flex-col gap-1 min-w-35"
+                            x-show="pricingMode === 'hour' || pricingMode === 'both'">
+                            <label class="text-xs text-(--text-muted)">{{ __('messages.price_per_hour') }}</label>
+                            <div class="relative max-w-35">
+                                <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
+                                    x-model="pricePerHour" name="price_per_hour"
+                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
                                     x-text="currency"></span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-1">
-                        <label for="deposit" class="text-xs text-(--text-muted)">
-                            {{ __('messages.deposit') }} (<span x-text="currency"></span>) <span
-                                class="opacity-40">{{ __('messages.optional') }}</span>
-                        </label>
+                    <div class="flex flex-col gap-1 max-w-35">
+                        <label class="text-xs text-(--text-muted)">{{ __('messages.deposit') }}</label>
                         <div class="relative">
-                            <input id="deposit" type="number" name="deposit" value="{{ old('deposit') }}"
-                                class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
+                            <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
+                                name="deposit"
+                                class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                             <span
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
                                 x-text="currency"></span>
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-2 pt-1" x-data="{ delivery: {{ old('delivery_available') ? 'true' : 'false' }} }">
+                    <div class="flex flex-col gap-2 pt-1">
                         <label class="flex items-center gap-2.5 text-sm text-(--text-muted) cursor-pointer select-none">
                             <input type="checkbox" name="delivery_available" value="1" x-model="delivery"
-                                {{ old('delivery_available') ? 'checked' : '' }} class="accent-(--button)">
+                                class="accent-(--button)">
                             {{ __('messages.delivery_available') }}
                         </label>
-
-                        <div x-show="delivery" x-transition class="flex flex-col gap-1">
-                            <label for="delivery_price" class="text-xs text-(--text-muted)">
-                                {{ __('messages.delivery_price') }} (<span x-text="$root.currency"></span>)
-                            </label>
+                        <div x-show="delivery" x-transition class="flex flex-col gap-1 max-w-35">
+                            <label class="text-xs text-(--text-muted)">{{ __('messages.delivery_price') }}</label>
                             <div class="relative">
-                                <input id="delivery_price" type="number" name="delivery_price"
-                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
+                                <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
+                                    name="delivery_price"
+                                    class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-(--text-muted) pointer-events-none"
-                                    x-text="$root.currency"></span>
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
+                                    x-text="currency"></span>
                             </div>
                         </div>
                     </div>
 
-                    <label class="flex items-center gap-2.5 text-sm text-(--text-muted) cursor-pointer select-none">
-                        <input type="checkbox" name="requires_document" value="1"
-                            {{ old('requires_document') ? 'checked' : '' }} class="accent-(--button)">
-                        {{ __('messages.requires_document') }}
-                    </label>
-
                     <div class="flex gap-2 pt-2">
                         <button type="button" @click="prevStep()"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:border-(--text-muted) transition-all cursor-pointer">
-                            {{ __('messages.back') }}
-                        </button>
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) transition-all">{{ __('messages.back') }}</button>
                         <button type="button" @click="nextStep()" :disabled="!canProceedStep2"
-                            :class="canProceedStep2
-                                ?
-                                'bg-(--button) text-(--button-text) hover:bg-(--button-h) cursor-pointer' :
-                                'bg-(--background-3) text-(--text-muted) cursor-not-allowed opacity-50'"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95">
-                            {{ __('messages.continue') }}
-                        </button>
+                            :class="canProceedStep2 ? 'bg-(--button) text-(--button-text)' :
+                                'bg-(--background-3) text-(--text-muted) opacity-50'"
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm transition-all">{{ __('messages.continue') }}</button>
                     </div>
-
                 </div>
+
+                {{-- STEP 3 --}}
                 <div x-show="step === 3" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-4">
-
                     <div class="flex flex-col gap-1">
                         <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.upload_photos') }}</p>
                         <p class="text-xs text-(--text-muted)">{{ __('messages.upload_photos_sub') }}</p>
                     </div>
 
                     <label
-                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-(--background-3) rounded-sm py-10 cursor-pointer hover:border-(--text-muted) transition-all bg-(--background-2)"
-                        x-data="{ count: 0 }" @change="count = $event.target.files.length">
+                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-(--background-3) rounded-sm py-10 cursor-pointer hover:border-(--text-muted) transition-all bg-(--background-2)">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-(--text-muted)" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                         </svg>
                         <span class="text-xs text-(--text-muted)"
-                            x-text="count > 0 ? count + ' photo(s) selected' : 'Click to upload'"></span>
-                        <input type="file" name="images[]" multiple accept="image/*" class="hidden">
+                            x-text="images.length > 0 ? images.length + ' {{ __('messages.photos_selected') }}' : '{{ __('messages.click_to_upload') }}'"></span>
+                        <input type="file" name="images[]" multiple accept="image/*" class="hidden"
+                            @change="handleFiles">
                     </label>
+
+                    {{-- Превью картинок --}}
+                    <div class="grid grid-cols-4 gap-2" x-show="images.length > 0">
+                        <template x-for="(img, index) in images" :key="index">
+                            <div class="aspect-square rounded-sm border border-(--background-3) bg-cover bg-center"
+                                :style="'background-image: url(' + img + ')'"></div>
+                        </template>
+                    </div>
 
                     <div class="flex gap-2 pt-2">
                         <button type="button" @click="prevStep()"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:border-(--text-muted) transition-all cursor-pointer">
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary)"
+                            :disabled="isSubmitting">
                             {{ __('messages.back') }}
                         </button>
-                        <button type="submit"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all active:scale-95 cursor-pointer">
-                            {{ __('messages.publish_listing') }}
+                        <button type="submit" :disabled="isSubmitting"
+                            :class="isSubmitting ? 'bg-(--background-3) cursor-not-allowed' :
+                                'bg-(--button) hover:bg-(--button-h)'"
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm text-(--button-text) transition-all flex items-center justify-center gap-2">
+                            <template x-if="isSubmitting">
+                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </template>
+                            <span
+                                x-text="isSubmitting ? '{{ __('messages.publishing') }}...' : '{{ __('messages.publish_listing') }}'"></span>
                         </button>
                     </div>
-
                 </div>
-
             </form>
         </div>
     </section>

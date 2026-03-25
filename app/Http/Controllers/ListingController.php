@@ -21,7 +21,7 @@ class ListingController extends Controller
         $validated = $request->validate([
             'category_id'      => 'required|exists:categories,id',
             'title'            => 'required|string|min:5|max:100',
-            'description'      => 'required|string|min:20|max:2000',
+            'description'      => 'required|string|min:10|max:2000',
             'city'             => 'required|string|max:60',
             'price_per_day'    => 'required|numeric|min:1|max:999999',
             'price_per_hour'   => 'nullable|numeric|min:1|max:999999',

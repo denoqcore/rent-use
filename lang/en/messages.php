@@ -151,27 +151,27 @@ return [
 
     //post listing
 
-        // Create listing
-    'create_listing' => 'Create listing',
+    'create_listing' => 'Post listing',
     'create_listing_sub' => 'Fill in the details to publish your rental',
-
-    // Steps
     'step_category' => 'Category',
     'step_details' => 'Details',
     'step_photos' => 'Photos',
-
-    // Step 1
     'choose_main_category' => 'Choose a main category',
     'choose_main_category_sub' => 'Select what type of item you\'re renting out',
     'choose_subcategory' => 'Choose a subcategory',
     'continue' => 'Continue',
 
-    // Step 2
     'title' => 'Title',
     'description' => 'Description',
     'city' => 'City',
-    'currency' => 'Currency',
+    'not_found' => 'City not found',
 
+
+    'pricing_type' => 'Rent type',
+    'per_day'      => 'Per day',
+    'per_hour'     => 'Per hour',
+    'currency' => 'Currency',
+    'both'         => 'Both',
     'price_per_day' => 'Price / day',
     'price_per_hour' => 'Price / hour',
     'deposit' => 'Deposit',
@@ -185,7 +185,6 @@ return [
 
     'back' => 'Back',
 
-    // Step 3
     'upload_photos' => 'Upload photos',
     'upload_photos_sub' => 'Up to 8 photos. First photo will be the cover.',
     'click_to_upload' => 'Click to upload',
