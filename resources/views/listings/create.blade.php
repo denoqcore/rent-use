@@ -22,7 +22,7 @@
             description: '{{ old('description') }}',
             isSubmitting: false,
             images: [],
-        
+
             init() {
                 // Загрузка из sessionStorage для защиты от рефреша
                 if (sessionStorage.getItem('listing_draft')) {
@@ -77,7 +77,6 @@
                 <p class="text-xs text-(--text-muted) mt-1">{{ __('messages.create_listing_sub') }}</p>
             </div>
 
-            {{-- Stepper (оставлен без изменений для сохранения дизайна) --}}
             <div class="flex items-center gap-0">
                 <div class="flex flex-col items-center gap-1.5">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
@@ -137,7 +136,6 @@
                 @csrf
                 <input type="hidden" name="currency" :value="currency">
 
-                {{-- STEP 1 --}}
                 <div x-show="step === 1" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-5">
@@ -189,11 +187,9 @@
                         class="w-full py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95">{{ __('messages.continue') }}</button>
                 </div>
 
-                {{-- STEP 2 --}}
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-4">
-                    {{-- Категория (Badge) --}}
                     <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-(--background-3)/30 border border-(--background-3)"
                         x-show="categoryId !== ''">
                         <x-heroicon-s-tag class="w-3 h-3 text-(--text-muted)/60" />
@@ -376,7 +372,6 @@
                     </div>
                 </div>
 
-                {{-- STEP 3 --}}
                 <div x-show="step === 3" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-4">
@@ -398,7 +393,6 @@
                             @change="handleFiles">
                     </label>
 
-                    {{-- Превью картинок --}}
                     <div class="grid grid-cols-4 gap-2" x-show="images.length > 0">
                         <template x-for="(img, index) in images" :key="index">
                             <div class="aspect-square rounded-sm border border-(--background-3) bg-cover bg-center"
