@@ -75,3 +75,15 @@ input:-webkit-autofill:focus {
     -webkit-text-fill-color: var(--text-primary) !important;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+/* chrome, safari, edge, opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

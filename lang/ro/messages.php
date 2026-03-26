@@ -10,9 +10,13 @@ return [
     'close' => 'Închide',
     'started' => 'Începe',
     'search' => 'Caută',
+    'cancel' => 'Înapoi',
     'sign-out' => 'Deconectare',
     'dark-mode' => 'Mod întunecat',
     'light-mode' => 'Mod luminos',
+    'sign-out-confirm-title' => 'Ești sigur că vrei să ieși?',
+    'sign-out-confirm-description' => '',
+
 
     'rent-hero' => 'Închiriază ceea ce ai nevoie',
     'rent-hero-2' => 'Atunci când ai nevoie',
@@ -149,28 +153,28 @@ return [
     'login-desc' => 'Închiriază ce ai nevoie, când ai nevoie. Totul într-un singur loc.',
 
     //post listing
-
-    // Create listing
     'create_listing' => 'Creează anunț',
     'create_listing_sub' => 'Completează detaliile pentru a publica anunțul',
 
-    // Steps
     'step_category' => 'Categorie',
     'step_details' => 'Detalii',
     'step_photos' => 'Fotografii',
 
-    // Step 1
     'choose_main_category' => 'Alege o categorie principală',
     'choose_main_category_sub' => 'Selectează tipul obiectului pe care îl închiriezi',
     'choose_subcategory' => 'Alege o subcategorie',
     'continue' => 'Continuă',
 
-    // Step 2
     'title' => 'Titlu',
     'description' => 'Descriere',
     'city' => 'Oraș',
-    'currency' => 'Valută',
+    'not_found' => 'Nu s-a găsit nimic',
 
+    'pricing_type' => 'Tarif',
+    'per_day'      => 'La ziua',
+    'per_hour'     => 'La ora',
+    'both'         => 'Ambele',
+    'currency' => 'Valută',
     'price_per_day' => 'Preț / zi',
     'price_per_hour' => 'Preț / oră',
     'deposit' => 'Garanție',
