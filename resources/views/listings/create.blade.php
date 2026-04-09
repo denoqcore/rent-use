@@ -22,9 +22,8 @@
             description: '{{ old('description') }}',
             isSubmitting: false,
             images: [],
-
+        
             init() {
-                // Загрузка из sessionStorage для защиты от рефреша
                 if (sessionStorage.getItem('listing_draft')) {
                     let data = JSON.parse(sessionStorage.getItem('listing_draft'));
                     this.title = data.title || '';
@@ -44,12 +43,18 @@
             },
             handleFiles(event) {
                 const files = Array.from(event.target.files);
-                this.images = [];
                 files.forEach(file => {
+                    if (this.images.length >= 8) return;
                     const reader = new FileReader();
-                    reader.onload = (e) => { this.images.push(e.target.result); };
+                    reader.onload = (e) => {
+                        this.images.push({ src: e.target.result, file: file });
+                    };
                     reader.readAsDataURL(file);
                 });
+                event.target.value = '';
+            },
+            removeImage(index) {
+                this.images.splice(index, 1);
             },
             get canProceedStep1() { return this.parent !== '' && this.categoryId !== ''; },
             get canProceedStep2() {
@@ -132,7 +137,14 @@
             @endif
 
             <form action="{{ route('listings.store') }}" method="POST" enctype="multipart/form-data"
-                class="flex flex-col gap-6" @submit="isSubmitting = true; sessionStorage.removeItem('listing_draft')">
+                class="flex flex-col gap-6"
+                @submit="
+                isSubmitting = true;
+                sessionStorage.removeItem('listing_draft');
+                const dt = new DataTransfer();
+                images.forEach(img => dt.items.add(img.file));
+                $refs.fileInput.files = dt.files;
+                ">
                 @csrf
                 <input type="hidden" name="currency" :value="currency">
 
@@ -184,7 +196,7 @@
                     <button type="button" @click="nextStep()" :disabled="!canProceedStep1"
                         :class="canProceedStep1 ? 'bg-(--button) text-(--button-text)' :
                             'bg-(--background-3) text-(--text-muted) opacity-50 cursor-not-allowed'"
-                        class="w-full py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95">{{ __('messages.continue') }}</button>
+                        class="w-full py-2.5 text-sm font-bold rounded-sm transition-all active:scale-95 cursor-pointer">{{ __('messages.continue') }}</button>
                 </div>
 
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200"
@@ -291,15 +303,15 @@
                             <button type="button" @click="pricingMode = 'day'; pricePerHour = ''"
                                 :class="pricingMode === 'day' ? 'bg-(--button) text-(--button-text)' :
                                     'text-(--text-muted)'"
-                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.per_day') }}</button>
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer">{{ __('messages.per_day') }}</button>
                             <button type="button" @click="pricingMode = 'hour'; pricePerDay = ''"
                                 :class="pricingMode === 'hour' ? 'bg-(--button) text-(--button-text)' :
                                     'text-(--text-muted)'"
-                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.per_hour') }}</button>
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer">{{ __('messages.per_hour') }}</button>
                             <button type="button" @click="pricingMode = 'both'"
                                 :class="pricingMode === 'both' ? 'bg-(--button) text-(--button-text)' :
                                     'text-(--text-muted)'"
-                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all">{{ __('messages.both') }}</button>
+                                class="px-4 py-1.5 rounded-sm text-xs font-bold transition-all cursor-pointer">{{ __('messages.both') }}</button>
                         </div>
                     </div>
 
@@ -364,52 +376,76 @@
 
                     <div class="flex gap-2 pt-2">
                         <button type="button" @click="prevStep()"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) transition-all">{{ __('messages.back') }}</button>
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) transition-all cursor-pointer">{{ __('messages.back') }}</button>
                         <button type="button" @click="nextStep()" :disabled="!canProceedStep2"
                             :class="canProceedStep2 ? 'bg-(--button) text-(--button-text)' :
                                 'bg-(--background-3) text-(--text-muted) opacity-50'"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm transition-all">{{ __('messages.continue') }}</button>
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm transition-all cursor-pointer">{{ __('messages.continue') }}</button>
                     </div>
                 </div>
 
                 <div x-show="step === 3" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
                     class="flex flex-col gap-4">
+
                     <div class="flex flex-col gap-1">
                         <p class="text-sm font-semibold text-(--text-primary)">{{ __('messages.upload_photos') }}</p>
                         <p class="text-xs text-(--text-muted)">{{ __('messages.upload_photos_sub') }}</p>
                     </div>
 
-                    <label
+                    <label x-show="images.length === 0"
                         class="flex flex-col items-center justify-center gap-2 border border-dashed border-(--background-3) rounded-sm py-10 cursor-pointer hover:border-(--text-muted) transition-all bg-(--background-2)">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-(--text-muted)" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                         </svg>
-                        <span class="text-xs text-(--text-muted)"
-                            x-text="images.length > 0 ? images.length + ' {{ __('messages.photos_selected') }}' : '{{ __('messages.click_to_upload') }}'"></span>
-                        <input type="file" name="images[]" multiple accept="image/*" class="hidden"
-                            @change="handleFiles">
+                        <span class="text-xs text-(--text-muted)">{{ __('messages.click_to_upload') }}</span>
+                        <input type="file" multiple accept="image/*" class="hidden" @change="handleFiles">
                     </label>
 
                     <div class="grid grid-cols-4 gap-2" x-show="images.length > 0">
                         <template x-for="(img, index) in images" :key="index">
-                            <div class="aspect-square rounded-sm border border-(--background-3) bg-cover bg-center"
-                                :style="'background-image: url(' + img + ')'"></div>
+                            <div class="relative aspect-square rounded-sm border border-(--background-3) bg-cover bg-center group"
+                                :style="'background-image: url(' + img.src + ')'">
+                                <button type="button" @click="removeImage(index)"
+                                    class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                    ×
+                                </button>
+                                <span x-show="index === 0"
+                                    class="absolute bottom-1 left-1 text-[9px] font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-sm">
+                                    {{ __('messages.main') }}
+                                </span>
+                            </div>
                         </template>
+
+                        <label x-show="images.length < 8"
+                            class="aspect-square rounded-sm border border-dashed border-(--background-3) bg-(--background-2) flex items-center justify-center cursor-pointer hover:border-(--text-muted) transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-(--text-muted)" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            <input type="file" multiple accept="image/*" class="hidden" @change="handleFiles">
+                        </label>
                     </div>
+
+                    <p class="text-[10px] text-(--text-muted)" x-show="images.length > 0">
+                        <span x-text="images.length"></span>/8 {{ __('messages.photos_selected') }}
+                    </p>
+
+                    <input type="file" name="images[]" multiple accept="image/*" class="hidden" x-ref="fileInput">
 
                     <div class="flex gap-2 pt-2">
                         <button type="button" @click="prevStep()"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary)"
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) transition-all cursor-pointer"
                             :disabled="isSubmitting">
                             {{ __('messages.back') }}
                         </button>
                         <button type="submit" :disabled="isSubmitting"
                             :class="isSubmitting ? 'bg-(--background-3) cursor-not-allowed' :
                                 'bg-(--button) hover:bg-(--button-h)'"
-                            class="flex-1 py-2.5 text-sm font-bold rounded-sm text-(--button-text) transition-all flex items-center justify-center gap-2">
+                            class="flex-1 py-2.5 text-sm font-bold rounded-sm text-(--button-text) transition-all flex items-center justify-center gap-2 cursor-pointer">
                             <template x-if="isSubmitting">
                                 <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24">
@@ -424,6 +460,7 @@
                                 x-text="isSubmitting ? '{{ __('messages.publishing') }}...' : '{{ __('messages.publish_listing') }}'"></span>
                         </button>
                     </div>
+
                 </div>
             </form>
         </div>

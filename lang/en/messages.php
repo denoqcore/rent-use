@@ -187,6 +187,7 @@ return [
 
     'upload_photos' => 'Upload photos',
     'upload_photos_sub' => 'Up to 8 photos. First photo will be the cover.',
+    'main' => 'main',
     'click_to_upload' => 'Click to upload',
     'photos_selected' => 'photo(s) selected',
 

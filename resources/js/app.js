@@ -10,3 +10,15 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
 }
+
+
+import Swiper from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination, Thumbs } from 'swiper/modules';
+
+window.Swiper = Swiper;
+window.Navigation = Navigation;
+window.Pagination = Pagination;
+window.Thumbs = Thumbs;
