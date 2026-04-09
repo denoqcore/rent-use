@@ -52,7 +52,7 @@
 
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-(--text-muted)">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com"
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="you@mail.com"
                             class="px-4 py-3 rounded-sm text-sm text-(--text-primary) placeholder:text-(--text-muted)
                                    border border-transparent focus:border-(--background-3) focus:outline-none transition-all
                                    @error('email') @enderror"
