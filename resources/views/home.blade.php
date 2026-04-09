@@ -13,8 +13,8 @@
             </div>
 
             <div
-                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-medium mb-8
-                bg-(--background-2)/80 backdrop-blur-md text-(--text-muted) border border-(--background-3) shadow-sm select-none">
+                class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium mb-8
+                bg-(--background-2)/80 backdrop-blur-md text-(--text-muted) border border-(--background-3) select-none">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
                     alt="moldova" class="h-3">
                 {{ __('messages.hero-sub-2') }}

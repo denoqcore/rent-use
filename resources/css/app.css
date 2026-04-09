@@ -24,7 +24,7 @@
     --color-text-primary: var(--text-primary);
 }
 
-/* Стили по умолчанию (Light) */
+/* light */
 :root {
     --background: #ffffff;
     --background-2: #f8fafc;
@@ -36,7 +36,7 @@
     --text-muted: #64748b;
 }
 
-/* Стили для Dark режима */
+/* dark */
 .dark {
     --background: #0f172a;
     --background-2: #1e293b;
@@ -48,7 +48,6 @@
     --text-muted: #94a3b8;
 }
 
-/* Плавный переход для всех элементов */
 * {
     transition:
         background-color 0.2s ease-in-out,
@@ -66,6 +65,33 @@ a,
 ul {
     list-style: none;
     text-decoration: none;
+}
+
+/* swiper */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 15px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: black !important;
+    width: 30px !important;
+    height: 30px !important;
+    transition: all 0.2 ease-in-out;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.thumbSlider .swiper-slide-thumb-active {
+    border-color: #3b82f6;
 }
 
 input:-webkit-autofill,
