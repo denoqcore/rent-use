@@ -3,6 +3,9 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/thumbs";
 /* @import "../../vendor/livewire/flux/dist/flux.css"; */
 @source '../**/*.blade.php';
 @source '../**/*.js';
@@ -76,8 +79,11 @@ ul {
 .swiper-button-next,
 .swiper-button-prev {
     color: black !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 25px !important;
+    height: 25px !important;
+    background-color: white;
+    border-radius: 100%;
+    padding: 4;
     transition: all 0.2 ease-in-out;
 }
 

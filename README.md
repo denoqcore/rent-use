@@ -12,13 +12,17 @@ docker restart rent_use_app
 php artisan migrate:fresh --seed
 
 # Clear routes
+
 docker exec -it rent_use_app php artisan route:clear
 
 # Clear cache
+
 docker exec -it rent_use_app php artisan cache:clear
 
 # Restart container
+
 docker restart rent_use_app
 
 # Reload Octane
+
 docker exec -it rent_use_app php artisan octane:reload
