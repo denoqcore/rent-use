@@ -62,10 +62,41 @@
 
             {{-- RIGHT: PRICE CARD --}}
             <div class="lg:w-[300px] w-full">
-                <div class="lg:relative fixed bottom-0 left-0 right-0 bg-white border-t p-4 lg:p-5">
-                    <div class="text-xl md:text-2xl font-semibold">
+                <div class=" bg-white border-t p-4 lg:p-5">
+                    <div class="text-xl font-medium">
                         {{ number_format($listing->price_per_day) }} {{ $listing->currency }}
-                        <span class="text-sm text-gray-400">/ день</span>
+                        <span class="text-sm font-normal text-gray-400">/ day</span>
+
+                        @if ($listing->price_per_hour)
+                            <div class="text-sm text-gray-400 mt-0.5">
+                                or {{ number_format($listing->price_per_hour) }} {{ $listing->currency }} / hour
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="mt-5">
+                        @if ($listing->deposit)
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Deposit</span>
+                                <span class="font-medium">{{ number_format($listing->deposit) }}
+                                    {{ $listing->currency }}</span>
+                            </div>
+                            <hr class="border-gray-100">
+                        @endif
+                    </div>
+
+                    <div class="mt-5">
+                        @if ($listing->delivery_available)
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Delivery</span>
+                                @if ($listing->delivery_price)
+                                    <span class="font-medium">{{ number_format($listing->delivery_price) }}
+                                        {{ $listing->currency }}</span>
+                                @else
+                                    <span class="font-medium text-green-500">Free</span>
+                                @endif
+                            </div>
+                        @endif
                     </div>
 
                     @auth
@@ -85,13 +116,35 @@
         </div>
 
         {{-- desc --}}
-        <div class="mt-10 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 border-t pt-8">
+        <div class="mt-8 grid grid-cols-[1fr_300px] gap-8">
+
+            {{-- Left: description --}}
             <div>
-                <h2 class="text-lg font-semibold mb-3">Description</h2>
-                <div class="text-sm text-gray-600 whitespace-pre-line leading-relaxed">
-                    {{ $listing->description }}
+                <h2 class="text-base font-medium mb-3">Описание</h2>
+                <p class="text-sm text-gray-500 leading-relaxed">{{ $listing->description }}</p>
+            </div>
+
+            {{-- Right: details --}}
+            <div>
+                <h2 class="text-base font-medium mb-3">Детали</h2>
+                <div class="flex flex-col text-sm divide-y divide-gray-100">
+                    <div class="flex justify-between py-2.5">
+                        <span class="text-gray-400">Город</span>
+                        <span class="font-medium">{{ $listing->city }}</span>
+                    </div>
+                    <div class="flex justify-between py-2.5">
+                        <span class="text-gray-400">Категория</span>
+                        <span class="font-medium">{{ $listing->category->name }}</span>
+                    </div>
+                    @if ($listing->requires_document)
+                        <div class="flex justify-between py-2.5">
+                            <span class="text-gray-400">Документ</span>
+                            <span class="font-medium">Требуется</span>
+                        </div>
+                    @endif
                 </div>
             </div>
+
         </div>
 
         {{-- space for mobile fixed block --}}
