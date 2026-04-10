@@ -9,7 +9,7 @@ new class extends Component {};
 
     <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
         :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent'">
-        <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
+        <div class="max-w-7xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 
             <div class="flex items-center gap-6">
                 <a href="/" class="text-xl font-black tracking-wide text-(--text-primary)">
