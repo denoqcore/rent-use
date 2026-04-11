@@ -9,12 +9,10 @@
         <div class="relative z-20 w-full max-w-2xl mx-auto px-6 flex flex-col items-center text-center">
 
             <div
-                class="absolute -inset-10 bg-radial from-white/60 via-white/30 to-transparent -z-10 blur-3xl pointer-events-none">
+                class="absolute -inset-10 bg-radial from-white/60 via-white/30 to-transparent -z-10 blur-3xl pointer-events-none dark:hidden">
             </div>
 
-            <div
-                class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium mb-8
-                bg-(--background-2)/80 backdrop-blur-md text-(--text-muted) border border-(--background-3) select-none">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium mb-8 text-(--text-muted) select-none">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
                     alt="moldova" class="h-3">
                 {{ __('messages.hero-sub-2') }}
@@ -51,7 +49,7 @@
                 <div
                     class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
                     <input type="text" placeholder="Camera, car, guitar..."
-                        class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
+                        class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none ">
                     <button
                         class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">
                         <x-heroicon-o-magnifying-glass class="w-4 h-4" />
@@ -300,42 +298,36 @@
 
 @push('scripts')
     <script>
-        VANTA.DOTS({
-            el: "#vanta-hero",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x6550ff,
-            color2: 0x828282,
-            backgroundColor: 0xffffff,
-            size: 3.50,
-            showLines: false
-        })
+        let vantaEffect = null;
+
+        function initVanta() {
+            const isDark = document.documentElement.classList.contains('dark');
+
+            if (vantaEffect) vantaEffect.destroy();
+
+            vantaEffect = VANTA.DOTS({
+                el: "#vanta-hero",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: isDark ? 0xb1b1b1 : 0x6550ff,
+                color2: 0x828282,
+                backgroundColor: isDark ? 0x222222 : 0xffffff,
+                size: 3.50,
+                showLines: false
+            });
+        }
+
+        initVanta();
+
+        const observer = new MutationObserver(() => initVanta());
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
     </script>
 @endpush
-
-
-{{-- <script>
-    new Swiper('.listings-swiper', {
-        slidesPerView: 1.2,
-        spaceBetween: 12,
-        navigation: {
-            nextEl: '.swiper-next-listings',
-            prevEl: '.swiper-prev-listings',
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2.2,
-                spaceBetween: 12
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 12
-            },
-        },
-    });
-</script> --}}

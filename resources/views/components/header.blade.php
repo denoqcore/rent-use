@@ -145,11 +145,41 @@ new class extends Component {};
                     </div>
                 @endauth
 
-                <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
-                    <a href="{{ route('lang.switch', 'en') }}"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</a>
-                    <a href="{{ route('lang.switch', 'ro') }}"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</a>
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) transition-all text-xs font-bold uppercase text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                        <x-heroicon-o-globe-alt class="w-4 h-4" />
+                        {{ app()->getLocale() == 'ro' ? 'MD' : strtoupper(app()->getLocale()) }}
+
+                    </button>
+
+                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                        class="absolute right-0 mt-2 w-32 bg-(--background-2)  border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
+
+                        <div class="flex flex-col p-1">
+                            <a href="{{ route('lang.switch', 'en') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'en' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                English
+                                @if (app()->getLocale() == 'en')
+                                @endif
+                            </a>
+
+                            <a href="{{ route('lang.switch', 'ro') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ro' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                Română
+                                @if (app()->getLocale() == 'ro')
+                                @endif
+                            </a>
+
+                            <a href="{{ route('lang.switch', 'ru') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ru' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                Русский
+                                @if (app()->getLocale() == 'ru')
+                                @endif
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,18 +259,91 @@ new class extends Component {};
 
         <div class="px-3 pb-6 pt-2 border-t border-(--background-2) space-y-3">
 
-            <div class="flex items-center justify-between px-1">
-                <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
-                    <button @click="window.location.href='{{ route('lang.switch', 'en') }}'"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</button>
-                    <button @click="window.location.href='{{ route('lang.switch', 'ro') }}'"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</button>
+            <div class="px-3 pb-6 pt-2 border-t border-(--background-2) space-y-3">
+
+                <div class="flex items-center justify-between px-1">
+
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) border border-(--background-3) text-xs font-bold uppercase text-(--text-muted) hover:text-(--text-primary) transition-all">
+                            <x-heroicon-o-globe-alt class="w-4 h-4" />
+                            {{ app()->getLocale() == 'ro' ? 'MD' : strtoupper(app()->getLocale()) }}
+                            <x-heroicon-o-chevron-down class="w-3 h-3 opacity-50" />
+                        </button>
+
+                        <div x-show="open" @click.away="open = false"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            class="absolute left-0 bottom-full mb-2 w-36 bg-(--background-2)  rounded-xl shadow-xl z-50 overflow-hidden">
+                            <div class="flex flex-col p-1">
+                                <a href="{{ route('lang.switch', 'en') }} cursor-pointer"
+                                    class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
+                            {{ app()->getLocale() == 'en' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                    English
+                                    @if (app()->getLocale() == 'en')
+                                        <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                    @endif
+                                </a>
+                                <a href="{{ route('lang.switch', 'ro') }} cursor-pointer"
+                                    class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
+                            {{ app()->getLocale() == 'ro' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                    Română
+                                    @if (app()->getLocale() == 'ro')
+                                        <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                    @endif
+                                </a>
+                                <a href="{{ route('lang.switch', 'ru') }} cursor-pointer"
+                                    class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
+                            {{ app()->getLocale() == 'ru' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                    Русский
+                                    @if (app()->getLocale() == 'ru')
+                                        <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                    @endif
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div x-data="{
+                        isDark: document.documentElement.classList.contains('dark'),
+                        toggle() {
+                            this.isDark = !this.isDark;
+                            if (this.isDark) {
+                                document.documentElement.classList.add('dark');
+                                localStorage.setItem('theme', 'dark');
+                            } else {
+                                document.documentElement.classList.remove('dark');
+                                localStorage.setItem('theme', 'light');
+                            }
+                        }
+                    }">
+                        <button @click="toggle()"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) border border-(--background-3) text-xs font-medium text-(--text-muted) hover:text-(--text-primary) transition-all cursor-pointer">
+                            <template x-if="!isDark">
+                                <div class="flex items-center gap-2">
+                                    <x-heroicon-o-moon class="w-4 h-4" />
+                                    <span>{{ __('messages.dark-mode') }}</span>
+                                </div>
+                            </template>
+                            <template x-if="isDark">
+                                <div class="flex items-center gap-2">
+                                    <x-heroicon-o-sun class="w-4 h-4" />
+                                    <span>{{ __('messages.light-mode') }}</span>
+                                </div>
+                            </template>
+                        </button>
+                    </div>
+
                 </div>
-                <button onclick="toggleTheme()"
-                    class="p-2 text-(--text-muted) hover:text-(--text-primary) transition-colors">
-                    <x-heroicon-o-sun class="h-5 w-5 hidden dark:block" />
-                    <x-heroicon-o-moon class="h-5 w-5 dark:hidden" />
-                </button>
+
+                @guest
+                    <a href="/login"
+                        class="flex items-center justify-center w-full px-4 py-2.5 rounded-sm bg-(--button) text-(--button-text) text-sm font-medium hover:bg-(--button-h) transition-all active:scale-95">
+                        {{ __('messages.started') }}
+                    </a>
+                @endguest
             </div>
 
             @guest
