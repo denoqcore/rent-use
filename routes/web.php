@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/listings/{slug}', [ListingController::class, 'show'])->name('listings.show');
 
 Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'ro'])) {
+    if (!in_array($locale, ['en', 'ro', 'ru'])) {
         abort(400);
     }
     session(['locale' => $locale]);

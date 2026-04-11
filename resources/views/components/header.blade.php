@@ -145,11 +145,41 @@ new class extends Component {};
                     </div>
                 @endauth
 
-                <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
-                    <a href="{{ route('lang.switch', 'en') }}"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</a>
-                    <a href="{{ route('lang.switch', 'ro') }}"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</a>
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) transition-all text-xs font-bold uppercase text-gray-700">
+                        <x-heroicon-o-globe-alt class="w-4 h-4" />
+                        {{ app()->getLocale() == 'ro' ? 'MD' : strtoupper(app()->getLocale()) }}
+
+                    </button>
+
+                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                        class="absolute right-0 mt-2 w-32 bg-(--background-2) border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
+
+                        <div class="flex flex-col p-1">
+                            <a href="{{ route('lang.switch', 'en') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'en' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                English
+                                @if (app()->getLocale() == 'en')
+                                @endif
+                            </a>
+
+                            <a href="{{ route('lang.switch', 'ro') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ro' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                Română
+                                @if (app()->getLocale() == 'ro')
+                                @endif
+                            </a>
+
+                            <a href="{{ route('lang.switch', 'ru') }}"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ru' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                Русский
+                                @if (app()->getLocale() == 'ru')
+                                @endif
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,12 +262,14 @@ new class extends Component {};
             <div class="flex items-center justify-between px-1">
                 <div class="flex items-center rounded-sm p-0.5 text-xs font-medium bg-(--background-2)">
                     <button @click="window.location.href='{{ route('lang.switch', 'en') }}'"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">EN</button>
+                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all cursor-pointer">EN</button>
                     <button @click="window.location.href='{{ route('lang.switch', 'ro') }}'"
-                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all">MD</button>
+                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all cursor-pointer">MD</button>
+                    <button @click="window.location.href='{{ route('lang.switch', 'ro') }}'"
+                        class="px-3 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)/30 transition-all cursor-pointer">RUS</button>
                 </div>
                 <button onclick="toggleTheme()"
-                    class="p-2 text-(--text-muted) hover:text-(--text-primary) transition-colors">
+                    class="p-2 text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
                     <x-heroicon-o-sun class="h-5 w-5 hidden dark:block" />
                     <x-heroicon-o-moon class="h-5 w-5 dark:hidden" />
                 </button>
