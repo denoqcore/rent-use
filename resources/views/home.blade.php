@@ -45,18 +45,18 @@
                 {{ __('messages.hero-sub') }}
             </p>
 
-            <div class="w-full max-w-md">
+            <form method="GET" action="{{ route('search') }}" class="w-full max-w-md">
                 <div
                     class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
-                    <input type="text" placeholder="Camera, car, guitar..."
-                        class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none ">
-                    <button
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Camera, car, guitar..."
+                        class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
+                    <button type="submit"
                         class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">
                         <x-heroicon-o-magnifying-glass class="w-4 h-4" />
                         {{ __('messages.search') }}
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </section>
 
@@ -65,7 +65,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                 @foreach ($categories as $category)
-                    <a href="/"
+                    <a href="{{ route('search', ['category' => $category->slug]) }}"
                         class="group relative flex flex-col justify-between gap-6 p-4 rounded-sm border border-(--background-3) bg-(--background-2) transition-all duration-200 overflow-hidden">
                         <div
                             class="absolute top-0 left-0 w-full h-px bg-(--button) opacity-0 group-hover:opacity-100 transition-all duration-300">
