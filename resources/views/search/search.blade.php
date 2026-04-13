@@ -4,7 +4,6 @@
 
     <div class="max-w-7xl mx-auto px-6 py-10">
 
-        {{-- Заголовок + счётчик --}}
         <div class="mb-8">
             <h1 class="text-2xl font-black text-(--text-primary)">{{ __('messages.browse') }}</h1>
             <p class="text-sm text-(--text-muted) mt-1">{{ $listings->total() }} {{ __('messages.results') }}</p>
@@ -12,18 +11,15 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
 
-            {{-- ===== SIDEBAR FILTERS ===== --}}
             <aside class="w-full lg:w-64 shrink-0">
                 <form method="GET" action="{{ route('search') }}" id="filter-form" class="flex flex-col gap-6">
 
-                    {{-- Поиск --}}
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.search') }}
                         </label>
                         <div class="flex gap-2 p-1 rounded-lg bg-(--background-2) border border-(--background-3)">
-                            <input type="text" name="q" value="{{ request('q') }}"
-                                placeholder="Camera, car, guitar..."
+                            <input type="text" name="q" value="{{ request('q') }}" placeholder=". . ."
                                 class="flex-1 px-3 py-2 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                             <button type="submit"
                                 class="px-3 py-2 bg-(--button) text-(--button-text) rounded-md hover:bg-(--button-h) transition-all cursor-pointer">
@@ -32,7 +28,6 @@
                         </div>
                     </div>
 
-                    {{-- Категории --}}
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.category') }}
@@ -53,7 +48,6 @@
                         </div>
                     </div>
 
-                    {{-- Город --}}
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.city') }}
@@ -69,20 +63,20 @@
                         </select>
                     </div>
 
-                    {{-- Цена --}}
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.price') }}
                         </label>
                         <div class="flex gap-2">
-                            <input type="number" name="price_min" value="{{ request('price_min') }}" placeholder="Min"
+                            <input type="number" name="price_min" value="{{ request('price_min') }}"
+                                placeholder="{{ __('messages.price-min') }}"
                                 class="w-full px-3 py-2 rounded-sm text-sm bg-(--background-2) border border-(--background-3) text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
-                            <input type="number" name="price_max" value="{{ request('price_max') }}" placeholder="Max"
+                            <input type="number" name="price_max" value="{{ request('price_max') }}"
+                                placeholder="{{ __('messages.price-max') }}"
                                 class="w-full px-3 py-2 rounded-sm text-sm bg-(--background-2) border border-(--background-3) text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                         </div>
                     </div>
 
-                    {{-- Доставка --}}
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="delivery" value="1" onchange="this.form.submit()"
                             {{ request('delivery') ? 'checked' : '' }}
@@ -92,7 +86,6 @@
                         </span>
                     </label>
 
-                    {{-- Сортировка --}}
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.sort') }}
@@ -108,7 +101,6 @@
                         </select>
                     </div>
 
-                    {{-- Применить / Сбросить --}}
                     <div class="flex gap-2">
                         <button type="submit"
                             class="flex-1 py-2 text-sm font-semibold bg-(--button) text-(--button-text) rounded-sm hover:bg-(--button-h) transition-all cursor-pointer">
@@ -123,8 +115,29 @@
                 </form>
             </aside>
 
-            {{-- ===== LISTINGS GRID ===== --}}
             <div class="flex-1 min-w-0">
+
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-xs text-(--text-muted)">
+                        {{ $listings->total() }} {{ __('messages.results') }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-(--text-muted)">{{ __('messages.sort') }}:</p>
+                        <select name="sort" form="filter-form" onchange="document.getElementById('filter-form').submit()"
+                            class="px-3 py-1.5 rounded-sm text-xs bg-(--background-2) border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) focus:outline-none cursor-pointer transition-all">
+                            <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
+                                {{ __('messages.sort-latest') }}</option>
+                            <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>
+                                {{ __('messages.sort-oldest') }}</option>
+                            <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>
+                                {{ __('messages.sort-price-asc') }}</option>
+                            <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
+                                {{ __('messages.sort-price-desc') }}</option>
+
+                        </select>
+                    </div>
+                </div>
+
                 @if ($listings->isEmpty())
                     <div class="flex flex-col items-center justify-center py-24 text-center">
                         <x-heroicon-o-magnifying-glass class="w-10 h-10 text-(--text-muted) mb-4 opacity-40" />
@@ -179,7 +192,6 @@
                         @endforeach
                     </div>
 
-                    {{-- Пагинация --}}
                     @if ($listings->hasPages())
                         <div class="mt-10">
                             {{ $listings->links() }}

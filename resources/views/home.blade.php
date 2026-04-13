@@ -48,7 +48,7 @@
             <form method="GET" action="{{ route('search') }}" class="w-full max-w-md">
                 <div
                     class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Camera, car, guitar..."
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder=". . ."
                         class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                     <button type="submit"
                         class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">

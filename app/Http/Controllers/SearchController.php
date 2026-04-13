@@ -64,6 +64,7 @@ class SearchController extends Controller
         match ($sort) {
             'price_asc'  => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) ASC'),
             'price_desc' => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) DESC'),
+            'oldest'     => $query->oldest(),
             default      => $query->latest(),
         };
 
