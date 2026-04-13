@@ -192,4 +192,19 @@ return [
     'photos_selected' => 'photo(s) selected',
 
     'publish_listing' => 'Publish listing',
+
+    //browse page
+    'results'            => 'results',
+    'category'           => 'Category',
+    'all'                => 'All',
+    'all-cities'         => 'All cities',
+    'price'              => 'Price',
+    'delivery-available' => 'Delivery available',
+    'sort'               => 'Sort by',
+    'sort-latest'        => 'Latest',
+    'sort-price-asc'     => 'Price: low to high',
+    'sort-price-desc'    => 'Price: high to low',
+    'apply'              => 'Apply',
+    'reset'              => 'Reset',
+    'no-results'         => 'No listings found',
 ];

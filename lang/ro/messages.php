@@ -195,4 +195,20 @@ return [
     'photos_selected' => 'fotografie(i) selectată(e)',
 
     'publish_listing' => 'Publică anunțul',
+
+    //browse page
+    'results'            => 'rezultate',
+    'category'           => 'Categorie',
+    'all'                => 'Toate',
+
+    'all-cities'         => 'Toate orașele',
+    'price'              => 'Preț',
+    'delivery-available' => 'Livrare disponibilă',
+    'sort'               => 'Sortează după',
+    'sort-latest'        => 'Cele mai noi',
+    'sort-price-asc'     => 'Preț: mic spre mare',
+    'sort-price-desc'    => 'Preț: mare spre mic',
+    'apply'              => 'Aplică',
+    'reset'              => 'Resetează',
+    'no-results'         => 'Nu au fost găsite anunțuri',
 ];

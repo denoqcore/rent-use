@@ -192,4 +192,19 @@ return [
     'photos_selected' => 'фото выбрано',
 
     'publish_listing' => 'Опубликовать объявление',
+
+//browse page
+    'results'            => 'результатов',
+    'category'           => 'Категория',
+    'all'                => 'Все',
+    'all-cities'         => 'Все города',
+    'price'              => 'Цена',
+    'delivery-available' => 'Есть доставка',
+    'sort'               => 'Сортировка',
+    'sort-latest'        => 'Новые',
+    'sort-price-asc'     => 'Дешевле',
+    'sort-price-desc'    => 'Дороже',
+    'apply'              => 'Применить',
+    'reset'              => 'Сбросить',
+    'no-results'         => 'Объявлений не найдено',
 ];
