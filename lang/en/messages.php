@@ -7,6 +7,7 @@ return [
     'home' => 'Home',
     'browse' => 'Browse',
     'post' => 'Post listing',
+    'support' => 'Support',
     'close' => 'Close',
     'started' => 'Get Started',
     'search' => 'Search',

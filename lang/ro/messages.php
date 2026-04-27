@@ -7,6 +7,7 @@ return [
     'home' => 'Acasă',
     'browse' => 'Explorează',
     'post' => 'Adaugă anunț',
+    'support' => 'Suport',
     'close' => 'Închide',
     'started' => 'Începe',
     'search' => 'Caută',
@@ -96,7 +97,6 @@ return [
     'step-3-desc' => 'Ridică obiectul, folosește-l și returnează-l. Simplu.',
 
     // CTA
-
     'cta-title' => 'Câștigă bani din obiectele pe care nu le folosești cu',
     'cta-desc' => 'Transformă lucrurile nefolosite în bani. Adaugă anunțuri în câteva minute și începe să câștigi astăzi.',
     'get-started' => 'Începe acum',

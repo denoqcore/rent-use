@@ -13,6 +13,7 @@ return new class extends Migration
     $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();
     $table->string('name_en');
     $table->string('name_ro');
+    $table->string('name_ru');
     $table->string('slug')->unique();
     $table->string('icon')->nullable();
     $table->timestamps();
