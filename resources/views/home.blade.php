@@ -48,7 +48,7 @@
             <form method="GET" action="{{ route('search') }}" class="w-full max-w-md">
                 <div
                     class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Camera, car, guitar..."
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder=". . ."
                         class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                     <button type="submit"
                         class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">
@@ -169,7 +169,7 @@
                 </div>
 
                 <div
-                    class="flex flex-col divide-y divide-(--background-3) border border-(--background-3) rounded-sm overflow-hidden">
+                    class="flex flex-col divide-y divide-(--background-3) border border-(--background-3) rounded-sm overflow-hidden select-none">
                     @foreach ([['icon' => 'heroicon-o-square-3-stack-3d', 'title' => __('messages.benefit-1-title'), 'desc' => __('messages.benefit-1-desc')], ['icon' => 'heroicon-o-shield-check', 'title' => __('messages.benefit-2-title'), 'desc' => __('messages.benefit-2-desc')], ['icon' => 'heroicon-o-calendar', 'title' => __('messages.benefit-3-title'), 'desc' => __('messages.benefit-3-desc')]] as $benefit)
                         <div
                             class="group flex items-start gap-4 p-5 bg-(--background-2) hover:bg-(--background) transition-all duration-200">
@@ -222,8 +222,6 @@
                 class="grid lg:grid-cols-2 items-center gap-0 rounded-sm overflow-hidden border border-(--background-3) bg-(--background)">
 
                 <div class="px-10 py-14 lg:px-16 lg:py-20">
-                    <span
-                        class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4 block">{{ __('messages.for-owners') }}</span>
                     <h2 class="text-3xl md:text-4xl font-black text-(--text-primary) leading-tight mb-3">
                         {{ __('messages.cta-title') }} <span class="text-(--button)">rent.use</span>
                     </h2>

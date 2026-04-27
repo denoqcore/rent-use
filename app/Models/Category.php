@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Category extends Model
 {
-    protected $fillable = ['parent_id', 'name_en', 'name_ro', 'slug', 'icon'];
+    protected $fillable = ['parent_id', 'name_en', 'name_ro', 'name_ru', 'slug', 'icon'];
 
     protected $appends = ['name'];
 

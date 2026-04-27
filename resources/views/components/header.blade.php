@@ -7,7 +7,7 @@ new class extends Component {};
 
 <div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })" x-cloak>
 
-    <header class="hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
+    <header class="hidden lg:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
         :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent'">
         <div class="max-w-7xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 
@@ -37,7 +37,7 @@ new class extends Component {};
                 <nav class="flex items-center gap-0.5">
                     <a href="/"
                         class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
-                        Support
+                        {{ __('messages.support') }}
                     </a>
                     <a href="/"
                         class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
@@ -53,22 +53,37 @@ new class extends Component {};
                 @endguest
 
                 @auth
+                    <div class="flex items-center gap-2">
+                        <button
+                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
+                            <x-heroicon-s-heart class="w-4 h-4" />
+                        </button>
+                        <button
+                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
+                            <x-heroicon-s-chat-bubble-bottom-center class="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    {{-- // --}}
                     <div class="w-px h-4 bg-(--background-3)"></div>
+                    {{-- // --}}
+
                     <div class="relative">
                         <button @click="userMenu = !userMenu"
-                            class="flex items-center gap-2.5 px-3 py-1.5 text-sm font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm transition-all cursor-pointer group">
+                            class="flex items-center gap-1.5 p-1.5 text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer group">
                             <div
-                                class="w-7 h-7 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 overflow-hidden shadow-sm group-hover:shadow-(--background-3)/20">
+                                class="w-6 h-6 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 overflow-hidden">
                                 @if (Auth::user()->avatar)
                                     <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
                                         class="w-full h-full object-cover">
                                 @else
-                                    <x-heroicon-s-user class="w-4 h-4 text-(--text-primary)" />
+                                    <span class="text-[10px] font-medium text-(--text-muted) uppercase leading-none">
+                                        {{ mb_substr(Auth::user()->name, 0, 1) }}
+                                    </span>
                                 @endif
                             </div>
-                            <span class="truncate max-w-30">{{ Auth::user()->name }}</span>
                             <x-heroicon-o-chevron-down
-                                class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />
+                                class="w-3 h-3 opacity-30 group-hover:opacity-60 transition-opacity" />
                         </button>
 
                         <div x-show="userMenu" x-cloak x-transition:enter="transition ease-out duration-200"
@@ -168,14 +183,14 @@ new class extends Component {};
 
     <div class="hidden md:block" style="height:72px"></div>
 
-    <header class="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
-        <div class="flex items-center justify-between px-4" style="height:52px">
-            <a href="/" class="text-sm font-black tracking-wide text-(--text-primary)">
+    <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
+        <div class="flex items-center justify-between p-4">
+            <a href="/" class="text-xs md:text-lg font-black tracking-wide text-(--text-primary)">
                 rent<span class="text-(--text-muted) font-normal">.use</span>
             </a>
 
             <button @click="open = !open"
-                class="text-xs font-medium text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
+                class="text-xs md:text-lg font-medium text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
                 <span x-show="!open">Menu</span>
                 <span x-show="open" x-cloak>{{ __('messages.close') }}</span>
             </button>
@@ -186,7 +201,7 @@ new class extends Component {};
         x-transition:enter-start="opacity-0 translate-x-full" x-transition:enter-end="opacity-100 translate-x-0"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-x-0"
         x-transition:leave-end="opacity-0 translate-x-full"
-        class="md:hidden fixed inset-0 z-40 bg-(--background) flex flex-col" style="padding-top:52px">
+        class="lg:hidden fixed inset-0 z-40 bg-(--background) flex flex-col" style="padding-top:52px">
 
         @auth
             <div class="px-5 py-4 border-b border-(--background-2) flex items-center gap-3">
