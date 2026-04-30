@@ -36,6 +36,7 @@
     --button-h: #1d4ed8;
     --button-text: #ffffff;
     --text-primary: #0f172a;
+    --text-btn-header: #000;
     --text-muted: #64748b;
 }
 
@@ -48,14 +49,8 @@
     --button-h: #2563eb;
     --button-text: #ffffff;
     --text-primary: #e5e7eb;
+    --text-btn-header: #fff;
     --text-muted: #9ca3af;
-}
-
-* {
-    transition:
-        background-color 0.2s ease-in-out,
-        border-color 0.2s ease-in-out,
-        color 0.2s ease-in-out;
 }
 
 [x-cloak] {

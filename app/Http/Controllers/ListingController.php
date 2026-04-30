@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Listing;
 use App\Models\Category;
+use App\Models\Cities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -12,8 +13,9 @@ class ListingController extends Controller
 {
     public function create()
 {
+    $cities = Cities::orderBy('order')->get();
     $categories = Category::whereNull('parent_id')->with('children')->get();
-    return view('listings.create', compact('categories'));
+    return view('listings.create', compact('categories', 'cities'));
 }
 
     public function store(Request $request)
@@ -22,7 +24,7 @@ class ListingController extends Controller
             'category_id'      => 'required|exists:categories,id',
             'title'            => 'required|string|min:5|max:100',
             'description'      => 'required|string|min:10|max:2000',
-            'city'             => 'required|string|max:60',
+            'city_id'          => 'required|exists:cities,id',
             'price_per_day'    => 'required|numeric|min:1|max:999999',
             'price_per_hour'   => 'nullable|numeric|min:1|max:999999',
             'deposit'          => 'nullable|numeric|min:0|max:999999',
@@ -40,7 +42,7 @@ class ListingController extends Controller
             'title'              => $validated['title'],
             'description'        => $validated['description'],
             'slug'               => Str::slug($validated['title']) . '-' . uniqid(),
-            'city'               => $validated['city'],
+            'city_id'            => $validated['city_id'],
             'price_per_day'      => $validated['price_per_day'],
             'price_per_hour'     => $validated['price_per_hour'] ?? null,
             'deposit'            => $validated['deposit'] ?? null,
@@ -90,7 +92,7 @@ class ListingController extends Controller
             'title'              => 'required|string|max:255',
             'description'        => 'required|string',
             'category_id'        => 'required|exists:categories,id',
-            'city'               => 'required|string|max:100',
+            'city_id'            => 'required|exists:cities,id',
             'price_per_day'      => 'required|integer|min:1',
             'price_per_hour'     => 'nullable|integer|min:1',
             'deposit'            => 'nullable|integer|min:0',

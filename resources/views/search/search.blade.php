@@ -57,7 +57,7 @@
                             <option value="">{{ __('messages.all-cities') }}</option>
                             @foreach ($cities as $city)
                                 <option value="{{ $city }}" {{ request('city') === $city ? 'selected' : '' }}>
-                                    {{ $city }}
+                                    {{ $city->name }}
                                 </option>
                             @endforeach
                         </select>

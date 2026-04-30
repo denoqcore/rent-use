@@ -11,6 +11,9 @@ return [
     'close' => 'Închide',
     'started' => 'Începe',
     'search' => 'Caută',
+    'favorite' => 'Favorite',
+    'messages' => 'Mesaje',
+    'rent' => 'Închirieri',
     'cancel' => 'Înapoi',
     'sign-out' => 'Deconectare',
     'dark-mode' => 'Mod întunecat',
@@ -32,6 +35,9 @@ return [
     'categories' => 'categorii',
     'more' => 'vezi mai mult',
     'latest' => 'Cele mai recente anunțuri',
+
+    'empty-title' => 'Încă nimic aici',
+'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
 
     // profile page
 

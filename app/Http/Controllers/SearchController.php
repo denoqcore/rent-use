@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Listing;
+use App\Models\Cities;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -70,7 +71,7 @@ class SearchController extends Controller
 
         $listings   = $query->paginate(16)->withQueryString();
         $categories = Category::whereNull('parent_id')->with('children')->get();
-        $cities     = Listing::where('status', 'active')->distinct()->pluck('city')->filter()->sort()->values();
+        $cities = Cities::orderBy('order')->get();
 
         return view('search.search', compact('listings', 'categories', 'cities'));
     }

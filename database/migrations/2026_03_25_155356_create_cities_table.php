@@ -10,7 +10,9 @@ return new class extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name_ru');
+            $table->string('name_ro');
+            $table->string('name_en');
             $table->string('slug')->unique();
             $table->boolean('is_suburb')->default(false);
             $table->integer('order')->default(0);
