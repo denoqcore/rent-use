@@ -17,6 +17,13 @@ new class extends Component {};
             </div>
 
             <div class="flex items-center gap-6">
+                <a href="/" class="text-xs text-(--text-muted) hover:text-(--text-primary) transition-colors">
+                    {{ __('messages.support') }}
+                </a>
+                <a href="/" class="text-xs text-(--text-muted) hover:text-(--text-primary) transition-colors">
+                    FAQ
+                </a>
+
                 <a href="#" class="text-xs text-(--text-muted) hover:text-(--text-primary) transition-colors">
                     {{ __('messages.privacy') }}
                 </a>

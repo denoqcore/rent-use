@@ -295,7 +295,8 @@
 @endsection
 
 @push('scripts')
-    <script>
+    {{-- OFF ON TIME --}}
+    {{-- <script>
         let vantaEffect = null;
 
         function initVanta() {
@@ -327,5 +328,5 @@
             attributes: true,
             attributeFilter: ['class']
         });
-    </script>
+    </script> --}}
 @endpush

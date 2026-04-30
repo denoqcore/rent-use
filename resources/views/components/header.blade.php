@@ -2,15 +2,14 @@
 
 use Livewire\Component;
 
-new class extends Component {};
-?>
+new class extends Component {}; ?>
 
-<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })" x-cloak>
+<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-cloak>
+    <header
+        class="hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b-[0.1px] border-(--background)">
+        <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
 
-    <header class="hidden lg:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bg-(--background)"
-        :class="scrolled ? 'border-(--background-3) shadow-sm' : 'border-transparent'">
-        <div class="max-w-7xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
-
+            {{-- LEFT --}}
             <div class="flex items-center gap-6">
                 <a href="/" class="text-xl font-black tracking-wide text-(--text-primary)">
                     rent<span class="text-(--text-muted) font-normal">.use</span>
@@ -21,58 +20,46 @@ new class extends Component {};
 
                 <nav class="flex items-center gap-0.5">
                     <a href="/search"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md">
+                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
                         {{ __('messages.browse') }}
                     </a>
                     @auth
                         <a href="{{ route('listings.create') }}"
-                            class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md">
+                            class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
                             {{ __('messages.post') }}
                         </a>
                     @endauth
                 </nav>
             </div>
 
-            <div class="flex items-center gap-6">
-                <nav class="flex items-center gap-0.5">
-                    <a href="/"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
-                        {{ __('messages.support') }}
-                    </a>
-                    <a href="/"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-md transition-all">
-                        FAQ
-                    </a>
-                </nav>
+            {{-- RIGHT --}}
+            <div class="flex items-center gap-2">
 
                 @guest
                     <a href="/login"
-                        class="px-5 py-2 rounded-sm bg-(--button) text-(--button-text) text-sm font-medium hover:bg-(--button-h) transition-all active:scale-95">
+                        class="px-4 py-1.5 rounded-sm bg-(--button) text-(--button-text) text-sm font-medium hover:bg-(--button-h) cursor-pointer">
                         {{ __('messages.started') }}
                     </a>
                 @endguest
 
                 @auth
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
-                            <x-heroicon-s-heart class="w-4 h-4" />
-                        </button>
-                        <button
-                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
-                            <x-heroicon-s-chat-bubble-bottom-center class="w-4 h-4" />
-                        </button>
-                    </div>
+                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                        <x-heroicon-o-heart class="w-5 h-5" />
+                    </button>
+                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-5 h-5" />
+                    </button>
+                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                        <x-heroicon-o-calendar class="w-5 h-5" />
+                    </button>
 
-                    {{-- // --}}
-                    <div class="w-px h-4 bg-(--background-3)"></div>
-                    {{-- // --}}
+                    <div class="w-px h-4 bg-(--background-3) mx-1"></div>
 
                     <div class="relative">
                         <button @click="userMenu = !userMenu"
-                            class="flex items-center gap-1.5 p-1.5 text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer group">
+                            class="flex items-center gap-1.5 p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) cursor-pointer group">
                             <div
-                                class="w-6 h-6 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 overflow-hidden">
+                                class="w-6 h-6 rounded-md bg-(--background-3) border-(--button-h) flex items-center justify-center shrink-0 overflow-hidden">
                                 @if (Auth::user()->avatar)
                                     <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
                                         class="w-full h-full object-cover">
@@ -82,17 +69,11 @@ new class extends Component {};
                                     </span>
                                 @endif
                             </div>
-                            <x-heroicon-o-chevron-down
-                                class="w-3 h-3 opacity-30 group-hover:opacity-60 transition-opacity" />
+                            <x-heroicon-o-chevron-down class="w-3 h-3 opacity-30 group-hover:opacity-60" />
                         </button>
 
-                        <div x-show="userMenu" x-cloak x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 -translate-y-2"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 -translate-y-2" @click.away="userMenu = false"
-                            class="absolute -right-25 top-full mt-2 w-52 rounded-sm border border-(--background-3) bg-(--background-2) shadow-xl z-50 overflow-hidden">
+                        <div x-show="userMenu" x-cloak @click.away="userMenu = false"
+                            class="absolute right-0 top-full mt-2 w-52 rounded-sm border border-(--background-3) bg-(--background-2) shadow-xl z-50 overflow-hidden">
 
                             <div
                                 class="absolute -top-1.5 right-4 w-3 h-3 bg-(--background-2) border-l border-t border-(--background-3) rotate-45">
@@ -105,12 +86,12 @@ new class extends Component {};
 
                             <div class="p-1.5 flex flex-col gap-0.5">
                                 <a href="/profile"
-                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all group">
+                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm group">
                                     <x-heroicon-o-user class="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
                                     <span>Profile</span>
                                 </a>
                                 <a href="{{ route('listings.create') }}" @click="userMenu = false"
-                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-all group">
+                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm group">
                                     <x-heroicon-o-plus class="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
                                     <span>{{ __('messages.post') }}</span>
                                 </a>
@@ -118,7 +99,7 @@ new class extends Component {};
 
                             <div class="p-1.5 border-t border-(--background-3)">
                                 <button type="button" @click="logoutModal = true; userMenu = false"
-                                    class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-sm transition-all cursor-pointer">
+                                    class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-sm cursor-pointer">
                                     <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 shrink-0" />
                                     {{ __('messages.sign-out') }}
                                 </button>
@@ -126,6 +107,8 @@ new class extends Component {};
                         </div>
                     </div>
                 @endauth
+
+                <div class="w-px h-4 bg-(--background-3) mx-1"></div>
 
                 <div x-data="{
                     isDark: document.documentElement.classList.contains('dark'),
@@ -141,7 +124,7 @@ new class extends Component {};
                     }
                 }">
                     <button @click="toggle()"
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) transition-all text-xs font-medium text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
                         <template x-if="!isDark">
                             <x-heroicon-o-moon class="w-4 h-4" />
                         </template>
@@ -153,55 +136,61 @@ new class extends Component {};
 
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open"
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) transition-all text-xs font-bold uppercase text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
-                        <x-heroicon-o-globe-alt class="w-4 h-4" />
-                        {{ app()->getLocale() == 'ro' ? 'MD' : strtoupper(app()->getLocale()) }}
+                        class="px-2 py-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) cursor-pointer text-xs font-bold uppercase">
+                        {{ app()->getLocale() == 'ro' ? 'RO' : strtoupper(app()->getLocale()) }}
                     </button>
 
-                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                        class="absolute right-0 mt-2 w-32 bg-(--background-2) border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden">
+                    <div x-show="open" x-cloak @click.away="open = false"
+                        class="absolute right-0 mt-2 w-32 bg-(--background-2) border border-(--background-3) rounded-sm shadow-xl z-50 overflow-hidden">
                         <div class="flex flex-col p-1">
                             <a href="{{ route('lang.switch', 'en') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'en' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'en' ? 'text-(--text-primary) font-semibold' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 English
+                                @if (app()->getLocale() == 'en')
+                                    <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                @endif
                             </a>
                             <a href="{{ route('lang.switch', 'ro') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ro' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'ro' ? 'text-(--text-primary) font-semibold' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 Română
+                                @if (app()->getLocale() == 'ro')
+                                    <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                @endif
                             </a>
                             <a href="{{ route('lang.switch', 'ru') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm {{ app()->getLocale() == 'ru' ? 'text-(--text-muted) hover:text-(--text-primary) font-bold' : 'text-gray-600 hover:text-(--text-primary)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'ru' ? 'text-(--text-primary) font-semibold' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 Русский
+                                @if (app()->getLocale() == 'ru')
+                                    <x-heroicon-o-check class="w-3.5 h-3.5" />
+                                @endif
                             </a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </header>
 
     <div class="hidden md:block" style="height:72px"></div>
 
+    {{-- MOBILE HEADER --}}
     <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between p-4">
             <a href="/" class="text-xs md:text-lg font-black tracking-wide text-(--text-primary)">
                 rent<span class="text-(--text-muted) font-normal">.use</span>
             </a>
-
             <button @click="open = !open"
-                class="text-xs md:text-lg font-medium text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
+                class="text-xs md:text-lg font-medium text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
                 <span x-show="!open">Menu</span>
                 <span x-show="open" x-cloak>{{ __('messages.close') }}</span>
             </button>
         </div>
     </header>
 
-    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-250"
-        x-transition:enter-start="opacity-0 translate-x-full" x-transition:enter-end="opacity-100 translate-x-0"
-        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-x-0"
-        x-transition:leave-end="opacity-0 translate-x-full"
-        class="lg:hidden fixed inset-0 z-40 bg-(--background) flex flex-col" style="padding-top:52px">
+    {{-- MOBILE MENU --}}
+    <div x-show="open" x-cloak class="lg:hidden fixed inset-0 z-40 bg-(--background) flex flex-col"
+        style="padding-top:52px">
 
         @auth
             <div class="px-5 py-4 border-b border-(--background-2) flex items-center gap-3">
@@ -210,7 +199,9 @@ new class extends Component {};
                     @if (Auth::user()->avatar)
                         <img src="{{ asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover">
                     @else
-                        <x-heroicon-s-user class="w-5 h-5 text-(--text-primary)" />
+                        <span class="text-sm font-medium text-(--text-muted) uppercase leading-none">
+                            {{ mb_substr(Auth::user()->name, 0, 1) }}
+                        </span>
                     @endif
                 </div>
                 <div class="min-w-0">
@@ -222,17 +213,17 @@ new class extends Component {};
 
         <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
             <a href="/search" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-magnifying-glass class="w-4 h-4 shrink-0 opacity-60" />
                 {{ __('messages.browse') }}
             </a>
             <a href="/" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-lifebuoy class="w-4 h-4 shrink-0 opacity-60" />
-                Support
+                {{ __('messages.support') }}
             </a>
             <a href="/" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-question-mark-circle class="w-4 h-4 shrink-0 opacity-60" />
                 FAQ
             </a>
@@ -240,12 +231,12 @@ new class extends Component {};
             @auth
                 <div class="pt-1 mt-1 border-t border-(--background-2) space-y-0.5">
                     <a href="/profile" @click="open = false"
-                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                         <x-heroicon-o-user class="w-4 h-4 shrink-0 opacity-60" />
                         Profile
                     </a>
                     <a href="{{ route('listings.create') }}" @click="open = false"
-                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) transition-all">
+                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                         <x-heroicon-o-plus class="w-4 h-4 shrink-0 opacity-60" />
                         {{ __('messages.post') }}
                     </a>
@@ -258,36 +249,30 @@ new class extends Component {};
 
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open"
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) border border-(--background-3) text-xs font-bold uppercase text-(--text-muted) hover:text-(--text-primary) transition-all">
+                        class="flex items-center gap-2 px-3 py-2.5 rounded-sm bg-(--background-2) border border-(--background-3) text-xs font-bold uppercase text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
                         <x-heroicon-o-globe-alt class="w-4 h-4" />
-                        {{ app()->getLocale() == 'ro' ? 'MD' : strtoupper(app()->getLocale()) }}
-                        <x-heroicon-o-chevron-down class="w-3 h-3 opacity-50" />
+                        {{ app()->getLocale() == 'ro' ? 'RO' : strtoupper(app()->getLocale()) }}
+                        <x-heroicon-o-chevron-up class="w-3 h-3 opacity-50" />
                     </button>
-
-                    <div x-show="open" @click.away="open = false"
-                        x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                        class="absolute left-0 bottom-full mb-2 w-36 bg-(--background-2) rounded-xl shadow-xl z-50 overflow-hidden">
+                    <div x-show="open" x-cloak @click.away="open = false"
+                        class="absolute left-0 bottom-full mb-2 w-36 bg-(--background-2) border border-(--background-3) rounded-sm shadow-xl z-50 overflow-hidden">
                         <div class="flex flex-col p-1">
                             <a href="{{ route('lang.switch', 'en') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
-                                {{ app()->getLocale() == 'en' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'en' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 English
                                 @if (app()->getLocale() == 'en')
                                     <x-heroicon-o-check class="w-3.5 h-3.5" />
                                 @endif
                             </a>
                             <a href="{{ route('lang.switch', 'ro') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
-                                {{ app()->getLocale() == 'ro' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'ro' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 Română
                                 @if (app()->getLocale() == 'ro')
                                     <x-heroicon-o-check class="w-3.5 h-3.5" />
                                 @endif
                             </a>
                             <a href="{{ route('lang.switch', 'ru') }}"
-                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all
-                                {{ app()->getLocale() == 'ru' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
+                                class="flex items-center justify-between px-3 py-2 rounded-sm text-sm {{ app()->getLocale() == 'ru' ? 'text-(--text-primary) font-semibold bg-(--background-3)' : 'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3)' }}">
                                 Русский
                                 @if (app()->getLocale() == 'ru')
                                     <x-heroicon-o-check class="w-3.5 h-3.5" />
@@ -311,7 +296,7 @@ new class extends Component {};
                     }
                 }">
                     <button @click="toggle()"
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--background-2) border border-(--background-3) text-xs font-medium text-(--text-muted) hover:text-(--text-primary) transition-all cursor-pointer">
+                        class="flex items-center gap-2 px-3 py-2.5 rounded-sm bg-(--background-2) border border-(--background-3) text-xs font-medium text-(--text-muted)     cursor-pointer">
                         <template x-if="!isDark">
                             <div class="flex items-center gap-2">
                                 <x-heroicon-o-moon class="w-4 h-4" />
@@ -330,14 +315,14 @@ new class extends Component {};
 
             @guest
                 <a href="/login"
-                    class="flex items-center justify-center w-full px-4 py-2.5 rounded-sm bg-(--button) text-(--button-text) text-sm font-medium hover:bg-(--button-h) transition-all active:scale-95">
+                    class="flex items-center justify-center w-full px-4 py-2.5 rounded-sm bg-(--button) text-(--button-text) text-sm font-medium hover:bg-(--button-h) active:scale-95">
                     {{ __('messages.started') }}
                 </a>
             @endguest
 
             @auth
                 <button type="button" @click="logoutModal = true; open = false"
-                    class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-sm text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 transition-all cursor-pointer">
+                    class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-sm text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 cursor-pointer">
                     <x-heroicon-o-arrow-left-on-rectangle class="w-4 h-4 shrink-0" />
                     {{ __('messages.sign-out') }}
                 </button>
@@ -347,23 +332,14 @@ new class extends Component {};
 
     <div class="md:hidden" style="height:52px"></div>
 
+    {{-- LOGOUT MODAL --}}
     @auth
-        <div x-show="logoutModal" x-cloak x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
+        <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
 
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutModal = false"></div>
 
-            <div x-show="logoutModal" x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave="transition ease-in duration-150"
-                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
-                class="relative z-10 w-full sm:max-w-sm p-6 bg-(--background-2) border border-(--background-3) rounded-lg shadow-2xl">
-
+            <div
+                class="relative z-10 w-full sm:max-w-sm p-6 bg-(--background-2) border border-(--background-3) rounded-sm shadow-2xl">
                 <div class="flex items-center gap-4 mb-6">
                     <div
                         class="w-10 h-10 rounded-sm bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/10">
@@ -373,7 +349,6 @@ new class extends Component {};
                         {{ __('messages.sign-out-confirm-title') }}
                     </h2>
                 </div>
-
                 <div class="flex gap-2">
                     <button type="button" @click="logoutModal = false"
                         class="flex-1 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm cursor-pointer">
