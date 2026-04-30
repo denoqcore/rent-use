@@ -212,36 +212,58 @@ new class extends Component {}; ?>
         @endauth
 
         <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
+
+            @auth
+                <a href="/favorites" @click="open = false"
+                    class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                    <x-heroicon-o-heart class="w-4 h-4 shrink-0 opacity-60" />
+                    {{ __('messages.favorite') }}
+                </a>
+                <a href="/messages" @click="open = false"
+                    class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                    <x-heroicon-o-chat-bubble-bottom-center class="w-4 h-4 shrink-0 opacity-60" />
+                    {{ __('messages.messages') }}
+                </a>
+                <a href="/rented" @click="open = false"
+                    class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                    <x-heroicon-o-calendar class="w-4 h-4 shrink-0 opacity-60" />
+                    {{ __('messages.rent') }}
+                </a>
+
+                <div class="w-full h-px bg-(--background-2) my-1"></div>
+            @endauth
+
             <a href="/search" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-magnifying-glass class="w-4 h-4 shrink-0 opacity-60" />
                 {{ __('messages.browse') }}
             </a>
             <a href="/" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-lifebuoy class="w-4 h-4 shrink-0 opacity-60" />
                 {{ __('messages.support') }}
             </a>
             <a href="/" @click="open = false"
-                class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
                 <x-heroicon-o-question-mark-circle class="w-4 h-4 shrink-0 opacity-60" />
                 FAQ
             </a>
 
             @auth
-                <div class="pt-1 mt-1 border-t border-(--background-2) space-y-0.5">
-                    <a href="/profile" @click="open = false"
-                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
-                        <x-heroicon-o-user class="w-4 h-4 shrink-0 opacity-60" />
-                        Profile
-                    </a>
-                    <a href="{{ route('listings.create') }}" @click="open = false"
-                        class="flex items-center gap-3 px-3 py-3 rounded-sm text-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
-                        <x-heroicon-o-plus class="w-4 h-4 shrink-0 opacity-60" />
-                        {{ __('messages.post') }}
-                    </a>
-                </div>
+                <div class="w-full h-px bg-(--background-2) my-1"></div>
+
+                <a href="/profile" @click="open = false"
+                    class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                    <x-heroicon-o-user class="w-4 h-4 shrink-0 opacity-60" />
+                    Profile
+                </a>
+                <a href="{{ route('listings.create') }}" @click="open = false"
+                    class="flex items-center gap-3 px-3 py-3 rounded-sm text-md text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2)">
+                    <x-heroicon-o-plus class="w-4 h-4 shrink-0 opacity-60" />
+                    {{ __('messages.post') }}
+                </a>
             @endauth
+
         </nav>
 
         <div class="px-3 pb-6 pt-2 border-t border-(--background-2) space-y-3">

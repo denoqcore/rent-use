@@ -91,67 +91,80 @@
                 <span class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
                     {{ __('messages.latest') }}
                 </span>
-                <a href="/search"
-                    class="flex items-center gap-1 text-xs text-(--text-muted) hover:text-(--text-primary) transition-all">
+                <a href="/search" class="flex items-center gap-1 text-xs text-(--text-muted) hover:text-(--text-primary)">
                     {{ __('messages.more') }}
                     <x-heroicon-o-arrow-right class="w-3 h-3" />
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                @forelse ($listings as $listing)
-                    <a href="{{ route('listings.show', $listing->slug) }}"
-                        class="group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
+            @if ($listings->isNotEmpty())
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    @foreach ($listings as $listing)
+                        <a href="{{ route('listings.show', $listing->slug) }}"
+                            class="group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
 
-                        <div class="h-44 bg-(--background-3)">
-                            @if ($listing->images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
-                                    alt="{{ $listing->title }}"
-                                    class="w-full h-full object-cover transition-transform duration-300 ease-in-out cursor-pointer">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <x-heroicon-o-photo class="w-7 h-7 text-(--text-primary)" />
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="p-3 flex flex-col gap-1">
-
-                            <div
-                                class="flex items-center gap-1 text-[10px] text-(--text-muted) tracking-wide font-medium truncate">
-                                <span>{{ $listing->category->parent->name ?? '' }}</span>
-                                @if ($listing->category->parent)
-                                    <span class="opacity-40">/</span>
+                            <div class="h-44 bg-(--background-3)">
+                                @if ($listing->images->isNotEmpty())
+                                    <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
+                                        alt="{{ $listing->title }}"
+                                        class="w-full h-full object-cover transition-transform duration-300 ease-in-out cursor-pointer">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <x-heroicon-o-photo class="w-7 h-7 text-(--text-primary)" />
+                                    </div>
                                 @endif
-                                <span>{{ $listing->category->name }}</span>
                             </div>
 
-                            <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}</h3>
-
-                            <div class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
-                                <div class="flex items-center gap-1 text-(--text-muted)">
-                                    <x-heroicon-s-map-pin class="w-3 h-3 shrink-0" />
-                                    <span class="text-[11px] font-medium truncate">{{ $listing->city }}</span>
+                            <div class="p-3 flex flex-col gap-1">
+                                <div
+                                    class="flex items-center gap-1 text-[10px] text-(--text-muted) tracking-wide font-medium truncate">
+                                    <span>{{ $listing->category->parent->name ?? '' }}</span>
+                                    @if ($listing->category->parent)
+                                        <span class="opacity-40">/</span>
+                                    @endif
+                                    <span>{{ $listing->category->name }}</span>
                                 </div>
 
-                                <span class="text-xs font-bold text-(--button) whitespace-nowrap ml-2">
-                                    @if ($listing->price_per_day)
-                                        {{ number_format($listing->price_per_day, 0, '.', ' ') }}
-                                        {{ $listing->currency }}<span class="text-(--text-muted) font-normal">/day</span>
-                                    @elseif ($listing->price_per_hour)
-                                        {{ number_format($listing->price_per_hour, 0, '.', ' ') }}
-                                        {{ $listing->currency }}<span class="text-(--text-muted) font-normal">/hr</span>
-                                    @endif
-                                </span>
+                                <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}</h3>
+
+                                <div
+                                    class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
+                                    <div class="flex items-center gap-1 text-(--text-muted)">
+                                        <x-heroicon-s-map-pin class="w-3 h-3 shrink-0" />
+                                        <span class="text-[11px] font-medium truncate">{{ $listing->city }}</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-(--button) whitespace-nowrap ml-2">
+                                        @if ($listing->price_per_day)
+                                            {{ number_format($listing->price_per_day, 0, '.', ' ') }}
+                                            {{ $listing->currency }}<span
+                                                class="text-(--text-muted) font-normal">/day</span>
+                                        @elseif ($listing->price_per_hour)
+                                            {{ number_format($listing->price_per_hour, 0, '.', ' ') }}
+                                            {{ $listing->currency }}<span
+                                                class="text-(--text-muted) font-normal">/hr</span>
+                                        @endif
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                @empty
-                    <div>
-                        <p>Empty</p>
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="flex flex-col items-center justify-center gap-6 min-h-[40vh]">
+                    <div class="w-full h-px bg-(--background-3)"></div>
+                    <div class="flex flex-col items-center text-center">
+                        <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) mb-3 opacity-40" />
+                        <h2 class="text-sm font-semibold text-(--text-primary) mb-1">
+                            {{ __('messages.empty-title') }}
+                        </h2>
+                        <p class="text-(--text-muted) text-xs max-w-xs">
+                            {{ __('messages.empty-desc') }}
+                        </p>
                     </div>
-                @endforelse
-            </div>
+                    <div class="w-full h-px bg-(--background-3)"></div>
+                </div>
+            @endif
+
         </div>
     </section>
 

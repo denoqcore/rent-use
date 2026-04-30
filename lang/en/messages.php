@@ -11,6 +11,9 @@ return [
     'close' => 'Close',
     'started' => 'Get Started',
     'search' => 'Search',
+    'favorite' => 'Favorite',
+    'messages' => 'Messages',
+    'rent' => 'Rent',
     'sign-out' => 'Sign out',
     'dark-mode' => 'Dark mode',
     'light-mode' => 'Light mode',
@@ -30,6 +33,8 @@ return [
     'more' => 'see more',
     'latest' => 'Latest announcements',
 
+    'empty-title' => 'Nothing here yet',
+'empty-desc'  => 'Items and listings will appear here',
     // profile page
 
     'profile' => 'Profile',

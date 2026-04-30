@@ -229,12 +229,27 @@
                     <div class="flex flex-col gap-1" x-data="{
                         open: false,
                         search: '',
-                        cities: [
-                            'Chișinău', 'Bălți', 'Tiraspol', 'Tighina (Bender)', 'Rîbnița', 'Cahul', 'Ungheni', 'Soroca', 'Orhei', 'Comrat', 'Strășeni', 'Drochia', 'Edineț', 'Căușeni', 'Fălești', 'Hîncești', 'Călărași', 'Anenii Noi', 'Ialoveni', 'Florești', 'Rezina', 'Ceadîr-Lunga',
-                            'Durlești (suburbie)', 'Stăuceni (suburbie)', 'Grătiești (suburbie)', 'Codru (suburbie)', 'Vadul lui Vodă (suburbie)', 'Cricova (suburbie)', 'Bubuieci (suburbie)', 'Trușeni (suburbie)', 'Vatra (suburbie)', 'Ciorescu (suburbie)'
-                        ],
+                    
+                        cityId: '{{ old('city_id') }}',
+                        selectedCity: null,
+                    
+                        init() {
+                            if (this.cityId) {
+                                this.selectedCity = this.cities.find(c => c.id == this.cityId);
+                            }
+                        },
+                    
                         get filteredCities() {
-                            return this.cities.filter(i => i.toLowerCase().includes(this.search.toLowerCase()));
+                            return this.cities.filter(c =>
+                                c.name.toLowerCase().includes(this.search.toLowerCase())
+                            );
+                        },
+                    
+                        selectCity(city) {
+                            this.cityId = city.id;
+                            this.selectedCity = city;
+                            this.open = false;
+                            this.search = '';
                         }
                     }">
                         <label class="text-xs text-(--text-muted)">{{ __('messages.city') }}</label>
@@ -265,13 +280,13 @@
                                 </div>
 
                                 <div class="max-h-60 overflow-y-auto custom-scrollbar">
-                                    <template x-for="item in filteredCities" :key="item">
-                                        <div @click="city = item; open = false; search = ''"
+                                    {{-- <template x-for="item in filteredCities" :key="item">
+                                        <div @click="cityId = city.id; city = city.name_en; open = false"
                                             class="px-3 py-2 text-sm text-(--text-primary) hover:bg-(--button) hover:text-(--button-text) cursor-pointer transition-colors"
                                             :class="city === item ? 'bg-(--background-3)' : ''">
                                             <span x-text="item"></span>
                                         </div>
-                                    </template>
+                                    </template> --}}
 
                                     <div x-show="filteredCities.length === 0"
                                         class="px-3 py-4 text-xs text-(--text-muted) text-center">
@@ -281,7 +296,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="city" :value="city">
+                        <input type="hidden" name="city_id" :value="cityId">
                     </div>
 
                     <div class="flex flex-col gap-2">
