@@ -15,7 +15,10 @@ class ListingController extends Controller
 {
     $cities = Cities::orderBy('order')->get();
     $categories = Category::whereNull('parent_id')->with('children')->get();
-    return view('listings.create', compact('categories', 'cities'));
+    $selectedCity = old('city_id')
+    ? Cities::find(old('city_id'))
+    : null;
+    return view('listings.create', compact('categories', 'cities', 'selectedCity'));
 }
 
     public function store(Request $request)
@@ -25,8 +28,8 @@ class ListingController extends Controller
             'title'            => 'required|string|min:5|max:100',
             'description'      => 'required|string|min:10|max:2000',
             'city_id'          => 'required|exists:cities,id',
-            'price_per_day'    => 'required|numeric|min:1|max:999999',
-            'price_per_hour'   => 'nullable|numeric|min:1|max:999999',
+            'price_per_day' => 'nullable|numeric|min:1|max:99999',
+            'price_per_hour' => 'nullable|numeric|min:1|max:99999',
             'deposit'          => 'nullable|numeric|min:0|max:999999',
             'currency'         => ['required', 'in:MDL,EUR,USD'],
             'delivery_price'   => 'nullable|numeric|min:0|max:99999',
@@ -35,6 +38,11 @@ class ListingController extends Controller
             'images'           => 'nullable|array|max:8',
             'images.*'         => 'image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
+
+        if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
+
+       return back()->withErrors(['price_per_day' => 'At least one price is required.'])->withInput();
+    }
 
         $listing = Listing::create([
             'user_id'            => Auth::id(),
@@ -71,7 +79,7 @@ class ListingController extends Controller
     public function show(string $slug)
     {
         $listing = Listing::where('slug', $slug)
-            ->with(['user', 'category', 'images'])
+            ->with(['user', 'category', 'images', 'city'])
             ->firstOrFail();
 
         return view('listings.show', compact('listing'));

@@ -131,7 +131,7 @@
                                     class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
                                     <div class="flex items-center gap-1 text-(--text-muted)">
                                         <x-heroicon-s-map-pin class="w-3 h-3 shrink-0" />
-                                        <span class="text-[11px] font-medium truncate">{{ $listing->city }}</span>
+                                        <span class="text-[11px] font-medium truncate">{{ $listing->city->name }}</span>
                                     </div>
                                     <span class="text-xs font-bold text-(--button) whitespace-nowrap ml-2">
                                         @if ($listing->price_per_day)

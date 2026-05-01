@@ -162,6 +162,8 @@ return [
     'step_category' => 'Категория',
     'step_details' => 'Детали',
     'step_photos' => 'Фото',
+    'select_city' => 'Select a city',
+    'suburbs'     => 'Пригород',
     'choose_main_category' => 'Выберите основную категорию',
     'choose_main_category_sub' => 'Выберите тип предмета, который вы сдаете',
     'choose_subcategory' => 'Выберите подкатегорию',

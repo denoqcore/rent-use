@@ -2,7 +2,7 @@
 @section('title', 'rent.use | Browse')
 @section('content')
 
-    <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="max-w-6xl mx-auto px-6 py-10">
 
         <div class="mb-8">
             <h1 class="text-2xl font-black text-(--text-primary)">{{ __('messages.browse') }}</h1>
@@ -56,7 +56,8 @@
                             class="w-full px-3 py-2 rounded-sm text-sm bg-(--background-2) border border-(--background-3) text-(--text-primary) focus:outline-none cursor-pointer">
                             <option value="">{{ __('messages.all-cities') }}</option>
                             @foreach ($cities as $city)
-                                <option value="{{ $city }}" {{ request('city') === $city ? 'selected' : '' }}>
+                                <option value="{{ $city->slug }}"
+                                    {{ request('city') === $city->slug ? 'selected' : '' }}>
                                     {{ $city->name }}
                                 </option>
                             @endforeach
@@ -173,7 +174,8 @@
                                         class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
                                         <div class="flex items-center gap-1 text-(--text-muted)">
                                             <x-heroicon-s-map-pin class="w-3 h-3 shrink-0" />
-                                            <span class="text-[11px] font-medium truncate">{{ $listing->city }}</span>
+                                            <span
+                                                class="text-[11px] font-medium truncate">{{ $listing->city->name }}</span>
                                         </div>
                                         <span class="text-xs font-bold text-(--button) whitespace-nowrap ml-2">
                                             @if ($listing->price_per_day)

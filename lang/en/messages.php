@@ -34,7 +34,7 @@ return [
     'latest' => 'Latest announcements',
 
     'empty-title' => 'Nothing here yet',
-'empty-desc'  => 'Items and listings will appear here',
+    'empty-desc'  => 'Items and listings will appear here',
     // profile page
 
     'profile' => 'Profile',
@@ -161,6 +161,8 @@ return [
     'create_listing_sub' => 'Fill in the details to publish your rental',
     'step_category' => 'Category',
     'step_details' => 'Details',
+    'select_city' => 'Select a city',
+    'suburbs'     => 'Suburbs',
     'step_photos' => 'Photos',
     'choose_main_category' => 'Choose a main category',
     'choose_main_category_sub' => 'Select what type of item you\'re renting out',
