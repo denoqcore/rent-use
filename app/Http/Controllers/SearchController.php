@@ -38,7 +38,9 @@ class SearchController extends Controller
 
         // filte by city
         if ($request->filled('city')) {
-            $query->where('city', $request->city);
+            $query->when(request('city'), function ($q) {
+            $q->whereHas('city', fn($q) => $q->where('slug', request('city')));
+            });
         }
 
         // filte by price

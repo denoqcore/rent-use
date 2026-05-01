@@ -37,7 +37,7 @@ return [
     'latest' => 'Cele mai recente anunțuri',
 
     'empty-title' => 'Încă nimic aici',
-'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
+    'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
 
     // profile page
 
@@ -176,6 +176,8 @@ return [
     'city' => 'Oraș',
     'not_found' => 'Nu s-a găsit nimic',
 
+    'select_city' => 'Selectați orașul',
+    'suburbs'     => 'Suburbii',
     'pricing_type' => 'Tarif',
     'per_day'      => 'La ziua',
     'per_hour'     => 'La ora',

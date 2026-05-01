@@ -13,10 +13,10 @@ class Listing extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'city_id',
         'title',
         'description',
         'slug',
-        'city',
         'price_per_day',
         'price_per_hour',
         'deposit',
@@ -50,5 +50,10 @@ class Listing extends Model
     public function mainImage()
     {
         return $this->images()->where('is_main', true)->first();
+    }
+
+    public function city()
+    {
+      return $this->belongsTo(Cities::class, 'city_id');
     }
 }

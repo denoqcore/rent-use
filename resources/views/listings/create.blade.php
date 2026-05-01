@@ -5,7 +5,7 @@
 @section('content')
     <section class="min-h-[calc(100vh-72px)] w-full py-12 bg-(--background)">
         <div class="max-w-xl mx-auto px-6 flex flex-col gap-8" x-data="{
-            step: 1,
+            step: {{ $errors->any() ? 2 : 1 }},
             parent: '{{ old('parent_category') }}',
             categoryId: '{{ old('category_id') }}',
             currency: 'MDL',
@@ -16,29 +16,43 @@
             delivery: false,
             deliveryPrice: '',
             deposit: '',
+            cityId: '{{ old('city_id') }}',
+            cityName: '{{ old('city_id') ? optional(\App\Models\Cities::find(old('city_id')))->name : '' }}',
+            citySearch: '',
+            cityOpen: false,
+            cities: {{ \Illuminate\Support\Js::from($cities->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'is_suburb' => $c->is_suburb])) }},
+            get filteredCities() {
+                return this.cities.filter(c =>
+                    c.name.toLowerCase().includes(this.citySearch.toLowerCase())
+                );
+            },
+            selectCity(city) {
+                this.cityId = city.id;
+                this.cityName = city.name;
+                this.cityOpen = false;
+                this.citySearch = '';
+            },
             pricingMode: 'day',
             title: '{{ old('title') }}',
-            city: '{{ old('city') }}',
             description: '{{ old('description') }}',
             isSubmitting: false,
             images: [],
         
             init() {
+                @if(!$errors->any())
                 if (sessionStorage.getItem('listing_draft')) {
                     let data = JSON.parse(sessionStorage.getItem('listing_draft'));
                     this.title = data.title || '';
-                    this.city = data.city || '';
                     this.description = data.description || '';
                 }
+                @endif
                 this.$watch('title', v => this.saveDraft());
-                this.$watch('city', v => this.saveDraft());
                 this.$watch('description', v => this.saveDraft());
             },
             saveDraft() {
                 sessionStorage.setItem('listing_draft', JSON.stringify({
                     title: this.title,
-                    city: this.city,
-                    description: this.description
+                    description: this.description,
                 }));
             },
             handleFiles(event) {
@@ -59,10 +73,10 @@
             get canProceedStep1() { return this.parent !== '' && this.categoryId !== ''; },
             get canProceedStep2() {
                 if (this.title.trim().length < 5) return false;
-                if (this.city.trim().length < 2) return false;
-                if (this.pricingMode === 'day') return this.pricePerDay > 0;
-                if (this.pricingMode === 'hour') return this.pricePerHour > 0;
-                if (this.pricingMode === 'both') return this.pricePerDay > 0 && this.pricePerHour > 0;
+                if (!this.cityId) return false;
+                if (this.pricingMode === 'day') return Number(this.pricePerDay) > 0;
+                if (this.pricingMode === 'hour') return Number(this.pricePerHour) > 0;
+                if (this.pricingMode === 'both') return Number(this.pricePerDay) > 0 && Number(this.pricePerHour) > 0;
                 return false;
             },
             nextStep() {
@@ -226,67 +240,57 @@
                             class="bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all resize-none"></textarea>
                     </div>
 
-                    <div class="flex flex-col gap-1" x-data="{
-                        open: false,
-                        search: '',
-                    
-                        cityId: '{{ old('city_id') }}',
-                        selectedCity: null,
-                    
-                        init() {
-                            if (this.cityId) {
-                                this.selectedCity = this.cities.find(c => c.id == this.cityId);
-                            }
-                        },
-                    
-                        get filteredCities() {
-                            return this.cities.filter(c =>
-                                c.name.toLowerCase().includes(this.search.toLowerCase())
-                            );
-                        },
-                    
-                        selectCity(city) {
-                            this.cityId = city.id;
-                            this.selectedCity = city;
-                            this.open = false;
-                            this.search = '';
-                        }
-                    }">
+                    <div class="flex flex-col gap-1">
                         <label class="text-xs text-(--text-muted)">{{ __('messages.city') }}</label>
 
                         <div class="relative">
                             <button type="button"
-                                @click="open = !open; if(open) $nextTick(() => $refs.citySearch.focus())"
-                                class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all text-left flex justify-between items-center">
-                                <span x-text="city ? city : 'Selectați orașul'"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="w-4 h-4 text-(--text-muted) transition-transform"
-                                    :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                @click="cityOpen = !cityOpen; if(cityOpen) $nextTick(() => $refs.citySearch.focus())"
+                                class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) text-left flex justify-between items-center">
+                                <span x-text="cityName || '{{ __('messages.select_city') }}'"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-(--text-muted)"
+                                    :class="cityOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
 
-                            <div x-show="open" @click.away="open = false"
-                                x-transition:enter="transition ease-out duration-100"
-                                x-transition:enter-start="opacity-0 scale-95"
-                                x-transition:enter-end="opacity-100 scale-100"
+                            <div x-show="cityOpen" x-cloak @click.away="cityOpen = false"
                                 class="absolute z-50 w-full mt-1 bg-(--background-2) border border-(--background-3) rounded-sm shadow-xl overflow-hidden">
 
-                                <div class="p-2 border-b border-(--background-3) bg-(--background)">
-                                    <input type="text" x-model="search" x-ref="citySearch"
-                                        class="w-full bg-(--background-2) border border-(--background-3) text-xs px-2 py-1.5 rounded-sm focus:outline-none focus:border-(--button)">
+                                <div class="p-2 border-b border-(--background-3)">
+                                    <input type="text" x-model="citySearch" x-ref="citySearch"
+                                        placeholder="{{ __('messages.search') }}..."
+                                        class="w-full bg-(--background) border border-(--background-3) text-xs text-(--text-primary) px-2 py-1.5 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 </div>
 
-                                <div class="max-h-60 overflow-y-auto custom-scrollbar">
-                                    {{-- <template x-for="item in filteredCities" :key="item">
-                                        <div @click="cityId = city.id; city = city.name_en; open = false"
-                                            class="px-3 py-2 text-sm text-(--text-primary) hover:bg-(--button) hover:text-(--button-text) cursor-pointer transition-colors"
-                                            :class="city === item ? 'bg-(--background-3)' : ''">
-                                            <span x-text="item"></span>
+                                <div class="max-h-52 overflow-y-auto">
+                                    <template x-for="city in filteredCities.filter(c => !c.is_suburb)"
+                                        :key="city.id">
+                                        <div @click="selectCity(city)" class="px-3 py-2 text-sm cursor-pointer"
+                                            :class="cityId == city.id ? 'bg-(--button)/10 text-(--button) font-medium' :
+                                                'text-(--text-muted) hover:bg-(--background-3) hover:text-(--text-primary)'">
+                                            <span x-text="city.name"></span>
                                         </div>
-                                    </template> --}}
+                                    </template>
+
+                                    <template x-if="filteredCities.filter(c => c.is_suburb).length > 0">
+                                        <div>
+                                            <div
+                                                class="px-3 py-1.5 text-[10px] font-semibold text-(--text-muted) uppercase tracking-widest border-t border-(--background-3) mt-1 pt-2">
+                                                {{ __('messages.suburbs') }}
+                                            </div>
+                                            <template x-for="city in filteredCities.filter(c => c.is_suburb)"
+                                                :key="city.id">
+                                                <div @click="selectCity(city)" class="px-3 py-2 text-sm cursor-pointer"
+                                                    :class="cityId == city.id ? 'bg-(--button)/10 text-(--button) font-medium' :
+                                                        'text-(--text-muted) hover:bg-(--background-3) hover:text-(--text-primary)'">
+                                                    <span x-text="city.name"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
 
                                     <div x-show="filteredCities.length === 0"
                                         class="px-3 py-4 text-xs text-(--text-muted) text-center">
@@ -340,7 +344,11 @@
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
-                                    x-text="currency"></span>
+                                    x-text="currency">
+                                </span>
+
+                                <input type="number" :name="pricingMode === 'hour' ? '' : 'price_per_day'"
+                                    x-model="pricePerDay" ...>
                             </div>
                         </div>
 
@@ -353,7 +361,11 @@
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
-                                    x-text="currency"></span>
+                                    x-text="currency">
+                                </span>
+
+                                <input type="number" :name="pricingMode === 'day' ? '' : 'price_per_hour'"
+                                    x-model="pricePerHour" ...>
                             </div>
                         </div>
                     </div>

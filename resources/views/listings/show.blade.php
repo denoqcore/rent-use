@@ -6,6 +6,8 @@
     <div class="max-w-6xl mx-auto px-4 py-4 md:py-6">
 
         <nav class="text-sm text-gray-400 mb-3">
+            <a href="/">Home</a>
+            <span class="mx-1">›</span>
             {{ $listing->category->parent->name ?? '' }}
             <span class="mx-1">›</span>
             {{ $listing->category->name }}
@@ -157,7 +159,7 @@
                     <div class="flex flex-col text-sm divide-y divide-gray-100">
                         <div class="flex justify-between py-2.5">
                             <span class="text-gray-400">City</span>
-                            <span class="font-medium">{{ $listing->city }}</span>
+                            <span class="font-medium">{{ $listing->city->name }}</span>
                         </div>
                         <div class="flex justify-between py-2.5">
                             <span class="text-gray-400">Category</span>
