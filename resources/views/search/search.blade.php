@@ -2,27 +2,48 @@
 @section('title', 'rent.use | Browse')
 @section('content')
 
-    <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="max-w-6xl mx-auto px-6 py-10" x-data="{ filtersOpen: false }">
 
-        <div class="mb-8">
-            <h1 class="text-2xl font-black text-(--text-primary)">{{ __('messages.browse') }}</h1>
-            <p class="text-sm text-(--text-muted) mt-1">{{ $listings->total() }} {{ __('messages.results') }}</p>
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-(--text-primary)">{{ __('messages.browse') }}</h1>
+                <p class="text-sm text-(--text-muted) mt-1">{{ $listings->total() }} {{ __('messages.results') }}</p>
+            </div>
+
+            {{-- Кнопка фильтров только на мобильном --}}
+            <button @click="filtersOpen = !filtersOpen"
+                class="lg:hidden flex items-center gap-2 px-3 py-1.5 rounded-sm border border-(--background-3) bg-(--background-2) text-sm text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                <x-heroicon-o-adjustments-horizontal class="w-4 h-4" />
+                {{ __('messages.filters') }}
+            </button>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
 
-            <aside class="w-full lg:w-64 shrink-0">
+            {{-- ASIDE: скрыт на мобильном, показывается по кнопке --}}
+            <aside class="w-full lg:w-64 shrink-0" x-show="filtersOpen || window.innerWidth >= 1024" x-cloak
+                :class="filtersOpen ? 'block' : 'hidden lg:block'">
+
+                <div class="lg:hidden flex items-center justify-between mb-4">
+                    <span
+                        class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">{{ __('messages.filters') }}</span>
+                    <button @click="filtersOpen = false"
+                        class="text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                        <x-heroicon-o-x-mark class="w-4 h-4" />
+                    </button>
+                </div>
+
                 <form method="GET" action="{{ route('search') }}" id="filter-form" class="flex flex-col gap-6">
 
                     <div>
                         <label class="block text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-2">
                             {{ __('messages.search') }}
                         </label>
-                        <div class="flex gap-2 p-1 rounded-lg bg-(--background-2) border border-(--background-3)">
+                        <div class="flex gap-2 p-1 rounded-sm bg-(--background-2) border border-(--background-3)">
                             <input type="text" name="q" value="{{ request('q') }}" placeholder=". . ."
                                 class="flex-1 px-3 py-2 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
                             <button type="submit"
-                                class="px-3 py-2 bg-(--button) text-(--button-text) rounded-md hover:bg-(--button-h) transition-all cursor-pointer">
+                                class="px-3 py-2 bg-(--button) text-(--button-text) rounded-sm hover:bg-(--button-h) cursor-pointer">
                                 <x-heroicon-o-magnifying-glass class="w-4 h-4" />
                             </button>
                         </div>
@@ -34,14 +55,12 @@
                         </label>
                         <div class="flex flex-col gap-0.5">
                             <a href="{{ route('search', array_merge(request()->except('category', 'page'), [])) }}"
-                                class="px-3 py-2 rounded-sm text-sm transition-all
-                            {{ !request('category') ? 'bg-(--button)/10 text-(--button) font-semibold' : 'text-(--text-muted) hover:bg-(--background-2) hover:text-(--text-primary)' }}">
+                                class="px-3 py-2 rounded-sm text-sm {{ !request('category') ? 'bg-(--button)/10 text-(--button) font-semibold' : 'text-(--text-muted) hover:bg-(--background-2) hover:text-(--text-primary)' }}">
                                 {{ __('messages.all') }}
                             </a>
                             @foreach ($categories as $cat)
                                 <a href="{{ route('search', array_merge(request()->except('category', 'page'), ['category' => $cat->slug])) }}"
-                                    class="px-3 py-2 rounded-sm text-sm transition-all
-                                {{ request('category') === $cat->slug ? 'bg-(--button)/10 text-(--button) font-semibold' : 'text-(--text-muted) hover:bg-(--background-2) hover:text-(--text-primary)' }}">
+                                    class="px-3 py-2 rounded-sm text-sm {{ request('category') === $cat->slug ? 'bg-(--button)/10 text-(--button) font-semibold' : 'text-(--text-muted) hover:bg-(--background-2) hover:text-(--text-primary)' }}">
                                     {{ $cat->name }}
                                 </a>
                             @endforeach
@@ -82,7 +101,7 @@
                         <input type="checkbox" name="delivery" value="1" onchange="this.form.submit()"
                             {{ request('delivery') ? 'checked' : '' }}
                             class="w-4 h-4 rounded accent-(--button) cursor-pointer">
-                        <span class="text-sm text-(--text-muted) group-hover:text-(--text-primary) transition-colors">
+                        <span class="text-sm text-(--text-muted) group-hover:text-(--text-primary)">
                             {{ __('messages.delivery-available') }}
                         </span>
                     </label>
@@ -104,11 +123,11 @@
 
                     <div class="flex gap-2">
                         <button type="submit"
-                            class="flex-1 py-2 text-sm font-semibold bg-(--button) text-(--button-text) rounded-sm hover:bg-(--button-h) transition-all cursor-pointer">
+                            class="flex-1 py-2 text-sm font-semibold bg-(--button) text-(--button-text) rounded-sm hover:bg-(--button-h) cursor-pointer">
                             {{ __('messages.apply') }}
                         </button>
                         <a href="{{ route('search') }}"
-                            class="flex-1 py-2 text-sm text-center text-(--text-muted) hover:text-(--text-primary) bg-(--background-2) border border-(--background-3) rounded-sm transition-all">
+                            class="flex-1 py-2 text-sm text-center text-(--text-muted) hover:text-(--text-primary) bg-(--background-2) border border-(--background-3) rounded-sm">
                             {{ __('messages.reset') }}
                         </a>
                     </div>
@@ -125,7 +144,7 @@
                     <div class="flex items-center gap-2">
                         <p class="text-xs text-(--text-muted)">{{ __('messages.sort') }}:</p>
                         <select name="sort" form="filter-form" onchange="document.getElementById('filter-form').submit()"
-                            class="px-3 py-1.5 rounded-sm text-xs bg-(--background-2) border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) focus:outline-none cursor-pointer transition-all">
+                            class="px-3 py-1.5 rounded-sm text-xs bg-(--background-2) border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) focus:outline-none cursor-pointer">
                             <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
                                 {{ __('messages.sort-latest') }}</option>
                             <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>
@@ -134,7 +153,6 @@
                                 {{ __('messages.sort-price-asc') }}</option>
                             <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
                                 {{ __('messages.sort-price-desc') }}</option>
-
                         </select>
                     </div>
                 </div>
@@ -152,8 +170,7 @@
                                 <div class="h-44 bg-(--background-3)">
                                     @if ($listing->images->isNotEmpty())
                                         <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
-                                            alt="{{ $listing->title }}"
-                                            class="w-full h-full object-cover transition-transform duration-300 ease-in-out">
+                                            alt="{{ $listing->title }}" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <x-heroicon-o-photo class="w-7 h-7 text-(--text-primary)" />
@@ -169,7 +186,8 @@
                                         @endif
                                         <span>{{ $listing->category->name }}</span>
                                     </div>
-                                    <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}</h3>
+                                    <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}
+                                    </h3>
                                     <div
                                         class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
                                         <div class="flex items-center gap-1 text-(--text-muted)">

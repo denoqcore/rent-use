@@ -203,8 +203,10 @@ return [
     'photos_selected' => 'fotografie(i) selectată(e)',
 
     'publish_listing' => 'Publică anunțul',
+    'publishing' => 'Se publică...',
 
     //browse page
+    'filters'            => 'Filtre',
     'results'            => 'rezultate',
     'category'           => 'Categorie',
     'all'                => 'Toate',

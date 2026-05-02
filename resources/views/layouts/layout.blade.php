@@ -7,6 +7,7 @@
     <title>@yield('title', 'rent.use')</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.12.0/headroom.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

@@ -76,6 +76,16 @@ class CategorySeeder extends Seeder
                 ['name_en' => 'Other',       'name_ro' => 'Altele',      'name_ru' => 'Другое',       'slug' => 'construction-other'],
             ],
             ],
+            [
+                'name_en' => 'Miscellaneous',
+                'name_ro' => 'Diverse',
+                'name_ru' => 'Разное',
+                'icon'    => 'heroicon-o-squares-2x2',
+                'slug'    => 'miscellaneous',
+                'children' => [
+                ['name_en' => 'Other', 'name_ro' => 'Altele', 'name_ru' => 'Другое', 'slug' => 'miscellaneous-other'],
+          ],
+         ],
         ];
 
         foreach ($categories as $data) {
@@ -87,7 +97,7 @@ class CategorySeeder extends Seeder
                 'icon'    => $data['icon'],
             ]);
 
-            foreach ($data['children'] as $child) {
+            foreach ($data['children'] ?? [] as $child) {
                 Category::updateOrCreate([
                     'name_en'   => $child['name_en'],
                     'name_ro'   => $child['name_ro'],

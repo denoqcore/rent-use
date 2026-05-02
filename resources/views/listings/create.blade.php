@@ -339,16 +339,13 @@
                             x-show="pricingMode === 'day' || pricingMode === 'both'">
                             <label class="text-xs text-(--text-muted)">{{ __('messages.price_per_day') }}</label>
                             <div class="relative max-w-35">
-                                <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
-                                    x-model="pricePerDay" name="price_per_day"
+                                <input type="number" min="0"
+                                    @keydown="if($event.key === '-' || $event.key === 'e') $event.preventDefault()"
+                                    x-model="pricePerDay" :name="pricingMode === 'hour' ? '' : 'price_per_day'"
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
-                                    x-text="currency">
-                                </span>
-
-                                <input type="number" :name="pricingMode === 'hour' ? '' : 'price_per_day'"
-                                    x-model="pricePerDay" ...>
+                                    x-text="currency"></span>
                             </div>
                         </div>
 
@@ -356,16 +353,13 @@
                             x-show="pricingMode === 'hour' || pricingMode === 'both'">
                             <label class="text-xs text-(--text-muted)">{{ __('messages.price_per_hour') }}</label>
                             <div class="relative max-w-35">
-                                <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
-                                    x-model="pricePerHour" name="price_per_hour"
+                                <input type="number" min="0"
+                                    @keydown="if($event.key === '-' || $event.key === 'e') $event.preventDefault()"
+                                    x-model="pricePerHour" :name="pricingMode === 'day' ? '' : 'price_per_hour'"
                                     class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 <span
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
-                                    x-text="currency">
-                                </span>
-
-                                <input type="number" :name="pricingMode === 'day' ? '' : 'price_per_hour'"
-                                    x-model="pricePerHour" ...>
+                                    x-text="currency"></span>
                             </div>
                         </div>
                     </div>
@@ -373,7 +367,8 @@
                     <div class="flex flex-col gap-1 max-w-35">
                         <label class="text-xs text-(--text-muted)">{{ __('messages.deposit') }}</label>
                         <div class="relative">
-                            <input type="number" min="0" oninput="this.value = Math.abs(this.value)"
+                            <input type="number" min="0"
+                                @keydown="if($event.key === '-' || $event.key === 'e') $event.preventDefault()"
                                 name="deposit"
                                 class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
                             <span
@@ -484,7 +479,7 @@
                                 </svg>
                             </template>
                             <span
-                                x-text="isSubmitting ? '{{ __('messages.publishing') }}...' : '{{ __('messages.publish_listing') }}'"></span>
+                                x-text="isSubmitting ? '{{ __('messages.publishing') }}' : '{{ __('messages.publish_listing') }}'"></span>
                         </button>
                     </div>
 
