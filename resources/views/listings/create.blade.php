@@ -479,7 +479,7 @@
                                 </svg>
                             </template>
                             <span
-                                x-text="isSubmitting ? '{{ __('messages.publishing') }}...' : '{{ __('messages.publish_listing') }}'"></span>
+                                x-text="isSubmitting ? '{{ __('messages.publishing') }}' : '{{ __('messages.publish_listing') }}'"></span>
                         </button>
                     </div>
 

@@ -200,8 +200,10 @@ return [
     'photos_selected' => 'фото выбрано',
 
     'publish_listing' => 'Опубликовать объявление',
+    'publishing' => 'Публикация...',
 
 //browse page
+    'filters'            => 'Фильтры',
     'results'            => 'результатов',
     'category'           => 'Категория',
     'all'                => 'Все',

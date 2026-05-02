@@ -6,8 +6,8 @@ new class extends Component {}; ?>
 
 <div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-cloak>
     <header
-        class="hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b-[0.1px] border-(--background)">
-        <div class="max-w-6xl w-full mx-auto px-8 flex items-center justify-between gap-8" style="height:72px">
+        class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b-[0.1px] border-(--background)">
+        <div class="max-w-6xl w-full mx-auto px-6 flex items-center justify-between gap-8" style="height:72px">
 
             {{-- LEFT --}}
             <div class="flex items-center gap-6">
@@ -387,5 +387,20 @@ new class extends Component {}; ?>
             </div>
         </div>
     @endauth
-
 </div>
+
+{{-- Headroom --}}
+
+<script>
+    const header = document.querySelector('header.headroom');
+    if (header) {
+        const headroom = new Headroom(header, {
+            offset: 80,
+            tolerance: {
+                up: 5,
+                down: 5
+            },
+        });
+        headroom.init();
+    }
+</script>

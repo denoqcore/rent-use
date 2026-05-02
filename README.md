@@ -26,3 +26,8 @@ docker restart rent_use_app
 # Reload Octane
 
 docker exec -it rent_use_app php artisan octane:reload
+
+# Tinker admin
+
+php artisan tinker
+User::where('email', 'adminRentUse@gmail.com')->update(['is_admin' => true]);

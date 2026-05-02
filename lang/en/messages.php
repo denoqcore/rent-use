@@ -200,8 +200,10 @@ return [
     'photos_selected' => 'photo(s) selected',
 
     'publish_listing' => 'Publish listing',
+    'publishing' => 'Publishing..',
 
     //browse page
+    'filters'            => 'Filters',
     'results'            => 'results',
     'category'           => 'Category',
     'all'                => 'All',

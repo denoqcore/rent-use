@@ -7,10 +7,12 @@ use App\Models\Category;
 use App\Models\Cities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 
 class ListingController extends Controller
 {
+    use AuthorizesRequests;
     public function create()
 {
     $cities = Cities::orderBy('order')->get();
@@ -87,6 +89,7 @@ class ListingController extends Controller
 
     public function edit(Listing $listing)
     {
+
         $this->authorize('update', $listing);
         $categories = Category::whereNull('parent_id')->with('children')->get();
         return view('listings.edit', compact('listing', 'categories'));
