@@ -38,6 +38,8 @@
     --text-primary: #0f172a;
     --text-btn-header: #000;
     --text-muted: #64748b;
+    --blackwhite: #000;
+    --whiteblack: #fff;
 }
 
 /* dark */
@@ -51,6 +53,8 @@
     --text-primary: #e5e7eb;
     --text-btn-header: #fff;
     --text-muted: #9ca3af;
+    --blackwhite: #fff;
+    --whiteblack: #000;
 }
 
 [x-cloak] {

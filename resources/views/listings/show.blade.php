@@ -179,6 +179,21 @@
 
         <div class="h-24 lg:hidden"></div>
     </div>
+
+    <div
+        class="mobile-bar lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 pt-3 pb-6 flex items-center gap-3 z-50">
+        <div class="flex-1">
+            <div class="text-base font-semibold">{{ number_format($listing->price_per_day) }} {{ $listing->currency }}
+            </div>
+            <div class="text-xs text-gray-400">/ день</div>
+        </div>
+        <button class="w-10 h-10 border border-gray-200 rounded-xl flex items-center justify-center">
+            <x-heroicon-o-heart class="w-5 h-5 text-gray-400" />
+        </button>
+        <button class="flex-1 bg-blue-600 text-white text-sm font-semibold rounded-xl py-3">
+            Написать {{ $listing->user->name }}
+        </button>
+    </div>
 @endsection
 
 <script>
