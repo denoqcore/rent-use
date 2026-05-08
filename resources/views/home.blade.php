@@ -4,83 +4,78 @@
 
 @section('content')
 
-    <section id="vanta-hero" class="min-h-[calc(60vh-72px)] w-full flex items-center relative overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none z-10"></div>
-        <div class="relative z-20 w-full max-w-2xl mx-auto px-6 flex flex-col items-center text-center">
+    <section id="vanta-hero" class="relative overflow-hidden border-b border-(--background-3) bg-(--background)">
 
-            <div
-                class="absolute -inset-10 bg-radial from-white/60 via-white/30 to-transparent -z-10 blur-3xl pointer-events-none dark:hidden">
-            </div>
+        <div class="relative z-20 max-w-7xl mx-auto px-6 pt-16 pb-14 grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
 
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium mb-8 text-(--text-muted) select-none">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
-                    alt="moldova" class="h-3">
-                {{ __('messages.hero-sub-2') }}
-            </div>
-
-            <h1
-                class="text-5xl md:text-6xl xl:text-7xl font-black text-(--text-primary) leading-none mb-5 tracking-tight drop-shadow-sm select-none">
-                {{ __('messages.rent-hero') }}<br>
-                <span x-data="{
-                    full: '{{ __('messages.rent-hero-2') }}',
-                    displayed: '',
-                    index: 0,
-                    done: false
-                }" x-init="setTimeout(() => {
-                    let iv = setInterval(() => {
-                        if (index < full.length) {
-                            displayed += full[index];
-                            index++;
-                        } else {
-                            done = true;
-                            clearInterval(iv);
-                        }
-                    }, 60)
-                }, 400)" class="text-(--button)">
-                    <span x-text="displayed"></span><span x-show="!done" class="animate-pulse text-(--text-muted)">|</span>
-                </span>
-            </h1>
-
-            <p class="text-(--text-muted) text-sm mb-8 max-w-xs leading-relaxed font-black select-none">
-                {{ __('messages.hero-sub') }}
-            </p>
-
-            <form method="GET" action="{{ route('search') }}" class="w-full max-w-md">
+            <div class="flex flex-col items-start">
                 <div
-                    class="flex gap-2 p-1.5 rounded-xl bg-(--background-2)/90 backdrop-blur-lg border border-(--background-3) shadow-xl shadow-blue-500/5">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder=". . ."
-                        class="flex-1 px-3 py-2.5 text-sm bg-transparent text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none">
-                    <button type="submit"
-                        class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-(--button) text-(--button-text) rounded-lg hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md shadow-(--button)/20">
-                        <x-heroicon-o-magnifying-glass class="w-4 h-4" />
-                        {{ __('messages.search') }}
-                    </button>
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-(--background-3) bg-(--background-2) text-xs font-medium text-(--text-muted) mb-6">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
+                        alt="moldova" class="h-3 rounded-[2px]">
+
+                    {{ __('messages.hero-sub-2') }}
                 </div>
-            </form>
-        </div>
-    </section>
 
-    <section class="w-full py-12 bg-(--background)">
-        <div class="max-w-6xl mx-auto px-6">
+                <h1 class="text-4xl lg:text-6xl font-black leading-none tracking-tight text-(--text-primary) max-w-xl">
+                    Rent anything nearby.
+                </h1>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                <p class="mt-5 text-sm lg:text-base text-(--text-muted) max-w-md leading-relaxed">
+                    {{ __('messages.hero-sub') }}
+                </p>
+
+                <form method="GET" action="{{ route('search') }}" class="w-full max-w-xl mt-8">
+                    <div
+                        class="flex items-center gap-2 p-2 rounded-2xl bg-(--background-2)/90 border border-(--background-3)">
+
+                        <x-heroicon-o-magnifying-glass class="w-5 h-5 text-(--text-muted) ml-2 shrink-0" />
+
+                        <input type="text" name="q" value="{{ request('q') }}"
+                            placeholder="{{ __('messages.search') }}..."
+                            class="flex-1 bg-transparent text-(--text-primary) placeholder:text-(--text-muted) text-sm focus:outline-none">
+
+                        <button type="submit"
+                            class="px-5 py-3 rounded-xl bg-(--button) text-(--button-text) text-sm font-bold hover:bg-(--button-h) transition-all cursor-pointer whitespace-nowrap">
+                            {{ __('messages.search') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+
                 @foreach ($categories as $category)
                     <a href="{{ route('search', ['category' => $category->slug]) }}"
-                        class="group relative flex flex-col justify-between gap-6 p-4 rounded-sm border border-(--background-3) bg-(--background-2) transition-all duration-200 overflow-hidden">
+                        class="group relative overflow-hidden rounded-2xl border border-(--background-3) bg-(--background-2) p-5 transition-all duration-300 hover:border-(--button)/40 hover:-translate-y-0.5">
                         <div
-                            class="absolute top-0 left-0 w-full h-px bg-(--button) opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.06),transparent_55%)]">
                         </div>
-                        <x-dynamic-component :component="$category->icon ?? 'heroicon-o-squares-2x2'"
-                            class="w-4 h-4 text-(--text-muted) group-hover:text-(--button) transition-all duration-200" />
-                        <div>
-                            <p class="text-sm font-bold text-(--text-primary)">{{ $category->name }}</p>
-                            <p class="text-xs text-(--text-muted) mt-0.5">{{ $category->children->count() }}
-                                {{ __('messages.subcategories') }}</p>
+
+                        <div class="relative z-10 flex flex-col gap-8">
+
+                            <div
+                                class="w-10 h-10 rounded-xl bg-(--background) border border-(--background-3) flex items-center justify-center">
+                                <x-dynamic-component :component="$category->icon ?? 'heroicon-o-squares-2x2'"
+                                    class="w-5 h-5 text-(--text-muted) group-hover:text-(--button) transition-all" />
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-bold text-(--text-primary)">
+                                    {{ $category->name }}
+                                </p>
+
+                                <p class="text-xs text-(--text-muted) mt-1">
+                                    {{ $category->children->count() }}
+                                    {{ __('messages.subcategories') }}
+                                </p>
+                            </div>
+
                         </div>
                     </a>
                 @endforeach
-            </div>
 
+            </div>
         </div>
     </section>
 

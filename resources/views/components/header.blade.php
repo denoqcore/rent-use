@@ -6,29 +6,60 @@ new class extends Component {}; ?>
 
 <div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-cloak>
     <header
-        class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b-[0.1px] border-(--background)">
-        <div class="max-w-6xl w-full mx-auto px-6 flex items-center justify-between gap-8" style="height:72px">
+        class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
+
+        <div class="w-full bg-(--blackwhite) border-b border-(--background-3)">
+            <div class="max-w-6xl mx-auto px-6 h-10 flex items-center">
+                <a href="/" class="text-sm font-black tracking-wide text-(--whiteblack)">
+                    rent<span class="text-(--whiteblack) font-normal">.use</span>
+
+                    <span class="text-[10px] font-normal text---whiteblack) ml-1">
+                        by Denis Beccev
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-6xl w-full mx-auto px-3 flex items-center justify-between gap-8" style="height:72px">
 
             {{-- LEFT --}}
-            <div class="flex items-center gap-6">
-                <a href="/" class="text-xl font-black tracking-wide text-(--text-primary)">
-                    rent<span class="text-(--text-muted) font-normal">.use</span>
-                    <span class="text-[11px] font-normal text-(--text-muted) ml-1">by Denis Beccev</span>
+            <div class="flex items-center gap-4">
+                <a href="/search"
+                    class="shrink-0 px-3 py-1.5 text-sm font-bold text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
+                    {{ __('messages.browse') }}
                 </a>
-
-                <div class="w-px h-4 bg-(--background-3)"></div>
-
-                <nav class="flex items-center gap-0.5">
-                    <a href="/search"
-                        class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
-                        {{ __('messages.browse') }}
+                @auth
+                    <a href="{{ route('listings.create') }}"
+                        class="shrink-0 px-3 py-1.5 text-sm font-bold text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
+                        {{ __('messages.post') }}
                     </a>
-                    @auth
-                        <a href="{{ route('listings.create') }}"
-                            class="px-3 py-1.5 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
-                            {{ __('messages.post') }}
+
+                    @if (auth()->user()?->is_admin)
+                        <a href="/admin"
+                            class="shrink-0 px-3 py-1.5 text-sm font-bold text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
+                            Admin Panel
                         </a>
-                    @endauth
+                    @endif
+
+                    <form method="GET" action="{{ route('search') }}" class="w-full max-w-sm">
+                        <div
+                            class="group flex items-center gap-2 h-10 px-3 rounded-full bg-(--background-2)/80 border border-(--background-3) backdrop-blur-md transition-all duration-200 hover:border-(--text-muted)/40">
+                            <input type="text" name="q" value="{{ request('q') }}"
+                                placeholder="{{ __('messages.search') }}" autocomplete="off"
+                                class="w-full bg-transparent border-0 outline-none text-sm text-(--text-primary) placeholder:text-(--blackwhite)/70 focus:ring-0">
+
+                            <x-heroicon-o-magnifying-glass
+                                class="w-4 h-4 text-(--text-muted) group-focus-within:text-(--button) shrink-0 transition-colors" />
+
+                            @if (request('q'))
+                                <a href="{{ route('search') }}"
+                                    class="text-(--text-muted) hover:text-(--text-primary) transition-colors">
+                                    <x-heroicon-o-x-mark class="w-4 h-4" />
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                @endauth
                 </nav>
             </div>
 
