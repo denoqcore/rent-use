@@ -32,6 +32,7 @@ return [
     'categories' => 'categories',
     'more' => 'see more',
     'latest' => 'Latest announcements',
+    'listings' => 'listings',
 
     'empty-title' => 'Nothing here yet',
     'empty-desc'  => 'Items and listings will appear here',

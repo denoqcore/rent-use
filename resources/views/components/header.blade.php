@@ -40,26 +40,27 @@ new class extends Component {}; ?>
                             Admin Panel
                         </a>
                     @endif
-
-                    <form method="GET" action="{{ route('search') }}" class="w-full max-w-sm">
-                        <div
-                            class="group flex items-center gap-2 h-10 px-3 rounded-full bg-(--background-2)/80 border border-(--background-3) backdrop-blur-md transition-all duration-200 hover:border-(--text-muted)/40">
-                            <input type="text" name="q" value="{{ request('q') }}"
-                                placeholder="{{ __('messages.search') }}" autocomplete="off"
-                                class="w-full bg-transparent border-0 outline-none text-sm text-(--text-primary) placeholder:text-(--blackwhite)/70 focus:ring-0">
-
-                            <x-heroicon-o-magnifying-glass
-                                class="w-4 h-4 text-(--text-muted) group-focus-within:text-(--button) shrink-0 transition-colors" />
-
-                            @if (request('q'))
-                                <a href="{{ route('search') }}"
-                                    class="text-(--text-muted) hover:text-(--text-primary) transition-colors">
-                                    <x-heroicon-o-x-mark class="w-4 h-4" />
-                                </a>
-                            @endif
-                        </div>
-                    </form>
                 @endauth
+
+
+                <form method="GET" action="{{ route('search') }}" class="w-full max-w-sm">
+                    <div
+                        class="group flex items-center gap-2 h-10 px-3 rounded-md bg-(--background-2)/80 border border-(--background-3) backdrop-blur-md transition-all duration-200 hover:border-(--text-muted)/40">
+                        <input type="text" name="q" value="{{ request('q') }}"
+                            placeholder="{{ __('messages.search') }}" autocomplete="off"
+                            class="w-full bg-transparent border-0 outline-none text-sm text-(--text-primary) placeholder:text-(--blackwhite)/70 focus:ring-0">
+
+                        <x-heroicon-o-magnifying-glass
+                            class="w-4 h-4 text-(--text-muted) group-focus-within:text-(--button) shrink-0 transition-colors" />
+
+                        @if (request('q'))
+                            <a href="{{ route('search') }}"
+                                class="text-(--text-muted) hover:text-(--text-primary) transition-colors">
+                                <x-heroicon-o-x-mark class="w-4 h-4" />
+                            </a>
+                        @endif
+                    </div>
+                </form>
                 </nav>
             </div>
 
