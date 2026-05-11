@@ -56,4 +56,9 @@ class Listing extends Model
     {
       return $this->belongsTo(Cities::class, 'city_id');
     }
+
+    public function favoritedByUsers()
+    {
+    return $this->belongsToMany(User::class, 'favorites');
+    }
 }

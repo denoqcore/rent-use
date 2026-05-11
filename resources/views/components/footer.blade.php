@@ -9,8 +9,13 @@ new class extends Component {};
         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
 
             <div class="flex items-center gap-3">
-                <a href="/" class="text-sm font-black tracking-wide text-(--text-primary)">
-                    rent<span class="text-(--text-muted) font-normal">.use</span>
+                <a href="/" class="text-sm flex items-center gap-1 font-black tracking-wide text-(--text-primary)">
+                    <div>
+                        <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-4 h-8">
+                    </div>
+                    <div>
+                        rent<span class="text-(--text-muted) font-normal">.use</span>
+                    </div>
                 </a>
                 <span class="w-px h-3 bg-(--background-3)"></span>
                 <span class="text-xs text-(--text-muted)">© 2026 {{ __('messages.all-rights') }}</span>

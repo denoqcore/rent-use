@@ -119,6 +119,7 @@ class ListingController extends Controller
             ->with('success', 'Listing updated!');
     }
 
+
     public function destroy(Listing $listing)
     {
         $this->authorize('delete', $listing);
