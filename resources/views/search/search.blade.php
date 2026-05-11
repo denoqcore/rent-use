@@ -2,7 +2,7 @@
 @section('title', 'rent.use | Browse')
 @section('content')
 
-    <div class="max-w-6xl mx-auto px-6 py-10" x-data="{ filtersOpen: false }">
+    <div class="max-w-6xl mx-auto px-6 py-10 sm:mt-10" x-data="{ filtersOpen: false }">
 
         <div class="flex items-center justify-between mb-8">
             <div>

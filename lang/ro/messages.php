@@ -38,6 +38,10 @@ return [
 
     'empty-title' => 'Încă nimic aici',
     'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
+    //favorite
+
+    'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
+    'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici.',
 
     // profile page
 

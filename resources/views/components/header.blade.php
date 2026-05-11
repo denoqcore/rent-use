@@ -4,26 +4,37 @@ use Livewire\Component;
 
 new class extends Component {}; ?>
 
-<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false }" x-cloak>
+<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false, favoritesModal: false }" x-cloak>
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
-        <div class="w-full bg-(--blackwhite) border-b border-(--background-3)">
-            <div class="max-w-6xl mx-auto px-6 h-10 flex items-center">
-                <a href="/" class="text-sm font-black tracking-wide text-(--whiteblack)">
-                    rent<span class="text-(--whiteblack) font-normal">.use</span>
+        <div class="w-full border-b border-(--background-3) bg-(--blackwhite)">
+            <div class="max-w-6xl mx-auto px-6 h-12 flex items-center">
+                <a href="/" class="flex items-center gap-3 group">
 
-                    <span class="text-[10px] font-normal text---whiteblack) ml-1">
-                        by Denis Beccev
-                    </span>
+                    {{-- Text --}}
+                    <div class="flex items-end gap-1">
+                        <span class="text-base font-black tracking-wide text-(--whiteblack)">
+                            rent<span class="font-normal">.use</span>
+                        </span>
+
+                        <span class="text-[10px] text-(--whiteblack)/60 mb-[2px]">
+                            by Denis Beccev
+                        </span>
+                    </div>
+
                 </a>
             </div>
         </div>
 
         <div class="max-w-6xl w-full mx-auto px-3 flex items-center justify-between gap-8" style="height:72px">
 
-            {{-- LEFT --}}
             <div class="flex items-center gap-4">
+                <a href="/"
+                    class="rounded-xl border border-transparent p-1 transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:outline-none">
+
+                    <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-17 h-8">
+                </a>
                 <a href="/search"
                     class="shrink-0 px-3 py-1.5 text-sm font-bold text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">
                     {{ __('messages.browse') }}
@@ -75,7 +86,8 @@ new class extends Component {}; ?>
                 @endguest
 
                 @auth
-                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                    <button @click="favoritesModal = true"
+                        class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-heart class="w-5 h-5" />
                     </button>
                     <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
@@ -209,8 +221,11 @@ new class extends Component {}; ?>
     {{-- MOBILE HEADER --}}
     <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between p-4">
-            <a href="/" class="text-xs md:text-lg font-black tracking-wide text-(--text-primary)">
+            <a href="/"
+                class="text-xs flex gap-1 items-center md:text-lg font-black tracking-wide text-(--text-primary)">
                 rent<span class="text-(--text-muted) font-normal">.use</span>
+
+                <p class="text-xs md:text-lg">by Denis Beccev</p>
             </a>
             <button @click="open = !open"
                 class="text-xs md:text-lg font-medium text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
@@ -388,8 +403,147 @@ new class extends Component {}; ?>
 
     {{-- LOGOUT MODAL --}}
     @auth
-        <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
+        <!-- Контейнер боковой панели -->
+        <div x-show="favoritesModal" x-cloak class="fixed inset-0 z-60 flex justify-end"
+            aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
 
+            <!-- Затемнение фона (Backdrop) -->
+            <div x-show="favoritesModal" x-transition:enter="ease-in-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @click="favoritesModal = false"
+                class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity">
+            </div>
+
+            <!-- Сама панель -->
+            <div x-show="favoritesModal" x-transition:enter="transform transition ease-in-out duration-300"
+                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-300"
+                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
+                class="relative z-10 w-screen max-w-md flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full"
+                @keydown.escape.window="favoritesModal = false">
+
+                {{-- Шапка панели --}}
+                <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-heart class="w-4 h-4 text-(--text-muted)" />
+                        <h2 class="text-sm font-bold text-(--text-primary)">
+                            {{ __('messages.favorite') }}
+                        </h2>
+                    </div>
+
+                    {{-- Кнопка закрытия --}}
+                    <button @click="favoritesModal = false"
+                        class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                        <x-heroicon-o-x-mark class="w-4 h-4" />
+                    </button>
+                </div>
+
+                {{-- Контент: список избранного --}}
+                <div class="overflow-y-auto flex-1 p-4">
+                    @php
+                        $userFavorites = auth()
+                            ->user()
+                            ->favoriteListings()
+                            ->with([
+                                'images' => fn($q) => $q->where('is_main', true)->orWhere('order', 0),
+                                'city',
+                                'category',
+                            ])
+                            ->where('status', 'active')
+                            ->latest('favorites.created_at')
+                            ->get();
+                    @endphp
+
+                    @if ($userFavorites->isEmpty())
+                        <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                            <x-heroicon-o-heart class="w-10 h-10 text-(--text-muted) opacity-30" />
+                            <p class="text-sm font-medium text-(--text-primary)">
+                                {{ __('messages.no_favorites_title') }}
+                            </p>
+                            <p class="text-xs text-(--text-muted) max-w-xs">
+                                {{ __('messages.no_favorites_desc') }}
+                            </p>
+                            <a href="{{ route('search') }}" @click="favoritesModal = false"
+                                class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
+                                {{ __('messages.browse') }}
+                            </a>
+                        </div>
+                    @else
+                        <div class="flex flex-col gap-2">
+                            @foreach ($userFavorites as $fav)
+                                <div
+                                    class="flex items-center gap-3 p-2 rounded-sm hover:bg-(--background-3) transition-colors group">
+                                    {{-- Миниатюра --}}
+                                    <a href="{{ route('listings.show', $fav->slug) }}" @click="favoritesModal = false"
+                                        class="shrink-0 w-16 h-14 rounded-sm overflow-hidden bg-(--background-3)">
+                                        @if ($fav->images->isNotEmpty())
+                                            <img src="{{ asset('storage/' . $fav->images->first()->path) }}"
+                                                alt="{{ $fav->title }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted) opacity-40" />
+                                            </div>
+                                        @endif
+                                    </a>
+
+                                    {{-- Инфо --}}
+                                    <div class="flex-1 min-w-0">
+                                        <a href="{{ route('listings.show', $fav->slug) }}"
+                                            @click="favoritesModal = false">
+                                            <p
+                                                class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
+                                                {{ $fav->title }}
+                                            </p>
+                                        </a>
+                                        <div class="flex items-center gap-2 mt-0.5">
+                                            <span class="flex items-center gap-1 text-[11px] text-(--text-muted)">
+                                                <x-heroicon-s-map-pin class="w-2.5 h-2.5 shrink-0" />
+                                                {{ $fav->city->name }}
+                                            </span>
+                                            <span class="text-[11px] font-bold text-(--button)">
+                                                @if ($fav->price_per_day)
+                                                    {{ number_format($fav->price_per_day, 0, '.', ' ') }}
+                                                    {{ $fav->currency }}<span
+                                                        class="text-(--text-muted) font-normal">/day</span>
+                                                @elseif($fav->price_per_hour)
+                                                    {{ number_format($fav->price_per_hour, 0, '.', ' ') }}
+                                                    {{ $fav->currency }}<span
+                                                        class="text-(--text-muted) font-normal">/hr</span>
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <form method="POST" action="{{ route('favorites.destroy', $fav) }}"
+                                        class="shrink-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
+                                            <x-heroicon-o-x-mark class="w-4 h-4" />
+                                        </button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Футер --}}
+                @if ($userFavorites->isNotEmpty())
+                    <div class="px-5 py-3 border-t border-(--background-3) shrink-0">
+                        <a href="{{ route('favorites.index') }}" @click="favoritesModal = false"
+                            class="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-colors">
+                            {{ __('messages.favorite') }} ({{ $userFavorites->count() }})
+                            <x-heroicon-o-arrow-right class="w-3 h-3" />
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutModal = false"></div>
 
             <div

@@ -9,15 +9,19 @@ use App\Models\Category;
 class HomeController extends Controller
 {
     public function index()
-{
-    $categories = Category::whereNull('parent_id')->with('children')->get();
+    {
+        $categories = Category::whereNull('parent_id')->with('children')->get();
 
-    $listings = Listing::with(['images', 'category'])
-        ->where('status', 'active')
-        ->latest()
-        ->take(8)
-        ->get();
+        $listings = Listing::with(['images', 'category.parent', 'city'])
+            ->where('status', 'active')
+            ->latest()
+            ->take(8)
+            ->get();
 
-    return view('home', compact('categories', 'listings'));
-}
+        if (auth()->check()) {
+            auth()->user()->load('favoriteListings');
+        }
+
+        return view('home', compact('categories', 'listings'));
+    }
 }

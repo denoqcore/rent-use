@@ -36,6 +36,12 @@ return [
 
     'empty-title' => 'Nothing here yet',
     'empty-desc'  => 'Items and listings will appear here',
+
+    //favorite
+
+    'no_favorites_title' => 'No saved listings yet',
+    'no_favorites_desc'  => 'Tap the heart on any listing to save it here.',
+
     // profile page
 
     'profile' => 'Profile',

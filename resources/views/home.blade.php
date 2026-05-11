@@ -50,7 +50,7 @@
                             class="flex-1 min-w-0 bg-transparent text-(--text-primary) placeholder:text-(--text-muted) text-sm py-3 focus:outline-none">
 
                         <button type="submit"
-                            class="m-1.5 px-6 py-2 rounded-md bg-(--button) text-(--button-text) text-sm font-semibold hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0">
+                            class="m-1.5 px-4 py-1.5 rounded-md bg-(--button) text-(--button-text) text-sm font-semibold hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0">
                             {{ __('messages.search') }}
                         </button>
                     </form>
@@ -114,7 +114,6 @@
 
     <section class="w-full bg-(--background) py-12">
         <div class="max-w-6xl mx-auto px-6">
-
             <div class="flex items-center justify-between mb-6">
                 <span class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
                     {{ __('messages.latest') }}
@@ -128,22 +127,51 @@
             @if ($listings->isNotEmpty())
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     @foreach ($listings as $listing)
-                        <a href="{{ route('listings.show', $listing->slug) }}"
+                        @php
+                            $isFavorited = auth()->check() && auth()->user()->favoriteListings->contains($listing->id);
+                        @endphp
+
+                        <div
                             class="group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
 
-                            <div class="h-44 bg-(--background-3)">
-                                @if ($listing->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
-                                        alt="{{ $listing->title }}"
-                                        class="w-full h-full object-cover transition-transform duration-300 ease-in-out cursor-pointer">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <x-heroicon-o-photo class="w-7 h-7 text-(--text-primary)" />
-                                    </div>
-                                @endif
+                            {{-- Изображение + сердечко поверх --}}
+                            <div class="relative h-44 bg-(--background-3)">
+                                <a href="{{ route('listings.show', $listing->slug) }}" class="block w-full h-full">
+                                    @if ($listing->images->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
+                                            alt="{{ $listing->title }}"
+                                            class="w-full h-full object-cover transition-transform duration-300 ease-in-out">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <x-heroicon-o-photo class="w-7 h-7 text-(--text-primary)" />
+                                        </div>
+                                    @endif
+                                </a>
+
+                                <div class="absolute top-2 right-2">
+                                    @if ($isFavorited)
+                                        <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" title="Remove favorite"
+                                                class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120 ">
+                                                <x-heroicon-s-heart class="w-6 h-6 text-red-500" />
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('favorites.store', $listing) }}">
+                                            @csrf
+                                            <button type="submit" title="Favorite"
+                                                class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120">
+                                                <x-heroicon-o-heart class="w-6 h-6 text-white" />
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="p-3 flex flex-col gap-1">
+
                                 <div
                                     class="flex items-center gap-1 text-[10px] text-(--text-muted) tracking-wide font-medium truncate">
                                     <span>{{ $listing->category->parent->name ?? '' }}</span>
@@ -153,7 +181,11 @@
                                     <span>{{ $listing->category->name }}</span>
                                 </div>
 
-                                <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}</h3>
+                                <a href="{{ route('listings.show', $listing->slug) }}">
+                                    <h3 class="text-sm font-bold text-(--text-primary) truncate hover:underline">
+                                        {{ $listing->title }}
+                                    </h3>
+                                </a>
 
                                 <div
                                     class="flex items-center justify-between pt-2 mt-auto border-t border-(--background-3)">
@@ -173,8 +205,9 @@
                                         @endif
                                     </span>
                                 </div>
+
                             </div>
-                        </a>
+                        </div>
                     @endforeach
                 </div>
             @else
@@ -242,7 +275,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 @foreach ([['step' => '01', 'icon' => 'heroicon-o-magnifying-glass', 'title' => __('messages.step-1-title'), 'desc' => __('messages.step-1-desc')], ['step' => '02', 'icon' => 'heroicon-o-chat-bubble-left-ellipsis', 'title' => __('messages.step-2-title'), 'desc' => __('messages.step-2-desc')], ['step' => '03', 'icon' => 'heroicon-o-arrow-path', 'title' => __('messages.step-3-title'), 'desc' => __('messages.step-3-desc')]] as $step)
-                    <div class="relative p-6 rounded-sm bg-(--background-2) border border-(--background-3) overflow-hidden">
+                    <div
+                        class="relative p-6 rounded-sm bg-(--background-2) border border-(--background-3) overflow-hidden">
                         <span class="absolute top-3 right-4 text-5xl font-black leading-none select-none"
                             style="color:#222">{{ $step['step'] }}</span>
                         <div class="mb-6">
@@ -336,38 +370,4 @@
 @endsection
 
 @push('scripts')
-    {{-- OFF ON TIME --}}
-    {{-- <script>
-        let vantaEffect = null;
-
-        function initVanta() {
-            const isDark = document.documentElement.classList.contains('dark');
-
-            if (vantaEffect) vantaEffect.destroy();
-
-            vantaEffect = VANTA.DOTS({
-                el: "#vanta-hero",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: isDark ? 0xb1b1b1 : 0x6550ff,
-                color2: 0x828282,
-                backgroundColor: isDark ? 0x222222 : 0xffffff,
-                size: 3.50,
-                showLines: false
-            });
-        }
-
-        initVanta();
-
-        const observer = new MutationObserver(() => initVanta());
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-    </script> --}}
 @endpush
