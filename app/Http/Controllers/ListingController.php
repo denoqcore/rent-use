@@ -80,11 +80,29 @@ class ListingController extends Controller
 
     public function show(string $slug)
     {
-        $listing = Listing::where('slug', $slug)
-            ->with(['user', 'category', 'images', 'city'])
-            ->firstOrFail();
+        $listing = Listing::with([
+            'images',
+            'category.parent',
+            'city',
+            'user',
+        ])->where('slug', $slug)->firstOrFail();
 
-        return view('listings.show', compact('listing'));
+        $bookedDates = $listing->activeBookings()
+            ->get(['start_date', 'end_date'])
+            ->flatMap(function ($booking) {
+                $dates = [];
+                $current = $booking->start_date->copy();
+                while ($current->lte($booking->end_date)) {
+                    $dates[] = $current->format('Y-m-d');
+                    $current->addDay();
+                }
+                return $dates;
+            })
+            ->unique()
+            ->values()
+            ->toArray();
+
+        return view('listings.show', compact('listing', 'bookedDates'));
     }
 
     public function edit(Listing $listing)
@@ -126,4 +144,5 @@ class ListingController extends Controller
         $listing->update(['status' => 'archived']);
         return redirect()->route('profile')->with('success', 'Listing archived.');
     }
+
 }

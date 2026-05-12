@@ -59,6 +59,8 @@
 
             <div class="lg:w-75 w-full">
                 <div class="border border-gray-100 rounded-2xl p-4 lg:p-5">
+
+                    {{-- Цена --}}
                     <div class="text-xl font-medium">
                         {{ number_format($listing->price_per_day) }} {{ $listing->currency }}
                         <span class="text-sm font-normal text-gray-400">/ day</span>
@@ -70,12 +72,14 @@
                         </div>
                     @endif
 
+                    {{-- Депозит / Доставка --}}
                     <div class="mt-4 flex flex-col gap-3 text-sm">
                         @if ($listing->deposit)
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Deposit</span>
-                                <span class="font-medium">{{ number_format($listing->deposit) }}
-                                    {{ $listing->currency }}</span>
+                                <span class="font-medium">
+                                    {{ number_format($listing->deposit) }} {{ $listing->currency }}
+                                </span>
                             </div>
                         @endif
 
@@ -83,8 +87,9 @@
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Delivery</span>
                                 @if ($listing->delivery_price)
-                                    <span class="font-medium">{{ number_format($listing->delivery_price) }}
-                                        {{ $listing->currency }}</span>
+                                    <span class="font-medium">
+                                        {{ number_format($listing->delivery_price) }} {{ $listing->currency }}
+                                    </span>
                                 @else
                                     <span class="font-medium text-green-500">Free</span>
                                 @endif
@@ -94,10 +99,62 @@
 
                     @auth
                         @if (auth()->id() !== $listing->user_id)
-                            <button
-                                class="mt-5 w-full bg-blue-600 hover:bg-blue-700 transition text-white rounded-xl py-3 text-sm font-semibold">
-                                Write {{ $listing->user->name }}
-                            </button>
+                            <form method="POST" action="{{ route('bookings.store', $listing) }}" x-data="bookingForm({{ $listing->price_per_day }}, {{ $listing->price_per_hour ?? 'null' }}, {{ json_encode($bookedDates) }})"
+                                x-init="init()" class="mt-5">
+                                @csrf
+
+                                <div class="flex gap-2 mb-3">
+
+                                    <div class="flex-1">
+                                        <label class="text-xs text-gray-400 mb-1 block">From</label>
+                                        <input type="text" id="start_date" name="start_date" x-ref="startInput" readonly
+                                            placeholder="— — —"
+                                            class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-center cursor-pointer focus:outline-none focus:border-blue-400">
+                                    </div>
+
+                                    <div class="flex-1">
+                                        <label class="text-xs text-gray-400 mb-1 block">To</label>
+                                        <input type="text" id="end_date" name="end_date" x-ref="endInput" readonly
+                                            placeholder="— — —"
+                                            class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-center cursor-pointer focus:outline-none focus:border-blue-400">
+                                    </div>
+                                </div>
+
+                                <div x-show="totalPrice > 0" x-cloak
+                                    class="mb-3 p-3 bg-gray-50 rounded-xl flex flex-col gap-1.5 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">
+                                            <span x-text="days"></span> days × {{ number_format($listing->price_per_day) }}
+                                            {{ $listing->currency }}
+                                        </span>
+                                        <span class="font-medium" x-text="totalPrice + ' {{ $listing->currency }}'"></span>
+                                    </div>
+                                    @if ($listing->deposit)
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-400">Deposit</span>
+                                            <span class="font-medium">{{ number_format($listing->deposit) }}
+                                                {{ $listing->currency }}</span>
+                                        </div>
+                                        <div class="flex justify-between border-t border-gray-200 pt-1.5 mt-0.5">
+                                            <span class="text-gray-500 font-medium">Total with deposit</span>
+                                            <span class="font-semibold"
+                                                x-text="(totalPrice + {{ $listing->deposit }}) + ' {{ $listing->currency }}'"></span>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <button type="submit" :disabled="!startDate || !endDate"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition text-white rounded-xl py-3 text-sm font-semibold">
+                                    Request to Book
+                                </button>
+
+                                @if ($errors->any())
+                                    <div class="mt-2 text-xs text-red-500 text-center">
+                                        {{ $errors->first() }}
+                                    </div>
+                                @endif
+
+                            </form>
                         @else
                             <a href="{{ route('listings.edit', $listing->slug) }}"
                                 class="mt-5 block text-center w-full border border-gray-200 rounded-xl py-3 text-sm hover:bg-gray-50 transition">
@@ -107,7 +164,7 @@
                     @else
                         <a href="{{ route('login') }}"
                             class="mt-5 block text-center w-full border border-gray-200 rounded-xl py-3 text-sm hover:bg-gray-50 transition">
-                            Login to contact
+                            Login to book
                         </a>
                     @endauth
 
@@ -137,12 +194,15 @@
                             <div class="text-sm font-medium">{{ $listing->user->name }}</div>
                             <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
                                 @if ($listing->user->is_online)
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+                                    Online
                                 @else
                                     {{ $listing->user->last_seen_at?->diffForHumans() ?? 'Offline' }}
                                 @endif
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -227,4 +287,61 @@
             },
         });
     });
+</script>
+
+
+<script>
+    function bookingForm(pricePerDay, bookedDates) {
+        return {
+            startDate: null,
+            endDate: null,
+            days: 0,
+            totalPrice: 0,
+            pickerStart: null,
+            pickerEnd: null,
+
+            init() {
+                const disableDates = (date) => {
+                    const d = date.toISOString().split('T')[0];
+                    return bookedDates.includes(d);
+                };
+
+                this.$nextTick(() => {
+
+                    this.pickerStart = flatpickr(this.$refs.startInput, {
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        disable: disableDates,
+                        onChange: (dates) => {
+                            this.startDate = dates[0];
+                            this.calculate();
+                        }
+                    });
+
+                    this.pickerEnd = flatpickr(this.$refs.endInput, {
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        disable: disableDates,
+                        onChange: (dates) => {
+                            this.endDate = dates[0];
+                            this.calculate();
+                        }
+                    });
+
+                });
+            },
+
+            calculate() {
+                if (!this.startDate || !this.endDate) {
+                    this.days = 0;
+                    this.totalPrice = 0;
+                    return;
+                }
+
+                const diff = this.endDate - this.startDate;
+                this.days = Math.floor(diff / 86400000) + 1;
+                this.totalPrice = this.days * pricePerDay;
+            }
+        }
+    }
 </script>

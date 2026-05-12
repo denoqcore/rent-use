@@ -31,3 +31,7 @@ docker exec -it rent_use_app php artisan octane:reload
 
 php artisan tinker
 User::where('email', 'adminRentUse@gmail.com')->update(['is_admin' => true]);
+
+# Reverb
+
+docker exec -it rent_use_app php artisan reverb:start

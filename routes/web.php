@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FavoriteController;
 
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::delete('/favorites/{listing}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+
+    Route::post('/bookings/{listing}', [BookingController::class, 'store'])->name('bookings.store');
 });
 
 Route::get('/listings/{slug}', [ListingController::class, 'show'])->name('listings.show');

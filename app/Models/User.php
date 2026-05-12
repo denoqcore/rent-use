@@ -53,4 +53,15 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Listing::class, 'favorites');
     }
+
+    public function bookingsAsRenter()
+    {
+        return $this->hasMany(Booking::class, 'renter_id');
+    }
+
+    // Бронирования на мои объявления (я владелец)
+    public function bookingsAsOwner()
+    {
+        return $this->hasMany(Booking::class, 'owner_id');
+    }
 }

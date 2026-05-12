@@ -61,4 +61,16 @@ class Listing extends Model
     {
     return $this->belongsToMany(User::class, 'favorites');
     }
+
+    public function bookings()
+    {
+    return $this->hasMany(Booking::class);
+    }
+
+
+    public function activeBookings()
+    {
+    return $this->hasMany(Booking::class)
+        ->whereIn('status', ['pending', 'confirmed']);
+    }
 }
