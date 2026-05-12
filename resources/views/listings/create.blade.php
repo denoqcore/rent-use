@@ -3,7 +3,7 @@
 @section('title', 'rent.use | ' . __('messages.create_listing'))
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] w-full py-12 bg-(--background)">
+    <section class="min-h-[calc(100vh-72px)] mt-20 sm:mt-20 w-full py-12 bg-(--background)">
         <div class="max-w-xl mx-auto px-6 flex flex-col gap-8" x-data="{
             step: {{ $errors->any() ? 2 : 1 }},
             parent: '{{ old('parent_category') }}',

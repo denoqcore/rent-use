@@ -3,6 +3,7 @@
 return [
 
     // Header + home + hero
+    'portfolio_disclaimer' => 'Acest website este un proiect fictiv pentru portofoliu și nu reprezintă o platformă reală de închirieri.',
     'welcome' => 'Bun venit',
     'home' => 'Acasă',
     'browse' => 'Explorează',

@@ -9,21 +9,28 @@ new class extends Component {}; ?>
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
         <div class="w-full border-b border-(--background-3) bg-(--blackwhite)">
-            <div class="max-w-6xl mx-auto px-6 h-12 flex items-center">
-                <a href="/" class="flex items-center gap-3 group">
-
-                    {{-- Text --}}
-                    <div class="flex items-end gap-1">
+            <div class="max-w-6xl mx-auto h-12 px-6 flex items-center justify-between">
+                {{-- Left --}}
+                <div class="flex items-center gap-4">
+                    <a href="/" class="flex items-center group">
                         <span class="text-base font-black tracking-wide text-(--whiteblack)">
                             rent<span class="font-normal">.use</span>
                         </span>
+                    </a>
+                </div>
+                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-lg">
+                    {{ __('messages.portfolio_disclaimer') }}
+                </p>
 
-                        <span class="text-[10px] text-(--whiteblack)/60 mb-[2px]">
-                            by Denis Beccev
-                        </span>
-                    </div>
-
+                <a href="https://github.com/yourgithub" target="_blank"
+                    class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
+                    <span class="text-[11px]">
+                        by Denis Beccev
+                    </span>
+                    <img src="{{ asset('storage/images/github.svg') }}" alt="GitHub"
+                        class="w-3 h-3 bg-(--whiteblack) rounded-full">
                 </a>
+
             </div>
         </div>
 
@@ -311,6 +318,35 @@ new class extends Component {}; ?>
                 </a>
             @endauth
 
+            <div class="w-full border-b border-(--background-3) bg-(--blackwhite)">
+                <div class="max-w-6xl mx-auto h-12 px-6 flex items-center justify-between">
+
+                    <div class="flex items-center gap-4">
+                        <a href="/" class="flex items-center group">
+                            <span class="text-base font-black tracking-wide text-(--whiteblack)">
+                                rent<span class="font-normal">.use</span>
+                            </span>
+                        </a>
+
+                        <a href="https://github.com/yourgithub" target="_blank"
+                            class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
+
+
+                            <span class="text-[11px]">
+                                by Denis Beccev
+                            </span>
+
+                            <img src="{{ asset('storage/images/github.svg') }}" alt="GitHub"
+                                class="w-4 h-4 bg-(--whiteblack) rounded-full">
+                        </a>
+
+                    </div>
+                    <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-lg">
+                        {{ __('messages.portfolio_disclaimer') }}
+                    </p>
+
+                </div>
+            </div>
         </nav>
 
         <div class="px-3 pb-6 pt-2 border-t border-(--background-2) space-y-3">
@@ -401,13 +437,10 @@ new class extends Component {}; ?>
 
     <div class="md:hidden" style="height:52px"></div>
 
-    {{-- LOGOUT MODAL --}}
+    {{-- MODAL WINDOWS --}}
     @auth
-        <!-- Контейнер боковой панели -->
         <div x-show="favoritesModal" x-cloak class="fixed inset-0 z-60 flex justify-end"
             aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-
-            <!-- Затемнение фона (Backdrop) -->
             <div x-show="favoritesModal" x-transition:enter="ease-in-out duration-300"
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
@@ -415,7 +448,6 @@ new class extends Component {}; ?>
                 class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity">
             </div>
 
-            <!-- Сама панель -->
             <div x-show="favoritesModal" x-transition:enter="transform transition ease-in-out duration-300"
                 x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transform transition ease-in-out duration-300"
@@ -423,7 +455,6 @@ new class extends Component {}; ?>
                 class="relative z-10 w-screen max-w-md flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full"
                 @keydown.escape.window="favoritesModal = false">
 
-                {{-- Шапка панели --}}
                 <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-heart class="w-4 h-4 text-(--text-muted)" />
@@ -432,14 +463,12 @@ new class extends Component {}; ?>
                         </h2>
                     </div>
 
-                    {{-- Кнопка закрытия --}}
                     <button @click="favoritesModal = false"
                         class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
                         <x-heroicon-o-x-mark class="w-4 h-4" />
                     </button>
                 </div>
 
-                {{-- Контент: список избранного --}}
                 <div class="overflow-y-auto flex-1 p-4">
                     @php
                         $userFavorites = auth()
@@ -474,7 +503,6 @@ new class extends Component {}; ?>
                             @foreach ($userFavorites as $fav)
                                 <div
                                     class="flex items-center gap-3 p-2 rounded-sm hover:bg-(--background-3) transition-colors group">
-                                    {{-- Миниатюра --}}
                                     <a href="{{ route('listings.show', $fav->slug) }}" @click="favoritesModal = false"
                                         class="shrink-0 w-16 h-14 rounded-sm overflow-hidden bg-(--background-3)">
                                         @if ($fav->images->isNotEmpty())
@@ -486,8 +514,6 @@ new class extends Component {}; ?>
                                             </div>
                                         @endif
                                     </a>
-
-                                    {{-- Инфо --}}
                                     <div class="flex-1 min-w-0">
                                         <a href="{{ route('listings.show', $fav->slug) }}"
                                             @click="favoritesModal = false">
@@ -529,8 +555,6 @@ new class extends Component {}; ?>
                         </div>
                     @endif
                 </div>
-
-                {{-- Футер --}}
                 @if ($userFavorites->isNotEmpty())
                     <div class="px-5 py-3 border-t border-(--background-3) shrink-0">
                         <a href="{{ route('favorites.index') }}" @click="favoritesModal = false"
@@ -575,7 +599,7 @@ new class extends Component {}; ?>
     @endauth
 </div>
 
-{{-- Headroom --}}
+{{-- Headroom, animation --}}
 
 <script>
     const header = document.querySelector('header.headroom');
