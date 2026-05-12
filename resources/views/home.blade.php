@@ -54,21 +54,6 @@
                             {{ __('messages.search') }}
                         </button>
                     </form>
-
-                    <div class="flex flex-wrap items-center gap-4 mt-5">
-                        <div class="flex items-center gap-1.5 text-xs text-(--text-muted)">
-                            <x-heroicon-o-check-circle class="w-3.5 h-3.5 shrink-0" />
-                            {{ __('messages.hero-down-sub') }}
-                        </div>
-                        <div class="flex items-center gap-1.5 text-xs text-(--text-muted)">
-                            <x-heroicon-o-check-circle class="w-3.5 h-3.5 shrink-0" />
-                            {{ __('messages.hero-down-sub-2') }}
-                        </div>
-                        <div class="flex items-center gap-1.5 text-xs text-(--text-muted)">
-                            <x-heroicon-o-check-circle class="w-3.5 h-3.5 shrink-0" />
-                            {{ __('messages.hero-down-sub-3') }}
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -133,8 +118,6 @@
 
                         <div
                             class="group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
-
-                            {{-- Изображение + сердечко поверх --}}
                             <div class="relative h-44 bg-(--background-3)">
                                 <a href="{{ route('listings.show', $listing->slug) }}" class="block w-full h-full">
                                     @if ($listing->images->isNotEmpty())

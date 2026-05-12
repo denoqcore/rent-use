@@ -12,6 +12,8 @@ function toggleTheme() {
 }
 
 
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 import Swiper from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -22,3 +24,4 @@ window.Swiper = Swiper;
 window.Navigation = Navigation;
 window.Pagination = Pagination;
 window.Thumbs = Thumbs;
+window.flatpickr = flatpickr;

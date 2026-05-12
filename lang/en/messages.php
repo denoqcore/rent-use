@@ -3,6 +3,7 @@
 return [
 
     // Header + home + hero
+    'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform.',
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',

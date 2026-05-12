@@ -5,6 +5,9 @@ RUN apk add --no-cache \
     libzip-dev \
     icu-dev \
     oniguruma-dev \
+    nodejs \
+    curl \
+    bash \
     inotify-tools \
     $PHPIZE_DEPS
 
@@ -17,6 +20,10 @@ RUN install-php-extensions \
     pdo_mysql \
     redis \
     inotify
+
+#Bun
+RUN curl -fsSL https://bun.sh/install | bash \
+    && ln -s /root/.bun/bin/bun /usr/local/bin/bun
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
