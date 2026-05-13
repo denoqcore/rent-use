@@ -99,7 +99,7 @@
 
                     @auth
                         @if (auth()->id() !== $listing->user_id)
-                            <form method="POST" action="{{ route('bookings.store', $listing) }}" x-data="bookingForm({{ $listing->price_per_day }}, {{ $listing->price_per_hour ?? 'null' }}, {{ json_encode($bookedDates) }})"
+                            <form method="POST" action="{{ route('bookings.store', $listing) }}" x-data="bookingForm({{ $listing->price_per_day }}, {{ json_encode($bookedDates) }})"
                                 x-init="init()" class="mt-5">
                                 @csrf
 
@@ -287,10 +287,7 @@
             },
         });
     });
-</script>
 
-
-<script>
     function bookingForm(pricePerDay, bookedDates) {
         return {
             startDate: null,
@@ -301,33 +298,44 @@
             pickerEnd: null,
 
             init() {
-                const disableDates = (date) => {
-                    const d = date.toISOString().split('T')[0];
-                    return bookedDates.includes(d);
-                };
+                // Преобразуем занятые даты в формат flatpickr
+                const disabledDates = bookedDates;
 
-                this.$nextTick(() => {
+                // Пикер — дата начала
+                this.pickerStart = flatpickr(this.$refs.startInput, {
+                    dateFormat: 'Y-m-d',
+                    minDate: 'today',
+                    disable: disabledDates,
+                    disableMobile: true,
+                    onChange: (selectedDates) => {
+                        this.startDate = selectedDates[0] || null;
 
-                    this.pickerStart = flatpickr(this.$refs.startInput, {
-                        dateFormat: "Y-m-d",
-                        minDate: "today",
-                        disable: disableDates,
-                        onChange: (dates) => {
-                            this.startDate = dates[0];
-                            this.calculate();
+                        // Сбрасываем дату конца если она раньше начала
+                        if (this.endDate && this.startDate && this.endDate <= this.startDate) {
+                            this.endDate = null;
+                            this.pickerEnd.clear();
                         }
-                    });
 
-                    this.pickerEnd = flatpickr(this.$refs.endInput, {
-                        dateFormat: "Y-m-d",
-                        minDate: "today",
-                        disable: disableDates,
-                        onChange: (dates) => {
-                            this.endDate = dates[0];
-                            this.calculate();
+                        // Обновляем минимальную дату конца
+                        if (this.pickerEnd && this.startDate) {
+                            const nextDay = new Date(this.startDate);
+                            nextDay.setDate(nextDay.getDate() + 1);
+                            this.pickerEnd.set('minDate', nextDay);
                         }
-                    });
 
+                        this.calculate();
+                    }
+                });
+
+                this.pickerEnd = flatpickr(this.$refs.endInput, {
+                    dateFormat: 'Y-m-d',
+                    minDate: 'today',
+                    disable: disabledDates,
+                    disableMobile: true,
+                    onChange: (selectedDates) => {
+                        this.endDate = selectedDates[0] || null;
+                        this.calculate();
+                    }
                 });
             },
 
@@ -337,7 +345,6 @@
                     this.totalPrice = 0;
                     return;
                 }
-
                 const diff = this.endDate - this.startDate;
                 this.days = Math.floor(diff / 86400000) + 1;
                 this.totalPrice = this.days * pricePerDay;
