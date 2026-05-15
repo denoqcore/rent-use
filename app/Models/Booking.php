@@ -7,18 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $fillable = [
-        'listing_id',
-        'renter_id',
-        'owner_id',
-        'start_date',
-        'end_date',
-        'total_price',
-        'deposit',
-        'currency',
-        'status',
-        'cancel_reason',
-        'cancelled_by',
-    ];
+    'listing_id',
+    'renter_id',
+    'owner_id',
+    'start_date',
+    'end_date',
+    'start_hour',
+    'end_hour',
+    'pricing_mode',
+    'total_price',
+    'deposit',
+    'currency',
+    'status',
+    'cancel_reason',
+    'cancelled_by',
+];
 
     protected $casts = [
         'start_date' => 'date',

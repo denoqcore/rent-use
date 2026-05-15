@@ -25,3 +25,5 @@ window.Navigation = Navigation;
 window.Pagination = Pagination;
 window.Thumbs = Thumbs;
 window.flatpickr = flatpickr;
+
+import './booking.js';

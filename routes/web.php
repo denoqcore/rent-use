@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 
+    Route::post('/refactor',       [ListingController::class, 'store'])->name('listings.store')->middleware('throttle:10,1');
     Route::get('/listings/create', [ListingController::class, 'create'])->name('listings.create');
     Route::post('/listings',       [ListingController::class, 'store'])->name('listings.store')->middleware('throttle:10,1');
     Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->name('listings.edit');
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/favorites/{listing}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 
     Route::post('/bookings/{listing}', [BookingController::class, 'store'])->name('bookings.store');
+    Route::patch('/bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
+    Route::patch('/bookings/{booking}/cancel',  [BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 Route::get('/listings/{slug}', [ListingController::class, 'show'])->name('listings.show');

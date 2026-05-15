@@ -37,6 +37,20 @@ return [
     'empty-title' => 'Пока ничего нет',
     'empty-desc'  => ' Здесь будут отображаться товары и объявления',
 
+    //rent modal
+    'my_rentals'         => 'Мои аренды',
+    'incoming_requests'  => 'Заявки',
+    'no_rentals_title'   => 'Пока нет аренд',
+    'no_rentals_desc'    => 'Забронируйте что-нибудь, и оно появится здесь.',
+    'no_requests_title'  => 'Пока нет заявок',
+    'no_requests_desc'   => 'Когда кто-то забронирует ваше объявление, вы увидите это здесь.',
+    'status_pending'     => 'Ожидает',
+    'status_confirmed'   => 'Подтверждено',
+    'status_cancelled'   => 'Отменено',
+    'status_completed'   => 'Завершено',
+    'confirm'            => 'Подтвердить',
+    'decline'            => 'Отклонить',
+    'cancel'             => 'Отменить',
     //favorite
 
     'no_favorites_title' => 'Пока ничего не сохранено',

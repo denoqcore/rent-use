@@ -44,6 +44,20 @@ return [
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
     'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici.',
 
+    //rent modal
+    'my_rentals'         => 'Închirierile mele',
+    'incoming_requests'  => 'Cereri',
+    'no_rentals_title'   => 'Încă nu există închirieri',
+    'no_rentals_desc'    => 'Rezervă ceva și va apărea aici.',
+    'no_requests_title'  => 'Încă nu există cereri',
+    'no_requests_desc'   => 'Când cineva rezervă anunțul tău, îl vei vedea aici.',
+    'status_pending'     => 'În așteptare',
+    'status_confirmed'   => 'Confirmat',
+    'status_cancelled'   => 'Anulat',
+    'status_completed'   => 'Finalizat',
+    'confirm'            => 'Respinge',
+    'decline'            => 'Anulează',
+
     // profile page
 
     'profile' => 'Profil',
