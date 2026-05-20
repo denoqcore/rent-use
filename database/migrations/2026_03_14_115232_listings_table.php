@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('slug')->unique();
-            $table->unsignedInteger('price_per_day');
+            $table->unsignedInteger('price_per_day')->nullable();
             $table->unsignedInteger('price_per_hour')->nullable();
             $table->unsignedInteger('deposit')->nullable();
             $table->string('city');

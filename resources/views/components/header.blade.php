@@ -4,7 +4,9 @@ use Livewire\Component;
 
 new class extends Component {}; ?>
 
-<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false, favoritesModal: false }" x-cloak>
+
+
+<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false, favoritesModal: false, bookingsModal: false, bookingsTab: 'renter' }" x-cloak>
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
@@ -100,7 +102,8 @@ new class extends Component {}; ?>
                     <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-chat-bubble-bottom-center class="w-5 h-5" />
                     </button>
-                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                    <button @click="bookingsModal = true"
+                        class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-calendar class="w-5 h-5" />
                     </button>
 
@@ -564,6 +567,308 @@ new class extends Component {}; ?>
                         </a>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        <div x-show="bookingsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog"
+            aria-modal="true">
+
+            {{-- Затемнённый фон --}}
+            <div x-show="bookingsModal" x-transition:enter="ease-in-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @click="bookingsModal = false"
+                class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity">
+            </div>
+
+            {{-- Панель --}}
+            <div x-show="bookingsModal" x-transition:enter="transform transition ease-in-out duration-300"
+                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-300"
+                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
+                @keydown.escape.window="bookingsModal = false"
+                class="relative z-10 w-screen max-w-md flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
+
+                {{-- Шапка --}}
+                <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-calendar class="w-4 h-4 text-(--text-muted)" />
+                        <h2 class="text-sm font-bold text-(--text-primary)">
+                            {{ __('messages.rent') }}
+                        </h2>
+                    </div>
+                    <button @click="bookingsModal = false"
+                        class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                        <x-heroicon-o-x-mark class="w-4 h-4" />
+                    </button>
+                </div>
+
+
+                {{-- Табы --}}
+                <div class="flex border-b border-(--background-3) shrink-0">
+                    {{-- Таб: Я арендую --}}
+                    <button @click="bookingsTab = 'renter'"
+                        :class="bookingsTab === 'renter'
+                            ?
+                            'border-b-2 border-(--button) text-(--text-primary)' :
+                            'text-(--text-muted) hover:text-(--text-primary)'"
+                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
+                        {{ __('messages.my_rentals') }}
+                    </button>
+                    {{-- Таб: Запросы на мои объявления --}}
+                    <button @click="bookingsTab = 'owner'"
+                        :class="bookingsTab === 'owner'
+                            ?
+                            'border-b-2 border-(--button) text-(--text-primary)' :
+                            'text-(--text-muted) hover:text-(--text-primary)'"
+                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
+                        {{ __('messages.incoming_requests') }}
+
+                        {{-- Бейдж с количеством pending запросов --}}
+                        @php
+                            $pendingCount = auth()->user()->bookingsAsOwner()->where('status', 'pending')->count();
+                        @endphp
+                        @if ($pendingCount > 0)
+                            <span
+                                class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-(--button) text-(--button-text) rounded-full">
+                                {{ $pendingCount }}
+                            </span>
+                        @endif
+                    </button>
+                </div>
+
+                {{-- Контент --}}
+                <div class="overflow-y-auto flex-1 p-4">
+
+                    @php
+                        $myRentals = auth()
+                            ->user()
+                            ->bookingsAsRenter()
+                            ->with(['listing.images', 'listing.city'])
+                            ->latest()
+                            ->get();
+
+                        $incomingRequests = auth()
+                            ->user()
+                            ->bookingsAsOwner()
+                            ->with(['listing', 'renter'])
+                            ->latest()
+                            ->get();
+                    @endphp
+
+                    {{-- ТАБ: МОИ АРЕНДЫ --}}
+                    <div x-show="bookingsTab === 'renter'">
+                        @if ($myRentals->isEmpty())
+                            <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                                <x-heroicon-o-calendar class="w-10 h-10 text-(--text-muted) opacity-30" />
+                                <p class="text-sm font-medium text-(--text-primary)">
+                                    {{ __('messages.no_rentals_title') }}
+                                </p>
+                                <p class="text-xs text-(--text-muted) max-w-xs">
+                                    {{ __('messages.no_rentals_desc') }}
+                                </p>
+                                <a href="{{ route('search') }}" @click="bookingsModal = false"
+                                    class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
+                                    {{ __('messages.browse') }}
+                                </a>
+                            </div>
+                        @else
+                            <div class="flex flex-col gap-2">
+                                @foreach ($myRentals as $booking)
+                                    <div
+                                        class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
+
+                                        {{-- Объявление --}}
+                                        <a href="{{ route('listings.show', $booking->listing->slug) }}"
+                                            @click="bookingsModal = false" class="flex items-center gap-3 group">
+                                            {{-- Картинка --}}
+                                            <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                                @if ($booking->listing->images->isNotEmpty())
+                                                    <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
+                                                        class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <x-heroicon-o-photo
+                                                            class="w-4 h-4 text-(--text-muted) opacity-40" />
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p
+                                                    class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline">
+                                                    {{ $booking->listing->title }}
+                                                </p>
+                                                <p class="text-[11px] text-(--text-muted)">
+                                                    {{ $booking->listing->city->name }}
+                                                </p>
+                                            </div>
+                                        </a>
+
+                                        {{-- Даты + цена --}}
+
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="text-(--text-muted)">
+                                                @if ($booking->pricing_mode === 'hour')
+                                                    {{ $booking->start_date->format('d M Y') }}
+                                                    · {{ $booking->start_hour }} – {{ $booking->end_hour }}
+                                                @else
+                                                    {{ $booking->start_date->format('d M') }} —
+                                                    {{ $booking->end_date->format('d M Y') }}
+                                                @endif
+                                            </span>
+                                            <span class="font-semibold text-(--text-primary)">
+                                                {{ number_format($booking->total_price) }} {{ $booking->currency }}
+                                            </span>
+                                        </div>
+
+                                        {{-- Статус --}}
+                                        <div class="flex items-center justify-between">
+                                            @php
+                                                $statusConfig = [
+                                                    'pending' => [
+                                                        'bg-yellow-400/10 text-yellow-500',
+                                                        __('messages.status_pending'),
+                                                    ],
+                                                    'confirmed' => [
+                                                        'bg-green-400/10 text-green-500',
+                                                        __('messages.status_confirmed'),
+                                                    ],
+                                                    'cancelled' => [
+                                                        'bg-red-400/10 text-red-400',
+                                                        __('messages.status_cancelled'),
+                                                    ],
+                                                    'completed' => [
+                                                        'bg-(--background-3) text-(--text-muted)',
+                                                        __('messages.status_completed'),
+                                                    ],
+                                                ];
+                                                [$statusClass, $statusLabel] = $statusConfig[$booking->status] ?? [
+                                                    '',
+                                                    $booking->status,
+                                                ];
+                                            @endphp
+                                            <span
+                                                class="px-2 py-0.5 rounded-full text-[11px] font-medium {{ $statusClass }}">
+                                                {{ $statusLabel }}
+                                            </span>
+
+                                            {{-- Отмена если pending --}}
+                                            @if ($booking->isPending())
+                                                <form method="POST" action="{{ route('bookings.cancel', $booking) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="cancelled_by" value="renter">
+                                                    <button type="submit"
+                                                        class="text-[11px] text-red-400 hover:text-red-300 cursor-pointer">
+                                                        {{ __('messages.cancel') }}
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- ТАБ: ВХОДЯЩИЕ ЗАПРОСЫ (я владелец) --}}
+                    <div x-show="bookingsTab === 'owner'">
+                        @if ($incomingRequests->isEmpty())
+                            <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                                <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) opacity-30" />
+                                <p class="text-sm font-medium text-(--text-primary)">
+                                    {{ __('messages.no_requests_title') }}
+                                </p>
+                                <p class="text-xs text-(--text-muted) max-w-xs">
+                                    {{ __('messages.no_requests_desc') }}
+                                </p>
+                            </div>
+                        @else
+                            <div class="flex flex-col gap-2">
+                                @foreach ($incomingRequests as $booking)
+                                    <div
+                                        class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
+
+                                        {{-- Объявление + арендатор --}}
+                                        <div class="flex items-center gap-3">
+                                            {{-- Аватар арендатора --}}
+                                            <div
+                                                class="shrink-0 w-9 h-9 rounded-sm bg-(--background-3) overflow-hidden flex items-center justify-center">
+                                                @if ($booking->renter->avatar)
+                                                    <img src="{{ asset('storage/' . $booking->renter->avatar) }}"
+                                                        class="w-full h-full object-cover">
+                                                @else
+                                                    <span class="text-xs font-medium text-(--text-muted) uppercase">
+                                                        {{ mb_substr($booking->renter->name, 0, 1) }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-semibold text-(--text-primary) truncate">
+                                                    {{ $booking->renter->name }}
+                                                </p>
+                                                <p class="text-[11px] text-(--text-muted) truncate">
+                                                    {{ $booking->listing->title }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {{-- Даты + цена --}}
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="text-(--text-muted)">
+                                                {{ $booking->start_date->format('d M') }} —
+                                                {{ $booking->end_date->format('d M Y') }}
+                                            </span>
+                                            <span class="font-semibold text-(--text-primary)">
+                                                {{ number_format($booking->total_price) }} {{ $booking->currency }}
+                                            </span>
+                                        </div>
+
+                                        {{-- Статус + действия --}}
+                                        @if ($booking->isPending())
+                                            {{-- Кнопки подтвердить / отклонить --}}
+                                            <div class="flex gap-2 mt-1">
+                                                <form method="POST" action="{{ route('bookings.confirm', $booking) }}"
+                                                    class="flex-1">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                        class="w-full py-1.5 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition-colors">
+                                                        {{ __('messages.confirm') }}
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('bookings.cancel', $booking) }}"
+                                                    class="flex-1">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="cancelled_by" value="owner">
+                                                    <button type="submit"
+                                                        class="w-full py-1.5 text-xs font-medium bg-red-400/10 text-red-400 hover:bg-red-400/20 rounded-sm cursor-pointer transition-colors">
+                                                        {{ __('messages.decline') }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @else
+                                            @php
+                                                [$statusClass, $statusLabel] = $statusConfig[$booking->status] ?? [
+                                                    '',
+                                                    $booking->status,
+                                                ];
+                                            @endphp
+                                            <span
+                                                class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit {{ $statusClass }}">
+                                                {{ $statusLabel }}
+                                            </span>
+                                        @endif
+
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
             </div>
         </div>
 

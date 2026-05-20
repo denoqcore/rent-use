@@ -38,6 +38,21 @@ return [
     'empty-title' => 'Nothing here yet',
     'empty-desc'  => 'Items and listings will appear here',
 
+    //booking modal
+    'my_rentals'         => 'My Rentals',
+    'incoming_requests'  => 'Requests',
+    'no_rentals_title'   => 'No rentals yet',
+    'no_rentals_desc'    => 'Book something and it will appear here.',
+    'no_requests_title'  => 'No requests yet',
+    'no_requests_desc'   => 'When someone books your listing, you will see it here.',
+    'status_pending'     => 'Pending',
+    'status_confirmed'   => 'Confirmed',
+    'status_cancelled'   => 'Cancelled',
+    'status_completed'   => 'Completed',
+    'confirm'            => 'Confirm',
+    'decline'            => 'Decline',
+    'cancel'             => 'Cancel',
+
     //favorite
 
     'no_favorites_title' => 'No saved listings yet',
