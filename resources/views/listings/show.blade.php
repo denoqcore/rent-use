@@ -16,59 +16,91 @@
         </nav>
     </div>
 
-    <div class="w-full max-w-4xl mx-auto flex flex-col gap-1 mb-10">
+    {{-- GALLERY --}}
+    <div class="max-w-6xl mx-auto px-4 mb-8">
 
-        <div class="relative group">
-            <div class="swiper mainSlider overflow-hidden ">
-                <div class="swiper-wrapper">
-                    @foreach ($listing->images as $image)
-                        <div class="swiper-slide">
-                            <div class="aspect-video md:aspect-21/9 w-full p-4 ">
-                                <img src="{{ asset('storage/' . $image->path) }}"
-                                    class="w-full h-full object-cover rounded-md lg:transition-transform duration-500 group-hover:scale-102"
-                                    alt="Property image">
-                            </div>
-                        </div>
-                    @endforeach
+        @php
+            $images = $listing->images;
+            $count = $images->count();
+        @endphp
+
+        <div class="relative rounded-2xl overflow-hidden cursor-pointer group" onclick="openGallery(0)"
+            @if ($count === 1) style="height: 420px;"
+        @elseif($count === 2)
+            style="display:grid; grid-template-columns: 1fr 1fr; height: 420px; gap: 4px;"
+        @elseif($count === 3)
+            style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 210px 210px; gap: 4px;"
+        @else
+            style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 220px 220px; gap: 4px;" @endif>
+
+            @foreach ($images->take(5) as $i => $image)
+                <div
+                    class="overflow-hidden
+                @if ($count === 1) w-full h-full
+                @elseif($count === 2) h-full
+                @elseif($count === 3 && $i === 0) row-span-2
+                @elseif($count >= 4 && $i === 0) row-span-2 @endif
+                @if ($i >= 3 && $count >= 4) hidden md:block @endif">
+                    <img src="{{ asset('storage/' . $image->path) }}"
+                        class="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-95"
+                        alt="">
                 </div>
+            @endforeach
 
-                <button
-                    class="swiper-button-prev !hidden !md:flex !w-10 !h-10 !bg-white/90 !text-black !rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 after:!text-[14px] left-4 border border-gray-200"></button>
-                <button
-                    class="swiper-button-next !hidden !md:flex !w-10 !h-10 !bg-white/90 !text-black !rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 after:!text-[14px] right-4 border border-gray-200"></button>
-
-                <div class="swiper-pagination !bottom-6"></div>
-            </div>
+            @if ($count > 1)
+                <button onclick="openGallery(0); event.stopPropagation();"
+                    class="absolute bottom-4 right-4 bg-white border border-gray-200 rounded-xl px-2 py-1 font-medium text-gray-800 text-lg flex items-center gap-2 shadow-sm hover:bg-gray-50 transition-colors">
+                    ({{ $count }})
+                </button>
+            @endif
         </div>
-
-        <div class="w-full">
-            <div class="swiper thumbSlider">
-                <div class="swiper-wrapper">
-                    @foreach ($listing->images as $image)
-                        <div class="swiper-slide !w-24 !h-16 md:!w-32 md:!h-20 cursor-pointer ml-4">
-                            <div class="w-full h-full rounded-md overflow-hidden transition-all duration-200">
-                                <img src="{{ asset('storage/' . $image->path) }}"
-                                    class="w-full h-full object-cover opacity-70 hover:opacity-100">
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <style>
-        .mainSlider .swiper-pagination-bullet {
-            background: #fff;
-            opacity: 0.6;
-        }
+    <div id="galleryModal" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center"
+        onclick="if(event.target===this) closeGallery()">
 
-        .mainSlider .swiper-pagination-bullet-active {
-            background: #fff;
-            opacity: 1;
-        }
-    </style>
+        <button onclick="closeGallery()"
+            class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <div class="w-full max-w-4xl px-4 flex flex-col items-center">
+
+            <div class="w-full" style="max-height:72vh;">
+                <img id="galleryMainImg" src="" alt="" class="w-full h-full object-contain rounded-xl"
+                    style="max-height:72vh;">
+            </div>
+
+            @if ($count > 1)
+                <div class="flex items-center gap-6 mt-4">
+                    <button onclick="galleryGo(-1)"
+                        class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <span id="galleryCounter" class="text-white/80 text-sm w-16 text-center"></span>
+                    <button onclick="galleryGo(1)"
+                        class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+
+            <div id="galleryThumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 max-w-full" style="scrollbar-width:none;">
+                @foreach ($images as $i => $image)
+                    <div onclick="galleryGoTo({{ $i }})" data-thumb="{{ $i }}"
+                        class="flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden cursor-pointer border-2 border-transparent opacity-50 transition-all duration-150 hover:opacity-80">
+                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover">
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
     <div class="max-w-6xl mx-auto px-4 pb-16">
         <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
@@ -197,8 +229,6 @@
             <div class="lg:w-[380px] shrink-0">
                 <div class="sticky top-24">
                     <div class="border border-gray-200 rounded-2xl p-6 shadow-lg bg-white">
-
-                        {{-- Цена --}}
                         <div class="mb-5">
                             @if ($listing->price_per_day)
                                 <div class="text-2xl font-bold text-gray-900">
@@ -232,13 +262,13 @@
                                                 : 'hour');
                                 @endphp
 
-                                <form method="POST" action="{{ route('bookings.store', $listing) }}" x-data="bookingForm(
-                                    {{ $listing->price_per_day ?? 0 }},
-                                    {{ $listing->price_per_hour ?? 0 }},
-                                    {{ json_encode($bookedDates) }},
-                                    '{{ $initialMode }}'
-                                )"
-                                    x-init="init()">
+                                <form method="POST" action="{{ route('bookings.store', $listing) }}"
+                                    x-data="bookingForm(
+                                        {{ $listing->price_per_day ?? 0 }},
+                                        {{ $listing->price_per_hour ?? 0 }},
+                                        {{ json_encode($bookedDates) }},
+                                        '{{ $initialMode }}'
+                                    )" x-init="init()">
                                     @csrf
 
                                     @if ($listing->price_per_day && $listing->price_per_hour)
@@ -445,37 +475,44 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    const _galleryImgs = @json($images->pluck('path'));
+    let _galleryCur = 0;
 
-        const swiperThumbs = new Swiper(".thumbSlider", {
-            spaceBetween: 12,
-            slidesPerView: "auto",
-            freeMode: true,
-            watchSlidesProgress: true,
+    function openGallery(i) {
+        document.getElementById('galleryModal').classList.remove('hidden');
+        document.getElementById('galleryModal').classList.add('flex');
+        galleryGoTo(i);
+    }
+
+    function closeGallery() {
+        document.getElementById('galleryModal').classList.add('hidden');
+        document.getElementById('galleryModal').classList.remove('flex');
+    }
+
+    function galleryGo(d) {
+        galleryGoTo((_galleryCur + d + _galleryImgs.length) % _galleryImgs.length);
+    }
+
+    function galleryGoTo(i) {
+        _galleryCur = i;
+        document.getElementById('galleryMainImg').src = '/storage/' + _galleryImgs[i];
+        const counter = document.getElementById('galleryCounter');
+        if (counter) counter.textContent = (i + 1) + ' / ' + _galleryImgs.length;
+        document.querySelectorAll('[data-thumb]').forEach((el, idx) => {
+            el.classList.toggle('border-white', idx === i);
+            el.classList.toggle('opacity-100', idx === i);
+            el.classList.toggle('border-transparent', idx !== i);
+            el.classList.toggle('opacity-50', idx !== i);
         });
-
-        const swiperMain = new Swiper(".mainSlider", {
-            modules: [window.Navigation, window.Pagination, window.Thumbs],
-            slidesPerView: 1,
-            spaceBetween: 10,
-            grabCursor: true,
-
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                dynamicBullets: true,
-            },
-
-            thumbs: {
-                swiper: swiperThumbs,
-            },
-
-            speed: 600,
+        document.querySelectorAll('[data-thumb]')[i]?.scrollIntoView({
+            inline: 'nearest',
+            behavior: 'smooth'
         });
+    }
+    document.addEventListener('keydown', e => {
+        if (document.getElementById('galleryModal').classList.contains('hidden')) return;
+        if (e.key === 'ArrowLeft') galleryGo(-1);
+        if (e.key === 'ArrowRight') galleryGo(1);
+        if (e.key === 'Escape') closeGallery();
     });
 </script>

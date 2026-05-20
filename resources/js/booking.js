@@ -130,3 +130,4 @@ window.bookingForm = function(pricePerDay, pricePerHour, bookedDates, initialMod
         }
     }
 }
+
