@@ -320,36 +320,6 @@ new class extends Component {}; ?>
                     {{ __('messages.post') }}
                 </a>
             @endauth
-
-            <div class="w-full border-b border-(--background-3) bg-(--blackwhite)">
-                <div class="max-w-6xl mx-auto h-12 px-6 flex items-center justify-between">
-
-                    <div class="flex items-center gap-4">
-                        <a href="/" class="flex items-center group">
-                            <span class="text-base font-black tracking-wide text-(--whiteblack)">
-                                rent<span class="font-normal">.use</span>
-                            </span>
-                        </a>
-
-                        <a href="https://github.com/yourgithub" target="_blank"
-                            class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
-
-
-                            <span class="text-[11px]">
-                                by Denis Beccev
-                            </span>
-
-                            <img src="{{ asset('storage/images/github.svg') }}" alt="GitHub"
-                                class="w-4 h-4 bg-(--whiteblack) rounded-full">
-                        </a>
-
-                    </div>
-                    <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-lg">
-                        {{ __('messages.portfolio_disclaimer') }}
-                    </p>
-
-                </div>
-            </div>
         </nav>
 
         <div class="px-3 pb-6 pt-2 border-t border-(--background-2) space-y-3">
@@ -448,7 +418,7 @@ new class extends Component {}; ?>
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0" @click="favoritesModal = false"
-                class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity">
+                class="absolute inset-0 bg-black/30 transition-opacity">
             </div>
 
             <div x-show="favoritesModal" x-transition:enter="transform transition ease-in-out duration-300"
@@ -573,15 +543,13 @@ new class extends Component {}; ?>
         <div x-show="bookingsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog"
             aria-modal="true">
 
-            {{-- Затемнённый фон --}}
             <div x-show="bookingsModal" x-transition:enter="ease-in-out duration-300"
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0" @click="bookingsModal = false"
-                class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity">
+                class="absolute inset-0 bg-black/30 transition-opacity">
             </div>
 
-            {{-- Панель --}}
             <div x-show="bookingsModal" x-transition:enter="transform transition ease-in-out duration-300"
                 x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transform transition ease-in-out duration-300"
@@ -589,7 +557,6 @@ new class extends Component {}; ?>
                 @keydown.escape.window="bookingsModal = false"
                 class="relative z-10 w-screen max-w-md flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
 
-                {{-- Шапка --}}
                 <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-calendar class="w-4 h-4 text-(--text-muted)" />
@@ -604,9 +571,7 @@ new class extends Component {}; ?>
                 </div>
 
 
-                {{-- Табы --}}
                 <div class="flex border-b border-(--background-3) shrink-0">
-                    {{-- Таб: Я арендую --}}
                     <button @click="bookingsTab = 'renter'"
                         :class="bookingsTab === 'renter'
                             ?
@@ -615,7 +580,6 @@ new class extends Component {}; ?>
                         class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
                         {{ __('messages.my_rentals') }}
                     </button>
-                    {{-- Таб: Запросы на мои объявления --}}
                     <button @click="bookingsTab = 'owner'"
                         :class="bookingsTab === 'owner'
                             ?
@@ -624,7 +588,6 @@ new class extends Component {}; ?>
                         class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
                         {{ __('messages.incoming_requests') }}
 
-                        {{-- Бейдж с количеством pending запросов --}}
                         @php
                             $pendingCount = auth()->user()->bookingsAsOwner()->where('status', 'pending')->count();
                         @endphp
@@ -637,7 +600,6 @@ new class extends Component {}; ?>
                     </button>
                 </div>
 
-                {{-- Контент --}}
                 <div class="overflow-y-auto flex-1 p-4">
 
                     @php
@@ -656,7 +618,6 @@ new class extends Component {}; ?>
                             ->get();
                     @endphp
 
-                    {{-- ТАБ: МОИ АРЕНДЫ --}}
                     <div x-show="bookingsTab === 'renter'">
                         @if ($myRentals->isEmpty())
                             <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
@@ -678,10 +639,9 @@ new class extends Component {}; ?>
                                     <div
                                         class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
 
-                                        {{-- Объявление --}}
                                         <a href="{{ route('listings.show', $booking->listing->slug) }}"
                                             @click="bookingsModal = false" class="flex items-center gap-3 group">
-                                            {{-- Картинка --}}
+
                                             <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
                                                 @if ($booking->listing->images->isNotEmpty())
                                                     <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
@@ -704,8 +664,6 @@ new class extends Component {}; ?>
                                             </div>
                                         </a>
 
-                                        {{-- Даты + цена --}}
-
                                         <div class="flex items-center justify-between text-xs">
                                             <span class="text-(--text-muted)">
                                                 @if ($booking->pricing_mode === 'hour')
@@ -721,7 +679,6 @@ new class extends Component {}; ?>
                                             </span>
                                         </div>
 
-                                        {{-- Статус --}}
                                         <div class="flex items-center justify-between">
                                             @php
                                                 $statusConfig = [
@@ -752,7 +709,6 @@ new class extends Component {}; ?>
                                                 {{ $statusLabel }}
                                             </span>
 
-                                            {{-- Отмена если pending --}}
                                             @if ($booking->isPending())
                                                 <form method="POST" action="{{ route('bookings.cancel', $booking) }}">
                                                     @csrf
@@ -772,7 +728,7 @@ new class extends Component {}; ?>
                         @endif
                     </div>
 
-                    {{-- ТАБ: ВХОДЯЩИЕ ЗАПРОСЫ (я владелец) --}}
+
                     <div x-show="bookingsTab === 'owner'">
                         @if ($incomingRequests->isEmpty())
                             <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
@@ -789,10 +745,8 @@ new class extends Component {}; ?>
                                 @foreach ($incomingRequests as $booking)
                                     <div
                                         class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
-
-                                        {{-- Объявление + арендатор --}}
                                         <div class="flex items-center gap-3">
-                                            {{-- Аватар арендатора --}}
+
                                             <div
                                                 class="shrink-0 w-9 h-9 rounded-sm bg-(--background-3) overflow-hidden flex items-center justify-center">
                                                 @if ($booking->renter->avatar)
@@ -814,7 +768,6 @@ new class extends Component {}; ?>
                                             </div>
                                         </div>
 
-                                        {{-- Даты + цена --}}
                                         <div class="flex items-center justify-between text-xs">
                                             <span class="text-(--text-muted)">
                                                 {{ $booking->start_date->format('d M') }} —
@@ -825,9 +778,7 @@ new class extends Component {}; ?>
                                             </span>
                                         </div>
 
-                                        {{-- Статус + действия --}}
                                         @if ($booking->isPending())
-                                            {{-- Кнопки подтвердить / отклонить --}}
                                             <div class="flex gap-2 mt-1">
                                                 <form method="POST" action="{{ route('bookings.confirm', $booking) }}"
                                                     class="flex-1">
