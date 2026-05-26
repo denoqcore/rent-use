@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::patch('/bookings/{booking}/cancel',  [BookingController::class, 'cancel'])->name('bookings.cancel');
 
+    Route::get('/chats', [ChatController::class, 'index']);
+    Route::get('/chats/{chat}', [ChatController::class, 'show']);
     Route::get('/chat/{listing}', [ChatController::class, 'openOrCreate']);
     Route::post('/chat/{chat}/send', [ChatController::class, 'send']);
 });

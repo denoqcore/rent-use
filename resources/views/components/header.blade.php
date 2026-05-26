@@ -6,7 +6,7 @@ new class extends Component {}; ?>
 
 
 
-<div x-data="{ open: false, scrolled: false, userMenu: false, logoutModal: false, favoritesModal: false, bookingsModal: false, bookingsTab: 'renter' }" x-cloak>
+<div x-data="chatComponent()" x-cloak>
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
@@ -24,7 +24,7 @@ new class extends Component {}; ?>
                     {{ __('messages.portfolio_disclaimer') }}
                 </p>
 
-                <a href="https://github.com/yourgithub" target="_blank"
+                <a href="https://github.com/markwellq" target="_blank"
                     class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
                     <span class="text-[11px]">
                         by Denis Beccev

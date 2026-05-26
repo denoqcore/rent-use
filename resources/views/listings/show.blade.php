@@ -4,6 +4,10 @@
 
 @section('content')
 
+    <script>
+        window.galleryImages = @json($listing->images->pluck('path')->values());
+    </script>
+
     <div class="max-w-6xl mx-auto px-4 pt-4 pb-2 mt-4 lg:mt-15">
         <nav class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted)">
             <a href="/" class="hover:opacity-70 transition-opacity" style="color: var(--text-muted)">Home</a>
@@ -52,7 +56,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h4v4H4zM14 6h6M14 10h6M4 14h16M4 18h16" />
                     </svg>
-                    Все фото ({{ $count }})
+                    ({{ $count }})
                 </button>
             @endif
         </div>
@@ -148,7 +152,8 @@
                         </div>
                     @endif
                     <div>
-                        <p class="text-sm font-semibold" style="color: var(--text-primary)">{{ $listing->user->name }}</p>
+                        <p class="text-sm font-semibold" style="color: var(--text-primary)">{{ $listing->user->name }}
+                        </p>
                         <p class="text-xs" style="color: var(--text-muted)">
                             @if ($listing->user->is_online)
                                 <span class="inline-flex items-center gap-1">
@@ -435,7 +440,8 @@
                                         @if ($listing->deposit)
                                             <div class="flex justify-between" style="color: var(--text-muted)">
                                                 <span>Deposit</span>
-                                                <span>{{ number_format($listing->deposit) }} {{ $listing->currency }}</span>
+                                                <span>{{ number_format($listing->deposit) }}
+                                                    {{ $listing->currency }}</span>
                                             </div>
                                             <div class="flex justify-between font-semibold pt-2"
                                                 style="color: var(--text-primary); border-top: 1px solid var(--background-3)">
@@ -454,28 +460,35 @@
                                         Request to Book
                                     </button>
 
-                                    <button type="button" onclick="openChat()"
-                                        class="w-full mt-3 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors"
-                                        style="border: 1px solid var(--background-3); color: var(--text-primary); background: var(--background)"
-                                        onmouseover="this.style.background='var(--background-2)'"
-                                        onmouseout="this.style.background='var(--background)'">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                        Написать владельцу
-                                    </button>
-
                                     @if (session('success'))
-                                        <p class="mt-3 text-xs text-center" style="color: #16a34a">{{ session('success') }}
-                                        </p>
+                                        <p class="mt-3 text-xs text-center" style="color: #16a34a">
+                                            {{ session('success') }}</p>
                                     @endif
 
                                     @if ($errors->any())
-                                        <p class="mt-3 text-xs text-center" style="color: #dc2626">{{ $errors->first() }}</p>
+                                        <p class="mt-3 text-xs text-center" style="color: #dc2626">
+                                            {{ $errors->first() }}</p>
                                     @endif
 
                                 </form>
+
+                                <div class="mt-4">
+                                    <div class="h-px mb-4" style="background: var(--background-3)"></div>
+                                    <textarea id="contactMessage" rows="3" placeholder="Send message."
+                                        class="w-full resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors"
+                                        style="border: 1px solid var(--background-3); color: var(--text-primary); background: var(--background)"
+                                        onfocus="this.style.borderColor='var(--button)'" onblur="this.style.borderColor='var(--background-3)'"></textarea>
+                                    <button onclick="$root.sendFirstMessage({{ $listing->id }})" id="contactSendBtn"
+                                        class="w-full mt-2 rounded-xl py-2.5 text-sm font-semibold transition-colors"
+                                        style="background: var(--button); color: var(--button-text)"
+                                        onmouseover="this.style.background='var(--button-h)'"
+                                        onmouseout="this.style.background='var(--button)'">
+                                        Send
+                                    </button>
+                                    <p id="contactSuccess" class="hidden mt-2 text-xs text-center" style="color: #16a34a">✓
+                                        Message sendedо</p>
+                                    <p id="contactError" class="hidden mt-2 text-xs text-center" style="color: #dc2626"></p>
+                                </div>
                             @else
                                 <a href="{{ route('listings.edit', $listing->slug) }}"
                                     class="block text-center w-full rounded-xl py-3 text-sm font-medium transition-colors"
@@ -526,127 +539,4 @@
 
     <div class="h-20 lg:hidden"></div>
 
-    {{-- CHAT MODAL --}}
-    @auth
-        @if (auth()->id() !== $listing->user_id)
-            <div id="chatModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center"
-                style="background: rgba(0,0,0,0.6);" onclick="if(event.target===this) closeChat()">
-
-                <div class="w-full sm:w-[420px] sm:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col"
-                    style="height: 85vh; max-height: 600px; background: var(--background);">
-
-                    {{-- Header --}}
-                    <div class="flex items-center gap-3 px-4 py-3.5" style="border-bottom: 1px solid var(--background-3)">
-                        @if ($listing->user->avatar)
-                            <img src="{{ asset('storage/' . $listing->user->avatar) }}"
-                                class="w-9 h-9 rounded-full object-cover shrink-0">
-                        @else
-                            <div class="w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm shrink-0"
-                                style="background: #dbeafe; color: var(--button)">
-                                {{ strtoupper(substr($listing->user->name, 0, 1)) }}
-                            </div>
-                        @endif
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold truncate" style="color: var(--text-primary)">
-                                {{ $listing->user->name }}</p>
-                            <p class="text-xs truncate" style="color: var(--text-muted)">{{ $listing->title }}</p>
-                        </div>
-                        <button onclick="closeChat()"
-                            class="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-                            style="color: var(--text-muted)" onmouseover="this.style.background='var(--background-2)'"
-                            onmouseout="this.style.background='transparent'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="chatMessages" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
-                        <div id="chatLoading" class="flex items-center justify-center h-full">
-                            <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
-                                style="border-color: var(--button); border-top-color: transparent"></div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3" style="border-top: 1px solid var(--background-3)">
-                        <div class="flex items-end gap-2">
-                            <textarea id="chatInput" placeholder="Написать сообщение..." rows="1"
-                                class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors"
-                                style="max-height: 120px; border: 1px solid var(--background-3); color: var(--text-primary); background: var(--background)"
-                                onfocus="this.style.borderColor='var(--button)'" onblur="this.style.borderColor='var(--background-3)'"
-                                onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }">
-                            </textarea>
-                            <button onclick="sendMessage()"
-                                class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-                                style="background: var(--button)" onmouseover="this.style.background='var(--button-h)'"
-                                onmouseout="this.style.background='var(--button)'">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    style="color: var(--button-text)">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        @endif
-    @endauth
-
 @endsection
-
-<script>
-    {{-- Gallery --}}
-    const _galleryImgs = @json($images->pluck('path'));
-    let _galleryCur = 0;
-
-    function openGallery(i) {
-        document.getElementById('galleryModal').classList.remove('hidden');
-        document.getElementById('galleryModal').classList.add('flex');
-        galleryGoTo(i);
-    }
-
-    function closeGallery() {
-        document.getElementById('galleryModal').classList.add('hidden');
-        document.getElementById('galleryModal').classList.remove('flex');
-    }
-
-    function galleryGo(d) {
-        galleryGoTo((_galleryCur + d + _galleryImgs.length) % _galleryImgs.length);
-    }
-
-    function galleryGoTo(i) {
-        _galleryCur = i;
-        document.getElementById('galleryMainImg').src = '/storage/' + _galleryImgs[i];
-        const counter = document.getElementById('galleryCounter');
-        if (counter) counter.textContent = (i + 1) + ' / ' + _galleryImgs.length;
-        document.querySelectorAll('[data-thumb]').forEach((el, idx) => {
-            el.style.borderColor = idx === i ? '#fff' : 'transparent';
-            el.style.opacity = idx === i ? '1' : '0.5';
-        });
-        document.querySelectorAll('[data-thumb]')[i]?.scrollIntoView({
-            inline: 'nearest',
-            behavior: 'smooth'
-        });
-    }
-    document.addEventListener('keydown', e => {
-        if (document.getElementById('galleryModal').classList.contains('hidden')) return;
-        if (e.key === 'ArrowLeft') galleryGo(-1);
-        if (e.key === 'ArrowRight') galleryGo(1);
-        if (e.key === 'Escape') closeGallery();
-    });
-
-    {{-- Chat --}}
-
-    function openChat() {
-        document.getElementById('chatModal').classList.remove('hidden');
-        document.getElementById('chatModal').classList.add('flex');
-    }
-
-    function closeChat() {
-        document.getElementById('chatModal').classList.add('hidden');
-        document.getElementById('chatModal').classList.remove('flex');
-    }
-</script>
