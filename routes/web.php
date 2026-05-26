@@ -7,6 +7,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -37,6 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings/{listing}', [BookingController::class, 'store'])->name('bookings.store');
     Route::patch('/bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::patch('/bookings/{booking}/cancel',  [BookingController::class, 'cancel'])->name('bookings.cancel');
+
+    Route::get('/chats', [ChatController::class, 'index']);
+    Route::get('/chats/{chat}', [ChatController::class, 'show']);
+    Route::get('/chat/{listing}', [ChatController::class, 'openOrCreate']);
+    Route::post('/chat/{chat}/send', [ChatController::class, 'send']);
 });
 
 Route::get('/listings/{slug}', [ListingController::class, 'show'])->name('listings.show');

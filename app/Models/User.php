@@ -59,9 +59,24 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Booking::class, 'renter_id');
     }
 
-    // Бронирования на мои объявления (я владелец)
     public function bookingsAsOwner()
     {
         return $this->hasMany(Booking::class, 'owner_id');
+    }
+
+    public function chatsAsOwner()
+    {
+        return $this->hasMany(Chat::class, 'owner_id');
+    }
+
+    public function chatsAsRenter()
+    {
+        return $this->hasMany(Chat::class, 'renter_id');
+    }
+
+    public function chats()
+    {
+        return Chat::where('owner_id', $this->id)
+                   ->orWhere('renter_id', $this->id);
     }
 }

@@ -1,4 +1,5 @@
-window.bookingForm = function(pricePerDay, pricePerHour, bookedDates, initialMode) {
+
+export default function bookingForm(pricePerDay, pricePerHour, bookedDates, initialMode) {
     return {
         pricingMode: initialMode === 'both' ? 'day' : initialMode,
 
@@ -130,4 +131,3 @@ window.bookingForm = function(pricePerDay, pricePerHour, bookedDates, initialMod
         }
     }
 }
-
