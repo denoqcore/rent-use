@@ -33,7 +33,8 @@ export default function galleryComponent(images) {
 
         initKeyboard() {
             document.addEventListener('keydown', (e) => {
-                if (document.getElementById('galleryModal').classList.contains('hidden')) return;
+                const modal = document.getElementById('galleryModal');
+                if (!modal || modal.classList.contains('hidden')) return;
                 if (e.key === 'ArrowLeft')  this.go(-1);
                 if (e.key === 'ArrowRight') this.go(1);
                 if (e.key === 'Escape')     this.close();

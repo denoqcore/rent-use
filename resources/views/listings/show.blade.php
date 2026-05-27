@@ -472,13 +472,13 @@
 
                                 </form>
 
-                                <div class="mt-4">
+                                <div x-data="chatComponent()" class="mt-4">
                                     <div class="h-px mb-4" style="background: var(--background-3)"></div>
                                     <textarea id="contactMessage" rows="3" placeholder="Send message."
                                         class="w-full resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors"
                                         style="border: 1px solid var(--background-3); color: var(--text-primary); background: var(--background)"
                                         onfocus="this.style.borderColor='var(--button)'" onblur="this.style.borderColor='var(--background-3)'"></textarea>
-                                    <button onclick="$root.sendFirstMessage({{ $listing->id }})" id="contactSendBtn"
+                                    <button @click="sendFirstMessage({{ $listing->id }})" id="contactSendBtn"
                                         class="w-full mt-2 rounded-xl py-2.5 text-sm font-semibold transition-colors"
                                         style="background: var(--button); color: var(--button-text)"
                                         onmouseover="this.style.background='var(--button-h)'"

@@ -15,12 +15,16 @@ class MessageSent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(public ChatMessage $message)
-    {}
+    {
+        $this->message->load('chat', 'sender');
+    }
 
     public function broadcastOn(): array
     {
         return [
             new PrivateChannel('chat.' . $this->message->chat_id),
+            new PrivateChannel('user.' . $this->message->chat->owner_id),
+            new PrivateChannel('user.' . $this->message->chat->renter_id),
         ];
     }
 
@@ -28,6 +32,7 @@ class MessageSent implements ShouldBroadcastNow
     {
         return [
             'id'         => $this->message->id,
+            'chat_id'    => $this->message->chat_id,
             'body'       => $this->message->body,
             'sender_id'  => $this->message->sender_id,
             'created_at' => $this->message->created_at->format('H:i'),

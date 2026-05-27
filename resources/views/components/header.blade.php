@@ -99,8 +99,13 @@ new class extends Component {}; ?>
                         class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-heart class="w-5 h-5" />
                     </button>
-                    <button class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                    <button @click="openChats()"
+                        class="relative p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-chat-bubble-bottom-center class="w-5 h-5" />
+                        <span x-show="unreadTotal > 0" x-text="unreadTotal"
+                            class="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] font-bold flex items-center justify-center rounded-full"
+                            style="background: var(--button); color: var(--button-text)">
+                        </span>
                     </button>
                     <button @click="bookingsModal = true"
                         class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
@@ -410,7 +415,7 @@ new class extends Component {}; ?>
 
     <div class="md:hidden" style="height:52px"></div>
 
-    {{-- MODAL WINDOWS --}}
+    {{-- ALL MODAL WINDOWS --}}
     @auth
         <div x-show="favoritesModal" x-cloak class="fixed inset-0 z-60 flex justify-end"
             aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
@@ -537,6 +542,152 @@ new class extends Component {}; ?>
                         </a>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        {{-- CHATS MODAL --}}
+        <div x-show="chatsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog" aria-modal="true">
+
+            {{-- Backdrop --}}
+            <div x-show="chatsModal" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="closeChats()"
+                class="absolute inset-0 bg-black/30 transition-opacity">
+            </div>
+
+            {{-- Panel --}}
+            <div x-show="chatsModal" x-transition:enter="transform transition ease-in-out duration-300"
+                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-300"
+                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
+                @keydown.escape.window="chatsModal = false"
+                class="relative z-10 w-screen max-w-md flex flex-col h-full shadow-2xl bg-(--background-2) border-l border-(--background-3)">
+
+                {{-- Header --}}
+                <div class="flex items-center justify-between px-5 py-4 shrink-0 border-b border-(--background-3)">
+                    <div class="flex items-center gap-2">
+                        <button x-show="chatView === 'chat'" @click="chatView = 'list'; openChats()"
+                            class="p-1 -ml-1 rounded-sm cursor-pointer hover:bg-(--background-3) mr-1 text-(--text-muted)">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-4 h-4 text-(--text-muted)" />
+                        <h2 class="text-sm font-bold text-(--text-primary)">
+                            <span x-show="chatView === 'list'">{{ __('messages.messages') }}</span>
+                            <span x-show="chatView === 'chat'" x-text="activeChatData?.other_user?.name ?? ''"></span>
+                        </h2>
+                    </div>
+                    <button @click="chatsModal = false"
+                        class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                        <x-heroicon-o-x-mark class="w-4 h-4" />
+                    </button>
+                </div>
+
+                <div x-show="chatView === 'list'" class="flex-1 overflow-y-auto">
+
+                    <div x-show="chatsLoading" class="flex items-center justify-center py-16">
+                        <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
+                            style="border-color: var(--button); border-top-color: transparent"></div>
+                    </div>
+
+                    <div x-show="!chatsLoading && chats.length === 0"
+                        class="flex flex-col items-center justify-center gap-3 py-16 text-center px-6">
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-10 h-10 text-(--text-muted) opacity-20" />
+                        <p class="text-sm font-medium text-(--text-primary)">No messages yet</p>
+                        <p class="text-xs text-(--text-muted)">Write to a listing owner to start a conversation</p>
+                    </div>
+
+                    <div x-show="!chatsLoading && chats.length > 0" class="flex flex-col p-3 gap-1">
+                        <template x-for="chat in chats" :key="chat.id">
+                            <div @click="openChat(chat.id)"
+                                class="flex items-center gap-3 p-3 rounded-sm cursor-pointer transition-colors hover:bg-(--background-3)">
+
+                                <div class="w-10 h-10 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold"
+                                    style="background: #dbeafe; color: var(--button)">
+                                    <template x-if="chat.other_user.avatar">
+                                        <img :src="'/storage/' + chat.other_user.avatar"
+                                            class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!chat.other_user.avatar">
+                                        <span x-text="chat.other_user.name.charAt(0).toUpperCase()"></span>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="text-sm font-semibold text-(--text-primary) truncate"
+                                            x-text="chat.other_user.name"></p>
+                                        <span class="text-[11px] text-(--text-muted) shrink-0"
+                                            x-text="chat.last_message?.created_at ?? ''"></span>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-2 mt-0.5">
+                                        <p class="text-xs text-(--text-muted) truncate">
+                                            <span x-show="chat.last_message?.is_mine">You: </span>
+                                            <span x-text="chat.last_message?.body ?? chat.listing.title"></span>
+                                        </p>
+                                        <span x-show="chat.unread > 0" x-text="chat.unread"
+                                            class="shrink-0 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full"
+                                            style="background: var(--button); color: var(--button-text)">
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div x-show="chatView === 'chat'" class="flex-1 flex flex-col min-h-0">
+
+                    <div class="px-4 py-2 shrink-0 border-b border-(--background-3) bg-(--background)">
+                        <p class="text-xs text-(--text-muted) truncate" x-text="activeChatData?.listing?.title ?? ''"></p>
+                    </div>
+
+                    <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
+
+                        <template x-if="activeMessages.length === 0">
+                            <div class="flex items-center justify-center h-full">
+                                <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
+                                    style="border-color: var(--button); border-top-color: transparent"></div>
+                            </div>
+                        </template>
+
+                        <template x-for="msg in activeMessages" :key="msg.id">
+                            <div :class="msg.is_mine ? 'items-end' : 'items-start'" class="flex flex-col gap-1">
+                                <div class="max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed break-words"
+                                    :style="msg.is_mine ?
+                                        'background: var(--button); color: var(--button-text); border-bottom-right-radius: 4px' :
+                                        'background: var(--background-3); color: var(--text-primary); border-bottom-left-radius: 4px'"
+                                    x-text="msg.body">
+                                </div>
+                                <span class="text-[10px] px-1 text-(--text-muted)" x-text="msg.created_at"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="px-4 py-3 shrink-0 border-t border-(--background-3)">
+                        <div class="flex items-end gap-2">
+                            <textarea x-model="chatInput" placeholder="{{ __('messages.messages') }}..." rows="1"
+                                class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary)"
+                                style="max-height: 120px; border: 1px solid var(--background-3)" onfocus="this.style.borderColor='var(--button)'"
+                                onblur="this.style.borderColor='var(--background-3)'"
+                                @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()">
+                    </textarea>
+                            <button @click="sendChatMessage()"
+                                class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors cursor-pointer bg-(--button) hover:bg-(--button-h)">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    style="color: var(--button-text)">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
 

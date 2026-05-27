@@ -10,3 +10,7 @@ Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
         $user->id === $chat->renter_id
     );
 });
+
+Broadcast::channel('user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
