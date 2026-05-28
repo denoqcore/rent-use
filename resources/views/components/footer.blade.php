@@ -5,8 +5,9 @@ use Livewire\Component;
 new class extends Component {};
 ?>
 <footer class="bg-(--background) border-t border-(--background-3)">
-    <div class="max-w-6xl mx-auto px-6 py-6">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="max-w-6xl mx-auto px-6 py-6 pb-30">
+        <div class="flex flex-col md:flex-row justify-between items-center
+        gap-4">
 
             <div class="flex items-center gap-3">
                 <a href="/" class="text-sm flex items-center gap-1 font-black tracking-wide text-(--text-primary)">

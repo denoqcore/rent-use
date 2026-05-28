@@ -205,8 +205,6 @@ new class extends Component {}; ?>
         </div>
     </header>
 
-    <div class="hidden md:block" style="height:72px"></div>
-
     {{-- MOBILE HEADER --}}
     <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between px-4 h-14">
@@ -226,7 +224,6 @@ new class extends Component {}; ?>
         </div>
     </header>
 
-    <div class="lg:hidden" style="height:56px"></div>
 
     <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-(--background) border-t border-(--background-3)"
         style="padding-bottom: env(safe-area-inset-bottom)">
@@ -328,11 +325,6 @@ new class extends Component {}; ?>
                                 <x-heroicon-o-user class="w-4 h-4 shrink-0" />
                                 Profile
                             </a>
-                            <a href="/search" @click="userMenu = false"
-                                class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-lg">
-                                <x-heroicon-o-magnifying-glass class="w-4 h-4 shrink-0" />
-                                {{ __('messages.browse') }}
-                            </a>
                             <div x-data="{
                                 isDark: document.documentElement.classList.contains('dark'),
                                 toggle() {
@@ -406,7 +398,6 @@ new class extends Component {}; ?>
         </div>
     </div>
 
-    <div class="lg:hidden" style="height:64px"></div>
 
     {{-- MODAL WINDOWS --}}
     @auth

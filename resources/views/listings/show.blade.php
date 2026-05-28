@@ -75,9 +75,8 @@
         </button>
 
         <div class="w-full max-w-4xl px-4 flex flex-col items-center">
-            <div class="w-full" style="max-height:72vh;">
-                <img id="galleryMainImg" src="" alt="" class="w-full h-full object-contain rounded-xl"
-                    style="max-height:72vh;">
+            <div class="w-full h-140">
+                <img id="galleryMainImg" src="" alt="image" class="w-full h-full object-contain rounded-xl">
             </div>
 
             @if ($count > 1)
@@ -153,7 +152,7 @@
                     <div>
                         <p class="text-sm font-semibold" style="color: var(--text-primary)">{{ $listing->user->name }}
                         </p>
-                        <p class="text-xs" style="color: var(--text-muted)">
+                        {{-- <p class="text-xs" style="color: var(--text-muted)">
                             @if ($listing->user->is_online)
                                 <span class="inline-flex items-center gap-1">
                                     <span class="w-1.5 h-1.5 rounded-full inline-block"
@@ -163,7 +162,7 @@
                             @else
                                 {{ $listing->user->last_seen_at?->diffForHumans() ?? 'Offline' }}
                             @endif
-                        </p>
+                        </p> --}}
                     </div>
                 </div>
 
@@ -510,7 +509,6 @@
         </div>
     </div>
 
-    {{-- MOBILE BOTTOM BAR --}}
     <div class="lg:hidden fixed bottom-0 left-0 right-0 px-4 pt-3 pb-6 flex items-center gap-3 z-50"
         style="background: var(--background); border-top: 1px solid var(--background-3)">
         <div class="flex-1">
