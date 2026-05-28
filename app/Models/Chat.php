@@ -37,6 +37,6 @@ class Chat extends Model
 
     public function otherUser(): User
     {
-        return auth()->id() === $this->owner_id ? $this->owner : $this->renter;
+        return auth()->id() === $this->owner_id ? $this->renter : $this->owner;
     }
 }

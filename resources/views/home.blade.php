@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background)">
+    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background) pt-0 md:pt-20">
 
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <div class="absolute top-0 -right-16 w-96 h-96 rounded-full opacity-10 bg-(--button) blur-[80px]"></div>
@@ -12,10 +12,12 @@
         </div>
 
         <div
-            class="relative z-10 max-w-6xl mx-auto mt-20 px-6 pt-14 pb-12 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
+            class="relative z-10 max-w-6xl mx-auto mt-10 px-6 pt-14 pb-12 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
             <div class="flex flex-col items-start">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-(--background-3) text-xs font-medium text-(--text-muted) mb-6">
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-(--background-3)
+                        text-xs font-medium text-(--text-muted) mb-6">
+
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png"
                         alt="moldova" class="h-3 rounded-xs">
 
@@ -23,21 +25,25 @@
                 </div>
 
                 <h1
-                    class="text-4xl lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px] text-(--text-primary) max-w-xl mb-5">
+                    class="text-4xl lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px]
+                       text-(--text-primary) max-w-xl mb-5">
+
                     {{ __('messages.rent-hero') }}
+
                     <span class="relative inline-block">
                         {{ __('messages.rent-hero-2') }}
                         <span class="absolute bottom-0 left-0 right-0 h-0.75 rounded-full opacity-70 bg-(--button)"></span>
                     </span>
                 </h1>
-
                 <p class="text-sm lg:text-base text-(--text-muted) max-w-md leading-relaxed mb-8">
                     {{ __('messages.hero-sub') }}
                 </p>
-
                 <div class="w-full max-w-xl">
                     <form method="GET" action="{{ route('search') }}"
-                        class="flex items-center gap-0 rounded-md border border-(--background-3) bg-(--background-2) overflow-hidden transition-all duration-200 focus-within:border-(--button) focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--button)_15%,transparent)]">
+                        class="flex items-center gap-0 rounded-md border border-(--background-3)
+                             bg-(--background-2) overflow-hidden transition-all duration-200
+                             focus-within:border-(--button)
+                             focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--button)_15%,transparent)]">
 
                         <label for="hero-search" class="sr-only">{{ __('messages.search') }}</label>
 
@@ -47,50 +53,91 @@
 
                         <input id="hero-search" type="text" name="q" value="{{ request('q') }}"
                             placeholder="{{ __('messages.search') }}..." autocomplete="off"
-                            class="flex-1 min-w-0 bg-transparent text-(--text-primary) placeholder:text-(--text-muted) text-sm py-3 focus:outline-none">
+                            class="flex-1 min-w-0 bg-transparent text-(--text-primary)
+                                  placeholder:text-(--text-muted) text-sm py-3 focus:outline-none">
 
                         <button type="submit"
-                            class="m-1.5 px-4 py-1.5 rounded-md bg-(--button) text-(--button-text) text-sm font-semibold hover:bg-(--button-h) active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0">
+                            class="m-1.5 px-4 py-1.5 rounded-md bg-(--button)
+                                   text-(--button-text) text-sm font-semibold
+                                   hover:bg-(--button-h) active:scale-95 transition-all
+                                   cursor-pointer whitespace-nowrap shrink-0">
                             {{ __('messages.search') }}
                         </button>
                     </form>
                 </div>
+
             </div>
 
-            <div>
+            <div class="hidden md:block">
                 <div class="grid grid-cols-2 gap-2">
                     @foreach ($categories as $category)
                         <a href="{{ route('search', ['category' => $category->slug]) }}"
-                            class="group relative overflow-hidden rounded-md border border-(--background-3) bg-(--background-2) p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm {{ $loop->last && $loop->count % 2 !== 0 ? 'col-span-2' : '' }}">
-
+                            class="group relative overflow-hidden rounded-md
+                              border border-(--background-3)
+                              bg-(--background-2)
+                              p-4 transition-all duration-200
+                              hover:-translate-y-0.5 hover:shadow-sm
+                              {{ $loop->last && $loop->count % 2 !== 0 ? 'md:col-span-2' : '' }}">
                             <div
-                                class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(55,138,221,0.06),transparent_60%)]">
+                                class="absolute -top-10 -right-10 w-40 h-40 rounded-full
+                                    bg-[rgba(55,138,221,0.08)] blur-3xl opacity-0
+                                    group-hover:opacity-100 transition duration-300">
+                            </div>
+                            <div
+                                class="absolute left-0 top-0 h-full w-[2px]
+                                    bg-gradient-to-b from-transparent via-[rgba(55,138,221,0.3)] to-transparent
+                                    opacity-0 group-hover:opacity-100 transition">
                             </div>
 
-                            <div class="relative z-10 flex flex-col gap-6">
+                            <div class="relative z-10 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
 
+                                    <div class="relative">
+
+                                        <div
+                                            class="absolute inset-0 rounded-xl scale-110 opacity-0
+                                                group-hover:opacity-100 bg-[rgba(55,138,221,0.08)]
+                                                blur-md transition">
+                                        </div>
+
+                                        <div
+                                            class="relative w-9 h-9 rounded-xl
+                                                bg-(--background)
+                                                border border-(--background-3)
+                                                flex items-center justify-center
+                                                group-hover:border-[rgba(55,138,221,0.3)]
+                                                transition">
+
+                                            <x-dynamic-component :component="$category->icon ?? 'heroicon-o-squares-2x2'"
+                                                class="w-4 h-4 text-(--text-muted)
+                                                   group-hover:text-(--button)
+                                                   transition" />
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <p class="text-sm font-semibold text-(--text-primary)">
+                                            {{ $category->name }}
+                                        </p>
+                                        <div
+                                            class="mt-1 h-[2px] w-6 bg-(--background-3)
+                                                group-hover:w-10
+                                                group-hover:bg-[rgba(55,138,221,0.4)]
+                                                transition-all duration-300">
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div
-                                    class="w-9 h-9 rounded-xl bg-(--background) border border-(--background-3) flex items-center justify-center transition-all duration-200 group-hover:border-[rgba(55,138,221,0.3)] group-hover:bg-[rgba(55,138,221,0.05)]">
-                                    <x-dynamic-component :component="$category->icon ?? 'heroicon-o-squares-2x2'"
-                                        class="w-4 h-4 text-(--text-muted) group-hover:text-(--button) transition-colors duration-200" />
+                                    class="text-(--background-3)
+                                        group-hover:text-(--text-muted)
+                                        group-hover:translate-x-1 transition">
+                                    <x-heroicon-o-arrow-up-right class="w-3.5 h-3.5" />
                                 </div>
 
-                                <div>
-                                    <p class="text-sm font-semibold text-(--text-primary) leading-snug">
-                                        {{ $category->name }}
-                                    </p>
-                                    {{-- <p class="text-xs text-(--text-muted) mt-0.5">
-                                        {{ $category->children->count() }} {{ __('messages.subcategories') }}
-                                    </p> --}}
-                                </div>
-                            </div>
-
-                            <div
-                                class="absolute top-3.5 right-3.5 text-(--background-3) group-hover:text-(--text-muted) group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">
-                                <x-heroicon-o-arrow-up-right class="w-3.5 h-3.5" />
                             </div>
                         </a>
                     @endforeach
+
                 </div>
             </div>
 

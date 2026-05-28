@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+    use AuthorizesRequests;
+
     public function openOrCreate(Listing $listing)
     {
         $chat = Chat::firstOrCreate(
@@ -60,35 +63,40 @@ class ChatController extends Controller
         return response()->json(['ok' => true]);
     }
 
-    public function index()
+public function index()
 {
-    $chats = auth()->user()->chats()
-        ->with(['listing.images', 'owner', 'renter', 'lastMessage'])
+    $chats = Chat::where('owner_id', auth()->id())
+        ->orWhere('renter_id', auth()->id())
+        ->with(['listing', 'owner', 'renter', 'lastMessage'])
         ->orderByDesc('last_message_at')
         ->get();
 
-    return response()->json($chats->map(fn($chat) => [
-        'id'           => $chat->id,
-        'listing'      => [
-            'id'    => $chat->listing->id,
-            'title' => $chat->listing->title,
-            'image' => $chat->listing->images->first()?->path,
-        ],
-        'other_user'   => [
-            'id'     => $chat->otherUser()->id,
-            'name'   => $chat->otherUser()->name,
-            'avatar' => $chat->otherUser()->avatar,
-        ],
-        'last_message' => $chat->lastMessage ? [
-            'body'       => $chat->lastMessage->body,
-            'created_at' => $chat->lastMessage->created_at->format('H:i'),
-            'is_mine'    => $chat->lastMessage->sender_id === auth()->id(),
-        ] : null,
-        'unread' => $chat->messages()
-            ->whereNull('read_at')
-            ->where('sender_id', '!=', auth()->id())
-            ->count(),
-    ]));
+    return response()->json($chats->map(function ($chat) {
+        $other = $chat->otherUser();
+
+        return [
+            'id'      => $chat->id,
+            'listing' => [
+                'id'    => $chat->listing->id,
+                'title' => $chat->listing->title,
+                'image' => $chat->listing->images()->first()?->path,
+            ],
+            'other_user' => [
+                'id'     => $other->id,
+                'name'   => $other->name,
+                'avatar' => $other->avatar,
+            ],
+            'last_message' => $chat->lastMessage ? [
+                'body'       => $chat->lastMessage->body,
+                'created_at' => $chat->lastMessage->created_at->format('H:i'),
+                'is_mine'    => $chat->lastMessage->sender_id === auth()->id(),
+            ] : null,
+            'unread' => $chat->messages()
+                ->whereNull('read_at')
+                ->where('sender_id', '!=', auth()->id())
+                ->count(),
+        ];
+    }));
 }
 
 public function show(Chat $chat)
@@ -100,21 +108,23 @@ public function show(Chat $chat)
         ->where('sender_id', '!=', auth()->id())
         ->update(['read_at' => now()]);
 
-    $messages = $chat->messages()->with('sender')->get();
+    $chat->load(['owner', 'renter', 'listing', 'messages.sender']);
+
+    $other = $chat->otherUser();
 
     return response()->json([
-        'chat'     => [
+        'chat' => [
             'id'         => $chat->id,
             'other_user' => [
-                'id'     => $chat->otherUser()->id,
-                'name'   => $chat->otherUser()->name,
-                'avatar' => $chat->otherUser()->avatar,
+                'id'     => $other->id,
+                'name'   => $other->name,
+                'avatar' => $other->avatar,
             ],
             'listing' => [
                 'title' => $chat->listing->title,
             ],
         ],
-        'messages' => $messages->map(fn($m) => [
+        'messages' => $chat->messages->map(fn($m) => [
             'id'         => $m->id,
             'body'       => $m->body,
             'sender_id'  => $m->sender_id,

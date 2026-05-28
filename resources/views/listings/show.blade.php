@@ -75,9 +75,8 @@
         </button>
 
         <div class="w-full max-w-4xl px-4 flex flex-col items-center">
-            <div class="w-full" style="max-height:72vh;">
-                <img id="galleryMainImg" src="" alt="" class="w-full h-full object-contain rounded-xl"
-                    style="max-height:72vh;">
+            <div class="w-full h-140">
+                <img id="galleryMainImg" src="" alt="image" class="w-full h-full object-contain rounded-xl">
             </div>
 
             @if ($count > 1)
@@ -116,7 +115,6 @@
     <div class="max-w-6xl mx-auto px-4 pb-16">
         <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
 
-            {{-- LEFT --}}
             <div class="flex-1 min-w-0">
 
                 <h1 class="text-2xl sm:text-3xl font-bold leading-tight mb-1" style="color: var(--text-primary)">
@@ -154,7 +152,7 @@
                     <div>
                         <p class="text-sm font-semibold" style="color: var(--text-primary)">{{ $listing->user->name }}
                         </p>
-                        <p class="text-xs" style="color: var(--text-muted)">
+                        {{-- <p class="text-xs" style="color: var(--text-muted)">
                             @if ($listing->user->is_online)
                                 <span class="inline-flex items-center gap-1">
                                     <span class="w-1.5 h-1.5 rounded-full inline-block"
@@ -164,7 +162,7 @@
                             @else
                                 {{ $listing->user->last_seen_at?->diffForHumans() ?? 'Offline' }}
                             @endif
-                        </p>
+                        </p> --}}
                     </div>
                 </div>
 
@@ -472,13 +470,13 @@
 
                                 </form>
 
-                                <div class="mt-4">
+                                <div x-data="chatComponent()" class="mt-4">
                                     <div class="h-px mb-4" style="background: var(--background-3)"></div>
                                     <textarea id="contactMessage" rows="3" placeholder="Send message."
                                         class="w-full resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors"
                                         style="border: 1px solid var(--background-3); color: var(--text-primary); background: var(--background)"
                                         onfocus="this.style.borderColor='var(--button)'" onblur="this.style.borderColor='var(--background-3)'"></textarea>
-                                    <button onclick="$root.sendFirstMessage({{ $listing->id }})" id="contactSendBtn"
+                                    <button @click="sendFirstMessage({{ $listing->id }})" id="contactSendBtn"
                                         class="w-full mt-2 rounded-xl py-2.5 text-sm font-semibold transition-colors"
                                         style="background: var(--button); color: var(--button-text)"
                                         onmouseover="this.style.background='var(--button-h)'"
@@ -511,7 +509,6 @@
         </div>
     </div>
 
-    {{-- MOBILE BOTTOM BAR --}}
     <div class="lg:hidden fixed bottom-0 left-0 right-0 px-4 pt-3 pb-6 flex items-center gap-3 z-50"
         style="background: var(--background); border-top: 1px solid var(--background-3)">
         <div class="flex-1">
