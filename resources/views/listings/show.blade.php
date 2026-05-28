@@ -116,7 +116,6 @@
     <div class="max-w-6xl mx-auto px-4 pb-16">
         <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
 
-            {{-- LEFT --}}
             <div class="flex-1 min-w-0">
 
                 <h1 class="text-2xl sm:text-3xl font-bold leading-tight mb-1" style="color: var(--text-primary)">
