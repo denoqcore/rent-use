@@ -14,7 +14,6 @@ class SearchController extends Controller
         $query = Listing::with(['images', 'category.parent'])
             ->where('status', 'active');
 
-        // Search by type
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($builder) use ($q) {
@@ -23,7 +22,6 @@ class SearchController extends Controller
             });
         }
 
-        // filte by categ
         if ($request->filled('category')) {
             $category = Category::where('slug', $request->category)->first();
             if ($category) {
@@ -36,14 +34,12 @@ class SearchController extends Controller
             }
         }
 
-        // filte by city
         if ($request->filled('city')) {
             $query->when(request('city'), function ($q) {
             $q->whereHas('city', fn($q) => $q->where('slug', request('city')));
             });
         }
 
-        // filte by price
         if ($request->filled('price_min')) {
             $query->where(function ($b) use ($request) {
                 $b->where('price_per_day', '>=', $request->price_min)
@@ -57,12 +53,10 @@ class SearchController extends Controller
             });
         }
 
-        // filte
         if ($request->boolean('delivery')) {
             $query->where('delivery_available', true);
         }
 
-        // sort
         $sort = $request->get('sort', 'latest');
         match ($sort) {
             'price_asc'  => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) ASC'),

@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 import './bootstrap';
 
+import Collapse from '@alpinejs/collapse';
 import bookingForm from './components/booking';
 import chatComponent from './components/chat';
 import galleryComponent from './components/gallery';
@@ -24,6 +25,7 @@ window.flatpickr   = flatpickr;
 window.bookingForm      = bookingForm;
 window.chatComponent    = chatComponent;
 window.galleryComponent = galleryComponent;
+window.Alpine.plugin(Collapse)
 
 
 

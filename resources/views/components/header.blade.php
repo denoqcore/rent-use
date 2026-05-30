@@ -259,20 +259,14 @@ new class extends Component {}; ?>
                 <a href="{{ route('listings.create') }}" class="flex flex-col items-center gap-1 cursor-pointer">
                     <div class="w-8 h-8 rounded-2xl flex items-center justify-center shadow-lg transition-colors"
                         style="background: var(--button)">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            style="color: var(--button-text)">
-                            <x-heroicon-o-plus class="w-5 h-5" />
-                        </svg>
+                        <x-heroicon-o-plus class="w-4 h-4 text-(--button-text)" />
                     </div>
                 </a>
             @else
                 <a href="{{ route('login') }}" class="flex flex-col items-center gap-1">
-                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
+                    <div class="w-8 h-8 rounded-2xl flex items-center justify-center shadow-lg transition-colors"
                         style="background: var(--button)">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            style="color: var(--button-text)">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                        </svg>
+                        <x-heroicon-o-plus class="w-4 h-4 text-(--button-text)" />
                     </div>
                 </a>
             @endauth
