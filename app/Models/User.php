@@ -49,6 +49,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Favorite::class);
     }
 
+    public function listings()
+{
+    return $this->hasMany(Listing::class);
+}
+
     public function favoriteListings()
     {
         return $this->belongsToMany(Listing::class, 'favorites');

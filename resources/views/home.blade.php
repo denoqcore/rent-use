@@ -24,21 +24,29 @@
                     {{ __('messages.hero-sub-2') }}
                 </div>
 
-                <h1
-                    class="text-4xl lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px]
-                       text-(--text-primary) max-w-xl mb-5">
+                <div>
+                    <h1
+                        class="text-[40px] md:text-[60px] lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px]
+                    text-(--text-primary) max-w-xl mb-5">
 
-                    {{ __('messages.rent-hero') }}
+                        {{ __('messages.rent-hero') }}
 
-                    <span class="relative inline-block">
-                        {{ __('messages.rent-hero-2') }}
-                        <span class="absolute bottom-0 left-0 right-0 h-0.75 rounded-full opacity-70 bg-(--button)"></span>
-                    </span>
-                </h1>
-                <p class="text-sm lg:text-base text-(--text-muted) max-w-md leading-relaxed mb-8">
-                    {{ __('messages.hero-sub') }}
-                </p>
-                <div class="w-full max-w-xl">
+                        <span class="relative inline-block">
+                            {{ __('messages.rent-hero-2') }}
+                            <span
+                                class="absolute bottom-0 left-0 right-0 h-0.75 rounded-full opacity-70 bg-(--button)"></span>
+                        </span>
+                    </h1>
+                    <p class="text-sm lg:text-base text-(--text-muted) max-w-md leading-relaxed mb-8">
+                        {{ __('messages.hero-sub') }}
+                    </p>
+                    <a href="/search"
+                        class="lg:hidden inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-(--button) text-white text-sm font-semibold shadow-sm active:scale-95 transition-all duration-200">
+                        {{ __('messages.browse') }}
+                    </a>
+                </div>
+
+                <div class="hidden lg:block w-full max-w-xl">
                     <form method="GET" action="{{ route('search') }}"
                         class="flex items-center gap-0 rounded-md border border-(--background-3)
                              bg-(--background-2) overflow-hidden transition-all duration-200
@@ -84,8 +92,8 @@
                                     group-hover:opacity-100 transition duration-300">
                             </div>
                             <div
-                                class="absolute left-0 top-0 h-full w-[2px]
-                                    bg-gradient-to-b from-transparent via-[rgba(55,138,221,0.3)] to-transparent
+                                class="absolute left-0 top-0 h-full w-0.5
+                                    bg-linear-to-b from-transparent via-[rgba(55,138,221,0.3)] to-transparent
                                     opacity-0 group-hover:opacity-100 transition">
                             </div>
 
@@ -119,7 +127,7 @@
                                             {{ $category->name }}
                                         </p>
                                         <div
-                                            class="mt-1 h-[2px] w-6 bg-(--background-3)
+                                            class="mt-1 h-0.5 w-6 bg-(--background-3)
                                                 group-hover:w-10
                                                 group-hover:bg-[rgba(55,138,221,0.4)]
                                                 transition-all duration-300">

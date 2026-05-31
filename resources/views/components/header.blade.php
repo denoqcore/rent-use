@@ -94,9 +94,13 @@ new class extends Component {}; ?>
                             style="background: var(--button); color: var(--button-text)">
                         </span>
                     </button>
-                    <button @click="bookingsModal = true"
-                        class="p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
+                    <button @click="bookingsModal = true; pendingBookings = 0; loadBookings()"
+                        class="relative p-1.5 rounded-sm text-(--text-btn-header) hover:text-(--button-h) cursor-pointer">
                         <x-heroicon-o-calendar class="w-5 h-5" />
+                        <span x-show="pendingBookings > 0" x-text="pendingBookings"
+                            class="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] font-bold flex items-center justify-center rounded-full"
+                            style="background: var(--button); color: var(--button-text)">
+                        </span>
                     </button>
 
                     <div class="w-px h-4 bg-(--background-3) mx-1"></div>
@@ -230,10 +234,14 @@ new class extends Component {}; ?>
         <div class="flex items-center justify-around h-16 px-2">
 
             @auth
-                <button @click="bookingsModal = true"
-                    class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
+                <button @click="bookingsModal = true; pendingBookings = 0; loadBookings()"
+                    class="relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
                     <x-heroicon-o-calendar class="w-5 h-5" />
                     <span class="text-[10px] font-medium">{{ __('messages.rent') }}</span>
+                    <span x-show="pendingBookings > 0" x-text="pendingBookings"
+                        class="absolute top-1 right-2 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full"
+                        style="background: var(--button); color: var(--button-text)">
+                    </span>
                 </button>
             @else
                 <a href="{{ route('login') }}"
@@ -259,20 +267,14 @@ new class extends Component {}; ?>
                 <a href="{{ route('listings.create') }}" class="flex flex-col items-center gap-1 cursor-pointer">
                     <div class="w-8 h-8 rounded-2xl flex items-center justify-center shadow-lg transition-colors"
                         style="background: var(--button)">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            style="color: var(--button-text)">
-                            <x-heroicon-o-plus class="w-5 h-5" />
-                        </svg>
+                        <x-heroicon-o-plus class="w-4 h-4 text-(--button-text)" />
                     </div>
                 </a>
             @else
                 <a href="{{ route('login') }}" class="flex flex-col items-center gap-1">
-                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
+                    <div class="w-8 h-8 rounded-2xl flex items-center justify-center shadow-lg transition-colors"
                         style="background: var(--button)">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            style="color: var(--button-text)">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                        </svg>
+                        <x-heroicon-o-plus class="w-4 h-4 text-(--button-text)" />
                     </div>
                 </a>
             @endauth
@@ -556,169 +558,140 @@ new class extends Component {}; ?>
                     <button @click="bookingsTab = 'owner'"
                         :class="bookingsTab === 'owner' ? 'border-b-2 border-(--button) text-(--text-primary)' :
                             'text-(--text-muted) hover:text-(--text-primary)'"
-                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
+                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors relative">
                         {{ __('messages.incoming_requests') }}
-                        @php $pendingCount = auth()->user()->bookingsAsOwner()->where('status', 'pending')->count(); @endphp
-                        @if ($pendingCount > 0)
-                            <span
-                                class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-(--button) text-(--button-text) rounded-full">
-                                {{ $pendingCount }}
-                            </span>
-                        @endif
+                        <span x-show="incomingRequests.filter(b => b.status === 'pending').length > 0"
+                            x-text="incomingRequests.filter(b => b.status === 'pending').length"
+                            class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-(--button) text-(--button-text) rounded-full">
+                        </span>
                     </button>
                 </div>
 
                 <div class="overflow-y-auto flex-1 p-4">
-                    @php
-                        $myRentals = auth()
-                            ->user()
-                            ->bookingsAsRenter()
-                            ->with(['listing.images', 'listing.city'])
-                            ->latest()
-                            ->get();
-                        $incomingRequests = auth()
-                            ->user()
-                            ->bookingsAsOwner()
-                            ->with(['listing', 'renter'])
-                            ->latest()
-                            ->get();
-                        $statusConfig = [
-                            'pending' => ['bg-yellow-400/10 text-yellow-500', __('messages.status_pending')],
-                            'confirmed' => ['bg-green-400/10 text-green-500', __('messages.status_confirmed')],
-                            'cancelled' => ['bg-red-400/10 text-red-400', __('messages.status_cancelled')],
-                            'completed' => ['bg-(--background-3) text-(--text-muted)', __('messages.status_completed')],
-                        ];
-                    @endphp
-
-                    <div x-show="bookingsTab === 'renter'">
-                        @if ($myRentals->isEmpty())
-                            <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                                <x-heroicon-o-calendar class="w-10 h-10 text-(--text-muted) opacity-30" />
-                                <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_rentals_title') }}
-                                </p>
-                                <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_rentals_desc') }}</p>
-                                <a href="{{ route('search') }}" @click="bookingsModal = false"
-                                    class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
-                                    {{ __('messages.browse') }}
-                                </a>
-                            </div>
-                        @else
-                            <div class="flex flex-col gap-2">
-                                @foreach ($myRentals as $booking)
-                                    @php [$statusClass, $statusLabel] = $statusConfig[$booking->status] ?? ['', $booking->status]; @endphp
-                                    <div
-                                        class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
-                                        <a href="{{ route('listings.show', $booking->listing->slug) }}"
-                                            @click="bookingsModal = false" class="flex items-center gap-3 group">
-                                            <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
-                                                @if ($booking->listing->images->isNotEmpty())
-                                                    <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
-                                                        class="w-full h-full object-cover">
-                                                @endif
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p
-                                                    class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline">
-                                                    {{ $booking->listing->title }}</p>
-                                                <p class="text-[11px] text-(--text-muted)">
-                                                    {{ $booking->listing->city->name }}</p>
-                                            </div>
-                                        </a>
-                                        <div class="flex items-center justify-between text-xs">
-                                            <span class="text-(--text-muted)">
-                                                @if ($booking->pricing_mode === 'hour')
-                                                    {{ $booking->start_date->format('d M Y') }} ·
-                                                    {{ $booking->start_hour }} – {{ $booking->end_hour }}
-                                                @else
-                                                    {{ $booking->start_date->format('d M') }} —
-                                                    {{ $booking->end_date->format('d M Y') }}
-                                                @endif
-                                            </span>
-                                            <span
-                                                class="font-semibold text-(--text-primary)">{{ number_format($booking->total_price) }}
-                                                {{ $booking->currency }}</span>
+                    <div x-show="bookingsLoading" class="flex items-center justify-center py-16">
+                        <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
+                            style="border-color: var(--button); border-top-color: transparent"></div>
+                    </div>
+                    <div x-show="!bookingsLoading && bookingsTab === 'renter'">
+                        <div x-show="myRentals.length === 0"
+                            class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                            <x-heroicon-o-calendar class="w-10 h-10 text-(--text-muted) opacity-30" />
+                            <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_rentals_title') }}</p>
+                            <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_rentals_desc') }}</p>
+                            <a href="{{ route('search') }}" @click="bookingsModal = false"
+                                class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
+                                {{ __('messages.browse') }}
+                            </a>
+                        </div>
+                        <div x-show="myRentals.length > 0" class="flex flex-col gap-2">
+                            <template x-for="booking in myRentals" :key="booking.id">
+                                <div
+                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
+                                    <a :href="'/listings/' + booking.listing.slug" @click="bookingsModal = false"
+                                        class="flex items-center gap-3 group">
+                                        <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                            <template x-if="booking.listing.image">
+                                                <img :src="'/storage/' + booking.listing.image"
+                                                    class="w-full h-full object-cover">
+                                            </template>
                                         </div>
-                                        <div class="flex items-center justify-between">
-                                            <span
-                                                class="px-2 py-0.5 rounded-full text-[11px] font-medium {{ $statusClass }}">{{ $statusLabel }}</span>
-                                            @if ($booking->isPending())
-                                                <form method="POST" action="{{ route('bookings.cancel', $booking) }}">
-                                                    @csrf @method('PATCH')
-                                                    <input type="hidden" name="cancelled_by" value="renter">
-                                                    <button type="submit"
-                                                        class="text-[11px] text-red-400 hover:text-red-300 cursor-pointer">{{ __('messages.cancel') }}</button>
-                                                </form>
-                                            @endif
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline"
+                                                x-text="booking.listing.title"></p>
+                                            <p class="text-[11px] text-(--text-muted)" x-text="booking.listing.city"></p>
                                         </div>
+                                    </a>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-(--text-muted)"
+                                            x-text="booking.pricing_mode === 'hour' ? booking.start_date + ' · ' + booking.start_hour + ' – ' + booking.end_hour : booking.start_date + ' — ' + booking.end_date">
+                                        </span>
+                                        <span class="font-semibold text-(--text-primary)"
+                                            x-text="booking.total_price + ' ' + booking.currency"></span>
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
+                                    <div class="flex items-center justify-between">
+                                        <span class="px-2 py-0.5 rounded-full text-[11px] font-medium"
+                                            :class="{
+                                                'bg-yellow-400/10 text-yellow-500': booking.status === 'pending',
+                                                'bg-green-400/10 text-green-500': booking.status === 'confirmed',
+                                                'bg-red-400/10 text-red-400': booking.status === 'cancelled',
+                                                'bg-gray-400/10 text-gray-400': booking.status === 'completed',
+                                            }"
+                                            x-text="booking.status">
+                                        </span>
+                                        <template x-if="booking.status === 'pending'">
+                                            <button @click="cancelBooking(booking.id)"
+                                                class="text-[11px] text-red-400 hover:text-red-300 cursor-pointer">
+                                                {{ __('messages.cancel') }}
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
-                    <div x-show="bookingsTab === 'owner'">
-                        @if ($incomingRequests->isEmpty())
-                            <div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                                <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) opacity-30" />
-                                <p class="text-sm font-medium text-(--text-primary)">
-                                    {{ __('messages.no_requests_title') }}</p>
-                                <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_requests_desc') }}</p>
-                            </div>
-                        @else
-                            <div class="flex flex-col gap-2">
-                                @foreach ($incomingRequests as $booking)
-                                    @php [$statusClass, $statusLabel] = $statusConfig[$booking->status] ?? ['', $booking->status]; @endphp
-                                    <div
-                                        class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="shrink-0 w-9 h-9 rounded-sm bg-(--background-3) overflow-hidden flex items-center justify-center">
-                                                @if ($booking->renter->avatar)
-                                                    <img src="{{ asset('storage/' . $booking->renter->avatar) }}"
-                                                        class="w-full h-full object-cover">
-                                                @else
-                                                    <span
-                                                        class="text-xs font-medium text-(--text-muted) uppercase">{{ mb_substr($booking->renter->name, 0, 1) }}</span>
-                                                @endif
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-semibold text-(--text-primary) truncate">
-                                                    {{ $booking->renter->name }}</p>
-                                                <p class="text-[11px] text-(--text-muted) truncate">
-                                                    {{ $booking->listing->title }}</p>
-                                            </div>
+                    <div x-show="!bookingsLoading && bookingsTab === 'owner'">
+                        <div x-show="incomingRequests.length === 0"
+                            class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                            <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) opacity-30" />
+                            <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_requests_title') }}
+                            </p>
+                            <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_requests_desc') }}</p>
+                        </div>
+                        <div x-show="incomingRequests.length > 0" class="flex flex-col gap-2">
+                            <template x-for="booking in incomingRequests" :key="booking.id">
+                                <div
+                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="shrink-0 w-9 h-9 rounded-sm bg-(--background-3) overflow-hidden flex items-center justify-center">
+                                            <template x-if="booking.renter.avatar">
+                                                <img :src="'/storage/' + booking.renter.avatar"
+                                                    class="w-full h-full object-cover">
+                                            </template>
+                                            <template x-if="!booking.renter.avatar">
+                                                <span class="text-xs font-medium text-(--text-muted) uppercase"
+                                                    x-text="booking.renter.name.charAt(0)"></span>
+                                            </template>
                                         </div>
-                                        <div class="flex items-center justify-between text-xs">
-                                            <span class="text-(--text-muted)">{{ $booking->start_date->format('d M') }} —
-                                                {{ $booking->end_date->format('d M Y') }}</span>
-                                            <span
-                                                class="font-semibold text-(--text-primary)">{{ number_format($booking->total_price) }}
-                                                {{ $booking->currency }}</span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-(--text-primary) truncate"
+                                                x-text="booking.renter.name"></p>
+                                            <p class="text-[11px] text-(--text-muted) truncate"
+                                                x-text="booking.listing.title"></p>
                                         </div>
-                                        @if ($booking->isPending())
-                                            <div class="flex gap-2 mt-1">
-                                                <form method="POST" action="{{ route('bookings.confirm', $booking) }}"
-                                                    class="flex-1">
-                                                    @csrf @method('PATCH')
-                                                    <button type="submit"
-                                                        class="w-full py-1.5 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition-colors">{{ __('messages.confirm') }}</button>
-                                                </form>
-                                                <form method="POST" action="{{ route('bookings.cancel', $booking) }}"
-                                                    class="flex-1">
-                                                    @csrf @method('PATCH')
-                                                    <input type="hidden" name="cancelled_by" value="owner">
-                                                    <button type="submit"
-                                                        class="w-full py-1.5 text-xs font-medium bg-red-400/10 text-red-400 hover:bg-red-400/20 rounded-sm cursor-pointer transition-colors">{{ __('messages.decline') }}</button>
-                                                </form>
-                                            </div>
-                                        @else
-                                            <span
-                                                class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit {{ $statusClass }}">{{ $statusLabel }}</span>
-                                        @endif
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-(--text-muted)"
+                                            x-text="booking.start_date + ' — ' + booking.end_date"></span>
+                                        <span class="font-semibold text-(--text-primary)"
+                                            x-text="booking.total_price + ' ' + booking.currency"></span>
+                                    </div>
+                                    <template x-if="booking.status === 'pending'">
+                                        <div class="flex gap-2 mt-1">
+                                            <button @click="confirmBooking(booking.id)"
+                                                class="flex-1 py-1.5 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition-colors">
+                                                {{ __('messages.confirm') }}
+                                            </button>
+                                            <button @click="cancelBooking(booking.id)"
+                                                class="flex-1 py-1.5 text-xs font-medium bg-red-400/10 text-red-400 hover:bg-red-400/20 rounded-sm cursor-pointer transition-colors">
+                                                {{ __('messages.decline') }}
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <template x-if="booking.status !== 'pending'">
+                                        <span class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit"
+                                            :class="{
+                                                'bg-green-400/10 text-green-500': booking.status === 'confirmed',
+                                                'bg-red-400/10 text-red-400': booking.status === 'cancelled',
+                                                'bg-gray-400/10 text-gray-400': booking.status === 'completed',
+                                            }"
+                                            x-text="booking.status">
+                                        </span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>

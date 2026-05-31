@@ -8,7 +8,7 @@
         window.galleryImages = @json($listing->images->pluck('path')->values());
     </script>
 
-    <div class="max-w-6xl mx-auto px-4 pt-4 pb-2 mt-4 lg:mt-15">
+    <div class="max-w-6xl pt-25 mx-auto px-4 pt-4 pb-2 mt-4 lg:mt-15">
         <nav class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted)">
             <a href="/" class="hover:opacity-70 transition-opacity" style="color: var(--text-muted)">Home</a>
             <span>›</span>
@@ -35,13 +35,15 @@
             @else style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 220px 220px; gap: 4px;" @endif>
 
             @foreach ($images->take(5) as $i => $image)
+                @if ($i >= 3)
+                    @continue
+                @endif
                 <div
                     class="overflow-hidden
-                    @if ($count === 1) w-full h-full
-                    @elseif($count === 2) h-full
-                    @elseif($count === 3 && $i === 0) row-span-2
-                    @elseif($count >= 4 && $i === 0) row-span-2 @endif
-                    @if ($i >= 3 && $count >= 4) hidden md:block @endif">
+                @if ($count === 1) w-full
+                @elseif($count === 2) h-full
+                @elseif($count === 3 && $i === 0)
+                @elseif($count >= 4 && $i === 0) row-span-2 @endif">
                     <img src="{{ asset('storage/' . $image->path) }}"
                         class="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-95"
                         alt="">
@@ -50,12 +52,8 @@
 
             @if ($count > 1)
                 <button onclick="openGallery(0); event.stopPropagation();"
-                    class="absolute bottom-4 right-4 rounded-xl px-3 py-1.5 text-sm font-medium flex items-center gap-2 shadow-sm transition-colors"
-                    style="background: var(--background); border: 1px solid var(--background-3); color: var(--text-primary);">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h4v4H4zM14 6h6M14 10h6M4 14h16M4 18h16" />
-                    </svg>
+                    class="absolute bottom-4 right-4 rounded-xl px-3 py-1.5 text-md font-medium flex items-center gap-2 shadow-sm transition-colors"
+                    style="background: var(--background); var(--background-3); color: var(--text-primary);">
                     ({{ $count }})
                 </button>
             @endif
@@ -74,8 +72,8 @@
             </svg>
         </button>
 
-        <div class="w-full max-w-4xl px-4 flex flex-col items-center">
-            <div class="w-full h-140">
+        <div class="w-full max-w-6xl px-4 flex flex-col items-center">
+            <div class="w-full max-h-[80vh]">
                 <img id="galleryMainImg" src="" alt="image" class="w-full h-full object-contain rounded-xl">
             </div>
 

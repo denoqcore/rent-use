@@ -35,3 +35,8 @@ User::where('email', 'adminRentUse@gmail.com')->update(['is_admin' => true]);
 # Reverb
 
 docker exec -it rent_use_app php artisan reverb:start
+
+# Octane
+
+docker exec -it rent_use_app php artisan octane:status
+docker exec -it rent_use_app php artisan octane:reload

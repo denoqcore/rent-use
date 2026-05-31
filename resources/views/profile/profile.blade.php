@@ -3,13 +3,14 @@
 @section('title', 'rent.use | ' . $user->name)
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] w-full py-12 bg-(--background)" x-data="{ tab: 'profile' }">
+    <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{ tab: window.location.hash === '#listings' ? 'listings' : 'profile', editInfo: false, editPassword: false }">
         <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
 
+            {{-- SIDEBAR --}}
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
-
                 <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) mb-2 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0">
+                    <div
+                        class="w-9 h-9 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 overflow-hidden">
                         @if ($user->avatar)
                             <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover rounded-sm">
                         @else
@@ -29,10 +30,7 @@
                             ?
                             'bg-(--background-2) text-(--text-primary) border border-(--background-3)' :
                             'text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) border border-transparent'">
-
-                        <x-dynamic-component :component="$item['icon']"
-                            class="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
-
+                        <x-dynamic-component :component="$item['icon']" class="w-4 h-4 shrink-0" />
                         {{ $item['label'] }}
                     </button>
                 @endforeach
@@ -47,124 +45,132 @@
                         </button>
                     </form>
                 </div>
-
             </aside>
 
             <div class="flex-1 min-w-0 w-full">
-
+                @if (session('success_info') || session('success_password') || session('success'))
+                    <div
+                        class="mb-4 px-4 py-3 rounded-sm text-sm text-green-500 bg-green-500/10 border border-green-500/20">
+                        {{ session('success_info') ?? (session('success_password') ?? session('success')) }}
+                    </div>
+                @endif
                 <div x-show="tab === 'profile'" x-cloak x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
-
-                    <div
-                        class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4 hover:border-(--background-3)/80 transition-colors">
-
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
                                 {{ __('messages.prof-personal-details') }}
                             </h2>
-
-                            <button
-                                class="flex items-center gap-1.5 text-xs text-(--text-muted) hover:text-(--background-3) transition-colors cursor-pointer">
+                            <button @click="editInfo = !editInfo"
+                                class="flex items-center gap-1.5 text-xs text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
                                 <x-heroicon-o-pencil-square class="w-3.5 h-3.5" />
-                                {{ __('messages.prof-edit') }}
+                                <span x-text="editInfo ? 'Cancel' : '{{ __('messages.prof-edit') }}'"></span>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-4 pb-6 mb-6 border-b border-(--background-3)">
-                            <div
-                                class="w-12 h-12 rounded-sm bg-(--background-3) flex items-center justify-center shrink-0 cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden">
-
-                                @if ($user->avatar)
-                                    <img src="{{ asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover">
-                                @else
-                                    <span class="text-lg font-black text-(--text-primary)">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </span>
-                                @endif
-
-                                <div
-                                    class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                                    <x-heroicon-o-camera class="w-4 h-4 text-white" />
-                                </div>
-
-                            </div>
-
+                            <form method="POST" action="{{ route('profile.avatar') }}" enctype="multipart/form-data"
+                                x-data="{ preview: null }" class="relative shrink-0">
+                                @csrf
+                                <label
+                                    class="w-14 h-14 rounded-sm bg-(--background-3) flex items-center justify-center cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden block">
+                                    <template x-if="preview">
+                                        <img :src="preview" class="w-full h-full object-cover absolute inset-0">
+                                    </template>
+                                    <template x-if="!preview">
+                                        @if ($user->avatar)
+                                            <img src="{{ asset('storage/' . $user->avatar) }}"
+                                                class="w-full h-full object-cover absolute inset-0">
+                                        @else
+                                            <span
+                                                class="text-lg font-black text-(--text-primary)">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                        @endif
+                                    </template>
+                                    <div
+                                        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                                        <x-heroicon-o-camera class="w-4 h-4 text-white" />
+                                    </div>
+                                    <input type="file" name="avatar" accept="image/*" class="hidden"
+                                        @change="
+                                        preview = URL.createObjectURL($event.target.files[0]);
+                                        $nextTick(() => $el.closest('form').submit());
+                                    ">
+                                </label>
+                            </form>
                             <div>
                                 <p class="text-sm font-black text-(--text-primary)">{{ $user->name }}</p>
-                                <p class="text-xs text-(--text-muted)">
-                                    {{ __('messages.prof-member-since') }} {{ $user->created_at->format('M Y') }}
-                                </p>
+                                <p class="text-xs text-(--text-muted)">{{ __('messages.prof-member-since') }}
+                                    {{ $user->created_at->format('M Y') }}</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">Click avatar to change</p>
                             </div>
                         </div>
 
-                        <div class="space-y-0">
-
+                        <div x-show="!editInfo" class="space-y-0">
                             <div class="flex items-center justify-between py-3 border-b border-(--background-3)">
-                                <span class="text-xs text-(--text-muted)">
-                                    {{ __('messages.prof-name') }}
-                                </span>
-
-                                <span class="text-sm text-(--text-primary)">
-                                    {{ $user->name }}
-                                </span>
+                                <span class="text-xs text-(--text-muted)">{{ __('messages.prof-name') }}</span>
+                                <span class="text-sm text-(--text-primary)">{{ $user->name }}</span>
                             </div>
-
                             <div class="flex items-center justify-between py-3 border-b border-(--background-3)">
-                                <span class="text-xs text-(--text-muted)">
-                                    {{ __('messages.prof-phone') }}
-                                </span>
-
-                                <span class="text-sm text-(--text-primary)">
-                                    {{ $user->phone ?? '—' }}
-                                </span>
+                                <span class="text-xs text-(--text-muted)">{{ __('messages.prof-phone') }}</span>
+                                <span class="text-sm text-(--text-primary)">{{ $user->phone ?? '—' }}</span>
                             </div>
-
                             <div class="flex items-center justify-between py-3">
-                                <span class="text-xs text-(--text-muted)">
-                                    {{ __('messages.prof-identity') }}
-                                </span>
-
+                                <span class="text-xs text-(--text-muted)">{{ __('messages.prof-identity') }}</span>
                                 <span
                                     class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs bg-red-500/10 border border-red-500/20 text-red-400">
                                     <x-heroicon-o-x-circle class="w-3.5 h-3.5" />
                                     {{ __('messages.prof-noverifed') }}
                                 </span>
                             </div>
-
+                        </div>
+                        <div x-show="editInfo" x-transition>
+                            <form method="POST" action="{{ route('profile.info') }}" class="flex flex-col gap-4">
+                                @csrf
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-xs text-(--text-muted)">{{ __('messages.prof-name') }}</label>
+                                    <input type="text" name="name" value="{{ old('name', $user->name) }}"
+                                        class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
+                                    @error('name')
+                                        <p class="text-xs text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-xs text-(--text-muted)">{{ __('messages.prof-phone') }}</label>
+                                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                                        class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted) transition-all">
+                                    @error('phone')
+                                        <p class="text-xs text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit"
+                                        class="px-4 py-2 text-sm font-semibold rounded-sm cursor-pointer transition-colors"
+                                        style="background: var(--button); color: var(--button-text)">
+                                        Save
+                                    </button>
+                                    <button type="button" @click="editInfo = false"
+                                        class="px-4 py-2 text-sm rounded-sm cursor-pointer text-(--text-muted) hover:text-(--text-primary) border border-(--background-3)">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-
-                    <div
-                        class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4 hover:border-(--background-3)/80 transition-colors">
-
-                        <div class="flex items-center justify-between mb-6">
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
+                        <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
-                                {{ __('messages.email') }}
-                            </h2>
-
-                            <button
-                                class="flex items-center gap-1.5 text-xs text-(--text-muted) hover:text-(--background-3) transition-colors cursor-pointer">
-                                <x-heroicon-o-pencil-square class="w-3.5 h-3.5" />
-                                {{ __('messages.prof-edit') }}
-                            </button>
+                                {{ __('messages.email') }}</h2>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-2 gap-3">
-
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div class="flex items-center gap-3">
                                 <x-heroicon-o-envelope class="w-4 h-4 text-(--text-muted)" />
-                                <span class="text-sm text-(--text-primary)">
-                                    {{ $user->email }}
-                                </span>
+                                <span class="text-sm text-(--text-primary)">{{ $user->email }}</span>
                             </div>
-
                             <div class="flex items-center gap-2">
-
                                 <span
-                                    class="text-xs px-2 py-0.5 rounded-sm bg-(--background-3)/20 border border-(--background-3)/30 text-(--background-3)">
+                                    class="text-xs px-2 py-0.5 rounded-sm bg-(--background-3)/20 border border-(--background-3)/30 text-(--text-muted)">
                                     {{ __('messages.prof-current') }}
                                 </span>
-
                                 @if ($user->email_verified_at)
                                     <span
                                         class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-green-400/10 border border-green-400/20 text-xs text-green-400">
@@ -178,130 +184,275 @@
                                         {{ __('messages.prof-noverifed') }}
                                     </span>
                                 @endif
-
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4 hover:border-(--background-3)/80 transition-colors">
-
-                        <div class="flex items-center justify-between mb-6">
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
+                        <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
-                                {{ __('messages.password') }}
-                            </h2>
-
-                            <button
-                                class="flex items-center gap-1.5 text-xs text-(--text-muted) hover:text-(--background-3) transition-colors cursor-pointer">
+                                {{ __('messages.password') }}</h2>
+                            <button @click="editPassword = !editPassword"
+                                class="flex items-center gap-1.5 text-xs text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
                                 <x-heroicon-o-pencil-square class="w-3.5 h-3.5" />
-                                {{ __('messages.prof-edit') }}
+                                <span x-text="editPassword ? 'Cancel' : '{{ __('messages.prof-edit') }}'"></span>
                             </button>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <x-heroicon-o-lock-closed class="w-4 h-4 text-(--text-muted)" />
-                            <span class="text-sm text-(--text-primary) tracking-widest">••••••••••••</span>
+                        <div x-show="!editPassword">
+                            <div class="flex items-center gap-3">
+                                <x-heroicon-o-lock-closed class="w-4 h-4 text-(--text-muted)" />
+                                <span class="text-sm text-(--text-primary) tracking-widest">••••••••••••</span>
+                            </div>
                         </div>
 
+                        <div x-show="editPassword" x-transition>
+                            <form method="POST" action="{{ route('profile.password') }}" class="flex flex-col gap-4">
+                                @csrf
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-xs text-(--text-muted)">Current password</label>
+                                    <input type="password" name="current_password"
+                                        class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
+                                    @error('current_password')
+                                        <p class="text-xs text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-xs text-(--text-muted)">New password</label>
+                                    <input type="password" name="password"
+                                        class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
+                                    @error('password')
+                                        <p class="text-xs text-red-400">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-xs text-(--text-muted)">Confirm new password</label>
+                                    <input type="password" name="password_confirmation"
+                                        class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit"
+                                        class="px-4 py-2 text-sm font-semibold rounded-sm cursor-pointer"
+                                        style="background: var(--button); color: var(--button-text)">
+                                        Update password
+                                    </button>
+                                    <button type="button" @click="editPassword = false"
+                                        class="px-4 py-2 text-sm rounded-sm cursor-pointer text-(--text-muted) border border-(--background-3)">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
                         <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) text-center">
-                            <p class="text-2xl font-black text-(--text-primary)">0</p>
+                            <p class="text-2xl font-black text-(--text-primary)">{{ $listings->count() }}</p>
                             <p class="text-xs text-(--text-muted) mt-1 uppercase tracking-wider">
-                                {{ __('messages.prof-listing') }}
-                            </p>
+                                {{ __('messages.prof-listing') }}</p>
                         </div>
-
                         <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) text-center">
                             <p class="text-2xl font-black text-(--text-primary)">0.0</p>
                             <p class="text-xs text-(--text-muted) mt-1 uppercase tracking-wider">
-                                {{ __('messages.prof-rating') }}
-                            </p>
+                                {{ __('messages.prof-rating') }}</p>
                         </div>
-
                         <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) text-center">
                             <p class="text-2xl font-black text-(--text-primary)">0</p>
                             <p class="text-xs text-(--text-muted) mt-1 uppercase tracking-wider">
-                                {{ __('messages.prof-reviews') }}
-                            </p>
+                                {{ __('messages.prof-reviews') }}</p>
                         </div>
-
                     </div>
-
                 </div>
-
                 <div x-show="tab === 'listings'" x-cloak>
-
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
-
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-mylisting') }}
-                        </h2>
+                            {{ __('messages.prof-mylisting') }}</h2>
 
-                        <div class="flex flex-col items-center justify-center py-16 gap-3">
+                        @if ($listings->isEmpty())
+                            <div class="flex flex-col items-center justify-center py-16 gap-3">
+                                <x-heroicon-o-squares-2x2 class="w-8 h-8 text-(--background-3)" />
+                                <p class="text-sm text-(--text-muted)">{{ __('messages.prof-nolisting') }}</p>
+                                <a href="{{ route('listings.create') }}"
+                                    class="mt-2 px-4 py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all">
+                                    {{ __('messages.prof-create-listing') }}
+                                </a>
+                            </div>
+                        @else
+                            <div class="flex flex-col gap-3">
+                                @foreach ($listings as $listing)
+                                    <div
+                                        class="flex items-center gap-3 p-3 rounded-sm border border-(--background-3) hover:border-(--text-muted)/30 transition-colors">
+                                        <a href="{{ route('listings.show', $listing->slug) }}"
+                                            class="shrink-0 w-16 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                            @if ($listing->images->isNotEmpty())
+                                                <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
+                                                    class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <x-heroicon-o-photo class="w-4 h-4 text-(--text-muted) opacity-40" />
+                                                </div>
+                                            @endif
+                                        </a>
+                                        <div class="flex-1 min-w-0">
+                                            <a href="{{ route('listings.show', $listing->slug) }}">
+                                                <p
+                                                    class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
+                                                    {{ $listing->title }}</p>
+                                            </a>
+                                            <div class="flex items-center gap-2 mt-0.5">
+                                                <span
+                                                    class="text-[11px] text-(--text-muted)">{{ $listing->city->name }}</span>
+                                                <span class="text-[11px] font-bold text-(--button)">
+                                                    @if ($listing->price_per_day)
+                                                        {{ number_format($listing->price_per_day) }}
+                                                        {{ $listing->currency }}/day
+                                                    @elseif ($listing->price_per_hour)
+                                                        {{ number_format($listing->price_per_hour) }}
+                                                        {{ $listing->currency }}/hr
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0">
+                                            @php
+                                                $statusClass = match ($listing->status) {
+                                                    'active' => 'bg-green-500/10 text-green-500',
+                                                    'paused' => 'bg-yellow-500/10 text-yellow-500',
+                                                    'archived' => 'bg-(--background-3) text-(--text-muted)',
+                                                    default => 'bg-(--background-3) text-(--text-muted)',
+                                                };
+                                            @endphp
+                                            <span
+                                                class="text-[11px] px-2 py-0.5 rounded-full font-medium {{ $statusClass }}">
+                                                {{ $listing->status }}
+                                            </span>
 
-                            <x-heroicon-o-squares-2x2 class="w-8 h-8 text-(--background-3)" />
+                                            <a href="{{ route('listings.edit', $listing->slug) }}"
+                                                class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) transition-colors">
+                                                <x-heroicon-o-pencil-square class="w-4 h-4" />
+                                            </a>
 
-                            <p class="text-sm text-(--text-muted)">
-                                {{ __('messages.prof-nolisting') }}
-                            </p>
+
+                                            <form method="POST" action="{{ route('listings.pause', $listing) }}">
+                                                @csrf
+                                                <button type="submit"
+                                                    title="{{ $listing->status === 'paused' ? 'Resume listing' : 'Pause listing' }}"
+                                                    class="p-1.5 rounded-sm transition-colors cursor-pointer
+                                                    {{ $listing->status === 'paused'
+                                                        ? 'text-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20'
+                                                        : 'text-(--text-muted) hover:text-yellow-500 hover:bg-yellow-500/10' }}">
+                                                    @if ($listing->status === 'paused')
+                                                        <x-heroicon-o-play class="w-4 h-4" />
+                                                    @else
+                                                        <x-heroicon-o-pause class="w-4 h-4" />
+                                                    @endif
+                                                </button>
+                                            </form>
+
+                                            @if ($listing->status === 'archived')
+                                                <form method="POST" action="{{ route('listings.restore', $listing) }}">
+                                                    @csrf
+                                                    <button type="submit" title="Restore listing"
+                                                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-green-500 hover:bg-green-500/10 transition-colors cursor-pointer">
+                                                        <x-heroicon-o-arrow-path class="w-4 h-4" />
+                                                    </button>
+                                                </form>
+                                            @endif
+
+                                            @if ($listing->status === 'active')
+                                                <form method="POST" action="{{ route('listings.destroy', $listing) }}">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit"
+                                                        onclick="return confirm('Archive this listing?')"
+                                                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
+                                                        <x-heroicon-o-archive-box class="w-4 h-4" />
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
 
                             <a href="{{ route('listings.create') }}"
-                                class="mt-2 px-4 py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all active:scale-95">
-
+                                class="mt-4 flex items-center justify-center gap-2 w-full py-2.5 text-xs font-semibold rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) transition-colors">
+                                <x-heroicon-o-plus class="w-4 h-4" />
                                 {{ __('messages.prof-create-listing') }}
-
                             </a>
-
-                        </div>
+                        @endif
                     </div>
                 </div>
-
                 <div x-show="tab === 'bookings'" x-cloak>
-
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
-
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-bookings') }}
-                        </h2>
+                            {{ __('messages.prof-bookings') }}</h2>
 
-                        <div class="flex flex-col items-center justify-center py-16 gap-3">
-
-                            <x-heroicon-o-calendar class="w-8 h-8 text-(--background-3)" />
-
-                            <p class="text-sm text-(--text-muted)">
-                                {{ __('messages.prof-nobookings') }}
-                            </p>
-
-                        </div>
+                        @if ($bookings->isEmpty())
+                            <div class="flex flex-col items-center justify-center py-16 gap-3">
+                                <x-heroicon-o-calendar class="w-8 h-8 text-(--background-3)" />
+                                <p class="text-sm text-(--text-muted)">{{ __('messages.prof-nobookings') }}</p>
+                            </div>
+                        @else
+                            <div class="flex flex-col gap-3">
+                                @foreach ($bookings as $booking)
+                                    <div class="p-3 rounded-sm border border-(--background-3) flex flex-col gap-2">
+                                        <a href="{{ route('listings.show', $booking->listing->slug) }}"
+                                            class="flex items-center gap-3 group">
+                                            <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                                @if ($booking->listing->images->isNotEmpty())
+                                                    <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
+                                                        class="w-full h-full object-cover">
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p
+                                                    class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline">
+                                                    {{ $booking->listing->title }}</p>
+                                                <p class="text-[11px] text-(--text-muted)">
+                                                    {{ $booking->listing->city->name }}</p>
+                                            </div>
+                                        </a>
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="text-(--text-muted)">
+                                                @if ($booking->pricing_mode === 'hour')
+                                                    {{ $booking->start_date->format('d M Y') }} ·
+                                                    {{ $booking->start_hour }} – {{ $booking->end_hour }}
+                                                @else
+                                                    {{ $booking->start_date->format('d M') }} —
+                                                    {{ $booking->end_date->format('d M Y') }}
+                                                @endif
+                                            </span>
+                                            <span
+                                                class="font-semibold text-(--text-primary)">{{ number_format($booking->total_price) }}
+                                                {{ $booking->currency }}</span>
+                                        </div>
+                                        @php
+                                            $statusConfig = [
+                                                'pending' => 'bg-yellow-400/10 text-yellow-500',
+                                                'confirmed' => 'bg-green-400/10 text-green-500',
+                                                'cancelled' => 'bg-red-400/10 text-red-400',
+                                                'completed' => 'bg-(--background-3) text-(--text-muted)',
+                                            ];
+                                        @endphp
+                                        <span
+                                            class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit {{ $statusConfig[$booking->status] ?? '' }}">
+                                            {{ $booking->status }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
-
                 <div x-show="tab === 'support'" x-cloak>
-
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
-
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-support') }}
-                        </h2>
-
+                            {{ __('messages.prof-support') }}</h2>
                         <div class="flex flex-col items-center justify-center py-16 gap-3">
-
                             <x-heroicon-o-lifebuoy class="w-8 h-8 text-(--background-3)" />
-
-                            <p class="text-sm text-(--text-muted)">
-                                {{ __('messages.prof-notickets') }}
-                            </p>
-
+                            <p class="text-sm text-(--text-muted)">{{ __('messages.prof-notickets') }}</p>
                             <a href="mailto:support@rent.use"
-                                class="mt-2 px-4 py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all active:scale-95">
-
+                                class="mt-2 px-4 py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-all">
                                 {{ __('messages.prof-create-ticket') }}
-
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -309,11 +460,5 @@
             </div>
         </div>
     </section>
-
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
 
 @endsection
