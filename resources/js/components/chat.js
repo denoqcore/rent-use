@@ -23,8 +23,15 @@ export default function chatComponent() {
         chatInput: '',
         unreadTotal: 0,
 
+        pendingBookings: 0,
+        bookingsLoading: false,
+        incomingRequests: [],
+        myRentals: [],
+
+
         init() {
          this.initNotifications();
+         this.loadPendingBookings();
         },
 
        initNotifications() {
@@ -63,6 +70,10 @@ export default function chatComponent() {
             }
         }
     });
+
+    channel.listen('BookingCreated', (e) => {
+        this.pendingBookings++;
+    });
 },
 closeChats() {
     this.chatsModal = false;
@@ -91,6 +102,7 @@ closeChats() {
 
         this.unreadTotal = this.chats.reduce((sum, chat) => sum + chat.unread, 0);
         this.chatsLoading = false;
+        await this.loadPendingBookings();
     },
 
         async openChat(chatId) {
@@ -128,14 +140,85 @@ closeChats() {
 
     window._echoChat = window.Echo
         .private(`chat.${chatId}`)
-        .listen('MessageSent', (e) => {
-            this.activeMessages.push(e);
-            this.$nextTick(() => {
-                const el = document.getElementById('chatScrollArea');
-                if (el) el.scrollTop = el.scrollHeight;
+    .listen('MessageSent', (e) => {
+        const authId = document.querySelector('meta[name="auth-id"]')?.content;
+        if (String(e.sender_id) === String(authId)) return;
+
+        this.activeMessages.push({
+            ...e,
+            is_mine: false,
+        });
+        this.$nextTick(() => {
+            const el = document.getElementById('chatScrollArea');
+            if (el) el.scrollTop = el.scrollHeight;
             });
         });
-},
+    },
+
+        async loadPendingBookings() {
+            try {
+                const res = await fetch('/api/bookings/pending-count', {
+                    headers: { Accept: 'application/json' }
+                });
+                const data = await res.json();
+                this.pendingBookings = data.count;
+            } catch (e) {
+                console.error('pendingBookings error:', e);
+            }
+        },
+
+        async loadBookings() {
+            try {
+                const res = await fetch('/api/bookings', {
+                    headers: { Accept: 'application/json' }
+                });
+                const data = await res.json();
+                this.incomingRequests = data.incoming;
+                this.myRentals = data.rentals;
+                this.pendingBookings = data.incoming.filter(b => b.status === 'pending').length;
+            } catch (e) {
+                console.error('loadBookings error:', e);
+            }
+    },
+
+        async loadBookings() {
+        this.bookingsLoading = true;
+        try {
+            const res = await fetch('/api/bookings', {
+                headers: { Accept: 'application/json' }
+            });
+            const data = await res.json();
+            this.incomingRequests = data.incoming;
+            this.myRentals = data.rentals;
+            this.pendingBookings = data.incoming.filter(b => b.status === 'pending').length;
+        } catch (e) {
+            console.error('loadBookings error:', e);
+        }
+        this.bookingsLoading = false;
+    },
+
+    async confirmBooking(id) {
+        const csrf = document.querySelector('meta[name=csrf-token]').content;
+        await fetch(`/bookings/${id}/confirm`, {
+            method: 'PATCH',
+            headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }
+        });
+        await this.loadBookings();
+    },
+
+    async cancelBooking(id) {
+        const csrf = document.querySelector('meta[name=csrf-token]').content;
+        await fetch(`/bookings/${id}/cancel`, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': csrf,
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            },
+            body: JSON.stringify({ cancelled_by: 'owner' })
+        });
+        await this.loadBookings();
+    },
 
         async sendFirstMessage(listingId) {
             const textarea = document.getElementById('contactMessage');

@@ -73,4 +73,9 @@ class Listing extends Model
     return $this->hasMany(Booking::class)
         ->whereIn('status', ['pending', 'confirmed']);
     }
+
+    public function scopeVisible($query)
+{
+    return $query->where('status', 'active');
+}
 }

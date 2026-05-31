@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use App\Events\BookingCreated;
+
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -79,7 +81,7 @@ class BookingController extends Controller
             return back()->withErrors(['start_date' => 'These dates are already booked.'])->withInput();
         }
 
-        Booking::create([
+                $booking = Booking::create([
             'listing_id'   => $listing->id,
             'renter_id'    => auth()->id(),
             'owner_id'     => $listing->user_id,
@@ -94,8 +96,11 @@ class BookingController extends Controller
             'status'       => 'pending',
         ]);
 
+        event(new BookingCreated($booking));
         return back()->with('success', 'Booking request sent!');
     }
+
+
 
     public function confirm(Booking $booking)
     {
@@ -127,5 +132,49 @@ class BookingController extends Controller
         ]);
 
         return back()->with('success', 'Booking cancelled.');
+    }
+
+    public function apiIndex()
+    {
+    $user = auth()->user();
+    return response()->json([
+        'incoming' => $user->bookingsAsOwner()->with(['listing.images', 'renter'])->latest()->get()->map(fn($b) => [
+            'id'          => $b->id,
+            'status'      => $b->status,
+            'total_price' => $b->total_price,
+            'currency'    => $b->currency,
+            'start_date'  => $b->start_date->format('d M'),
+            'end_date'    => $b->end_date->format('d M Y'),
+            'listing'     => ['title' => $b->listing->title],
+            'renter'      => [
+                'name'   => $b->renter->name,
+                'avatar' => $b->renter->avatar,
+            ],
+        ]),
+        'rentals' => $user->bookingsAsRenter()->with(['listing.images', 'listing.city'])->latest()->get()->map(fn($b) => [
+            'id'           => $b->id,
+            'status'       => $b->status,
+            'total_price'  => $b->total_price,
+            'currency'     => $b->currency,
+            'pricing_mode' => $b->pricing_mode,
+            'start_date'   => $b->start_date->format('d M'),
+            'end_date'     => $b->end_date->format('d M Y'),
+            'start_hour'   => $b->start_hour,
+            'end_hour'     => $b->end_hour,
+            'listing'      => [
+                'title' => $b->listing->title,
+                'slug'  => $b->listing->slug,
+                'city'  => $b->listing->city->name,
+                'image' => $b->listing->images->first()?->path,
+            ],
+        ]),
+    ]);
+    }
+
+    public function pendingCount()
+    {
+        return response()->json([
+            'count' => auth()->user()->bookingsAsOwner()->where('status', 'pending')->count()
+        ]);
     }
 }

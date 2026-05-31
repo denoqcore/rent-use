@@ -35,12 +35,15 @@
             @else style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 220px 220px; gap: 4px;" @endif>
 
             @foreach ($images->take(5) as $i => $image)
+                @if ($i >= 3)
+                    @continue
+                @endif
                 <div
                     class="overflow-hidden
-                    @if ($count === 1) w-full h-full
-                    @elseif($count === 2) h-full
-                    @elseif($count === 3 && $i === 0) row-span-2 @endif
-                    @if ($i >= 3 && $count >= 4) hidden md:block @endif">
+                @if ($count === 1) w-full
+                @elseif($count === 2) h-full
+                @elseif($count === 3 && $i === 0)
+                @elseif($count >= 4 && $i === 0) row-span-2 @endif">
                     <img src="{{ asset('storage/' . $image->path) }}"
                         class="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-95"
                         alt="">

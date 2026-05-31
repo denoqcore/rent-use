@@ -92,8 +92,8 @@
                                     group-hover:opacity-100 transition duration-300">
                             </div>
                             <div
-                                class="absolute left-0 top-0 h-full w-[2px]
-                                    bg-gradient-to-b from-transparent via-[rgba(55,138,221,0.3)] to-transparent
+                                class="absolute left-0 top-0 h-full w-0.5
+                                    bg-linear-to-b from-transparent via-[rgba(55,138,221,0.3)] to-transparent
                                     opacity-0 group-hover:opacity-100 transition">
                             </div>
 
@@ -127,7 +127,7 @@
                                             {{ $category->name }}
                                         </p>
                                         <div
-                                            class="mt-1 h-[2px] w-6 bg-(--background-3)
+                                            class="mt-1 h-0.5 w-6 bg-(--background-3)
                                                 group-hover:w-10
                                                 group-hover:bg-[rgba(55,138,221,0.4)]
                                                 transition-all duration-300">
