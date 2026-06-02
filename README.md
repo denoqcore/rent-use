@@ -40,3 +40,8 @@ docker exec -it rent_use_app php artisan reverb:start
 
 docker exec -it rent_use_app php artisan octane:status
 docker exec -it rent_use_app php artisan octane:reload
+
+# Filament
+
+docker exec -it rent_use_app php artisan make:filament-resource Listing --generate --view
+docker exec -it rent_use_app php artisan make:filament-resource User --generate

@@ -43,10 +43,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [ListingController::class, 'create'])->name('listings.create');
         Route::post('/', [ListingController::class, 'store'])->middleware('throttle:10,1')->name('listings.store');
         Route::get('/{listing:slug}/edit', [ListingController::class, 'edit'])->name('listings.edit');
-        Route::put('/{listing:slug}', [ListingController::class, 'update'])->name('listings.update');
-        Route::delete('/{listing}', [ListingController::class, 'destroy'])->name('listings.destroy');
+
         Route::post('/{listing}/pause', [ListingController::class, 'pause'])->name('listings.pause');
+        Route::post('/{listing:slug}/archive', [ListingController::class, 'archive'])->name('listings.archive');
         Route::post('/{listing}/restore', [ListingController::class, 'restore'])->name('listings.restore');
+        Route::delete('/{listing:slug}', [ListingController::class, 'destroy'])->name('listings.destroy');
+        Route::put('/{listing:slug}', [ListingController::class, 'update'])->name('listings.update');
     });
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');

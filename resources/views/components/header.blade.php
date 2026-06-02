@@ -327,6 +327,13 @@ new class extends Component {}; ?>
                                 <x-heroicon-o-user class="w-4 h-4 shrink-0" />
                                 Profile
                             </a>
+                            @if (auth()->user()?->is_admin)
+                                <a href="/admin"
+                                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-lg">
+                                    <x-heroicon-o-wrench class="w-4 h-4 shrink-0" />
+                                    Admin Panel
+                                </a>
+                            @endif
                             <div x-data="{
                                 isDark: document.documentElement.classList.contains('dark'),
                                 toggle() {
@@ -509,16 +516,6 @@ new class extends Component {}; ?>
                         </div>
                     @endif
                 </div>
-                {{--
-                @if ($userFavorites->isNotEmpty())
-                    <div class="px-5 py-3 border-t border-(--background-3) shrink-0">
-                        <a href="{{ route('favorites.index') }}" @click="favoritesModal = false"
-                            class="flex items-center justify-center gap-1.5 w-full py-2 text-xs font-medium text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm transition-colors">
-                            {{ __('messages.favorite') }} ({{ $userFavorites->count() }})
-                            <x-heroicon-o-arrow-right class="w-3 h-3" />
-                        </a>
-                    </div>
-                @endif --}}
             </div>
         </div>
 

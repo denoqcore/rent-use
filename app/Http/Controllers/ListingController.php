@@ -177,7 +177,7 @@ class ListingController extends Controller
     }
 
     return redirect()->route('listings.show', $listing->slug)
-        ->with('success', 'Listing updated!');
+        ->with('success', 'Listing updated');
 }
 
 
@@ -187,7 +187,7 @@ class ListingController extends Controller
     $newStatus = $listing->status === 'paused' ? 'active' : 'paused';
     $listing->update(['status' => $newStatus]);
     return redirect()->route('profile')->withFragment('listings')->with('success',
-        $newStatus === 'paused' ? 'Listing paused.' : 'Listing activated.'
+        $newStatus === 'paused' ? 'Listing paused' : 'Listing activated'
     );
 }
 
@@ -195,14 +195,36 @@ public function restore(Listing $listing)
 {
     $this->authorize('update', $listing);
     $listing->update(['status' => 'active']);
-    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing restored.');
+    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing restored');
+}
+
+public function archive(Listing $listing)
+{
+    $this->authorize('update', $listing);
+
+    $listing->update([
+        'status' => 'archived'
+    ]);
+
+    return redirect()
+        ->route('profile')
+        ->withFragment('listings')
+        ->with('success', 'Listing archived');
 }
 
 public function destroy(Listing $listing)
 {
     $this->authorize('delete', $listing);
-    $listing->update(['status' => 'archived']);
-    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing archived.');
+
+    foreach ($listing->images as $image) {
+        \Storage::disk('public')->delete($image->path);
+    }
+
+    $listing->delete();
+
+    return redirect()->route('profile')
+        ->withFragment('listings')
+        ->with('success', 'Listing deleted');
 }
 
 }

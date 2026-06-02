@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{ tab: window.location.hash === '#listings' ? 'listings' : 'profile', editInfo: false, editPassword: false }">
-        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
 
             {{-- SIDEBAR --}}
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
@@ -347,6 +347,16 @@
                                                 </button>
                                             </form>
 
+                                            @if ($listing->status === 'active')
+                                                <form method="POST" action="{{ route('listings.archive', $listing) }}">
+                                                    @csrf
+                                                    <button type="submit" title="Restore listing"
+                                                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-green-500 hover:bg-green-500/10 transition-colors cursor-pointer">
+                                                        <x-heroicon-o-archive-box class="w-4 h-4" />
+                                                    </button>
+                                                </form>
+                                            @endif
+
                                             @if ($listing->status === 'archived')
                                                 <form method="POST" action="{{ route('listings.restore', $listing) }}">
                                                     @csrf
@@ -355,17 +365,78 @@
                                                         <x-heroicon-o-arrow-path class="w-4 h-4" />
                                                     </button>
                                                 </form>
-                                            @endif
 
-                                            @if ($listing->status === 'active')
                                                 <form method="POST" action="{{ route('listings.destroy', $listing) }}">
                                                     @csrf @method('DELETE')
                                                     <button type="submit"
                                                         onclick="return confirm('Archive this listing?')"
                                                         class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
-                                                        <x-heroicon-o-archive-box class="w-4 h-4" />
+                                                        <x-heroicon-o-trash class="w-4 h-4" />
                                                     </button>
                                                 </form>
+                                            @endif
+
+                                            @if ($listing->status === 'active')
+                                                <div x-data="{ confirmDelete: false }" class="inline-block">
+                                                    <button type="button" @click="confirmDelete = true"
+                                                        title="Delete listing"
+                                                        class="p-2 rounded-sm transition-colors cursor-pointer"
+                                                        :class="confirmDelete ? 'text-red-400 bg-red-400/10' :
+                                                            'text-(--text-muted) hover:text-red-400 hover:bg-red-400/10'">
+                                                        <x-heroicon-o-trash class="w-4 h-4" />
+                                                    </button>
+                                                    <div x-show="confirmDelete" x-cloak
+                                                        class="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-xs"
+                                                        x-transition:enter="transition ease-out duration-200"
+                                                        x-transition:enter-start="opacity-0"
+                                                        x-transition:enter-end="opacity-100"
+                                                        x-transition:leave="transition ease-in duration-150">
+                                                        <div @click.away="confirmDelete = false"
+                                                            class="w-full sm:max-w-md p-6 bg-(--background-2) border-t sm:border border-(--background-3) rounded-t-lg sm:rounded-sm shadow-2xl"
+                                                            x-transition:enter="transition ease-out duration-200"
+                                                            x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95"
+                                                            x-transition:enter-end="translate-y-0 sm:scale-100">
+
+                                                            <div
+                                                                class="w-12 h-1 bg-(--background-3) rounded-full mx-auto mb-5 sm:hidden">
+                                                            </div>
+
+                                                            <h3 class="text-base font-bold text-(--text-primary) mb-2">
+                                                                Delete this ad?
+                                                            </h3>
+
+                                                            {{-- Крупный текст --}}
+                                                            <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
+                                                                Are you sure you want to completely delete <span
+                                                                    class="text-(--text-primary) font-semibold">«{{ $listing->title }}»</span>.
+                                                                It will be impossible to restore it.
+                                                            </p>
+
+                                                            {{-- Крупные, удобные для пальцев кнопки --}}
+                                                            <div
+                                                                class="flex flex-col sm:flex-row items-center justify-end gap-3">
+                                                                {{-- Кнопка Отмена (на мобилках идет на всю ширину первым делом) --}}
+                                                                <button type="button" @click="confirmDelete = false"
+                                                                    class="w-full sm:w-auto order-2 sm:order-1 px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background) cursor-pointer transition-colors">
+                                                                    Cancel
+                                                                </button>
+
+                                                                {{-- Кнопка Удалить --}}
+                                                                <form method="POST"
+                                                                    action="{{ route('listings.destroy', $listing->slug) }}"
+                                                                    class="w-full sm:w-auto order-1 sm:order-2">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
+                                                                        Delete
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
