@@ -20,9 +20,9 @@ class ListingResource extends Resource
 {
     protected static ?string $model = Listing::class;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
-    protected static ?string $navigationLabel = 'Объявления';
-    protected static ?string $modelLabel = 'Объявление';
-    protected static ?string $pluralModelLabel = 'Объявления';
+    protected static ?string $navigationLabel = 'Listings';
+    protected static ?string $modelLabel = 'Listing';
+    protected static ?string $pluralModelLabel = 'Listings';
     protected static ?string $recordTitleAttribute = 'title';
     protected static ?int $navigationSort = 1;
 

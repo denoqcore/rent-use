@@ -16,38 +16,38 @@ class ListingForm
     {
         return $schema
             ->components([
-                Section::make('Основная информация')
+                Section::make('Main information')
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
-                            ->label('Название')
+                            ->label('Title')
                             ->required(),
 
                         Select::make('user_id')
-                            ->label('Владелец')
+                            ->label('Owner')
                             ->relationship('user', 'name')
                             ->searchable()
                             ->required(),
 
                         Select::make('category_id')
-                            ->label('Категория')
+                            ->label('Category')
                             ->relationship('category', 'name')
                             ->searchable()
                             ->required(),
 
                         TextInput::make('city')
-                            ->label('Город')
+                            ->label('City')
                             ->required(),
 
                         TextInput::make('address')
-                            ->label('Адрес'),
+                            ->label('Adress'),
 
                         TextInput::make('slug')
                             ->label('Slug')
                             ->required(),
 
                         Textarea::make('description')
-                            ->label('Описание')
+                            ->label('Description')
                             ->required()
                             ->columnSpanFull(),
                     ]),
@@ -56,52 +56,52 @@ class ListingForm
                     ->columns(2)
                     ->schema([
                         TextInput::make('price_per_day')
-                            ->label('Цена в день')
+                            ->label('Price/Day')
                             ->numeric(),
 
                         TextInput::make('price_per_hour')
-                            ->label('Цена в час')
+                            ->label('Price/Hour')
                             ->numeric(),
 
                         TextInput::make('deposit')
-                            ->label('Залог')
+                            ->label('Deposit')
                             ->numeric(),
 
                         Select::make('currency')
-                            ->label('Валюта')
+                            ->label('Currency')
                             ->options([
-                                'MDL' => 'MDL — Лей',
-                                'USD' => 'USD — Доллар',
-                                'EUR' => 'EUR — Евро',
+                                'MDL' => 'MDL — LEI',
+                                'USD' => 'USD — USD',
+                                'EUR' => 'EUR — EUR',
                             ])
                             ->default('MDL')
                             ->required(),
                     ]),
 
-                Section::make('Доставка и условия')
+                Section::make('Delivery terms')
                     ->columns(2)
                     ->schema([
                         Toggle::make('delivery_available')
-                            ->label('Доставка доступна')
+                            ->label('Delivery available')
                             ->reactive(),
 
                         TextInput::make('delivery_price')
-                            ->label('Цена доставки')
+                            ->label('Delivery price')
                             ->numeric()
                             ->visible(fn ($get) => $get('delivery_available')),
 
                         Toggle::make('requires_document')
-                            ->label('Требуется документ'),
+                            ->label('Requires document'),
                     ]),
 
-                Section::make('Статус')
+                Section::make('Status')
                     ->schema([
                         Select::make('status')
-                            ->label('Статус')
+                            ->label('Status')
                             ->options([
-                                'active'   => 'Активно',
-                                'paused'   => 'Пауза',
-                                'archived' => 'Архив',
+                                'active'   => 'Active',
+                                'paused'   => 'Pause',
+                                'archived' => 'Archive',
                             ])
                             ->default('active')
                             ->required(),

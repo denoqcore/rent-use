@@ -40,7 +40,7 @@
                 @endif
                 <div
                     class="overflow-hidden
-                @if ($count === 1) w-full
+                @if ($count === 1) w-full h-full
                 @elseif($count === 2) h-full
                 @elseif($count === 3 && $i === 0)
                 @elseif($count >= 4 && $i === 0) row-span-2 @endif">

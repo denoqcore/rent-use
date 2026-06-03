@@ -15,23 +15,23 @@ class StatsOverviewWidget extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Всего объявлений', Listing::count())
-                ->description('Активных: ' . Listing::where('status', 'active')->count())
+            Stat::make('Total listings', Listing::count())
+                ->description('Active: ' . Listing::where('status', 'active')->count())
                 ->descriptionIcon('heroicon-m-home')
                 ->color('success'),
 
-            Stat::make('На паузе', Listing::where('status', 'paused')->count())
-                ->description('Архивных: ' . Listing::where('status', 'archived')->count())
+            Stat::make('Paused', Listing::where('status', 'paused')->count())
+                ->description('Archived: ' . Listing::where('status', 'archived')->count())
                 ->descriptionIcon('heroicon-m-pause-circle')
                 ->color('warning'),
 
-            Stat::make('Пользователей', User::count())
-                ->description('Новых сегодня: ' . User::whereDate('created_at', today())->count())
+            Stat::make('Users', User::count())
+                ->description('New today: ' . User::whereDate('created_at', today())->count())
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('primary'),
 
-            Stat::make('Бронирований', Booking::count())
-                ->description('Сегодня: ' . Booking::whereDate('created_at', today())->count())
+            Stat::make('Bookings', Booking::count())
+                ->description('Today: ' . Booking::whereDate('created_at', today())->count())
                 ->descriptionIcon('heroicon-m-calendar')
                 ->color('info'),
         ];

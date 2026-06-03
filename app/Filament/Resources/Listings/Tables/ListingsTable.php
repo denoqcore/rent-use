@@ -12,7 +12,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filament\Actions\DeleteAction;
 use Illuminate\Support\Facades\DB;
 
 class ListingsTable
@@ -27,31 +26,31 @@ class ListingsTable
                     ->width('60px'),
 
                 TextColumn::make('title')
-                    ->label('Название')
+                    ->label('Title')
                     ->searchable()
                     ->limit(35)
                     ->tooltip(fn ($record) => $record->title),
 
                 TextColumn::make('user.name')
-                    ->label('Владелец')
+                    ->label('Owner')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('category.name')
-                    ->label('Категория')
+                    ->label('Category')
                     ->sortable(),
 
-                TextColumn::make('city')
-                    ->label('Город')
+                TextColumn::make('city.name')
+                    ->label('City')
                     ->searchable(),
 
                 TextColumn::make('price_per_day')
-                    ->label('Цена/день')
+                    ->label('Price/day')
                     ->formatStateUsing(fn ($state, $record) => $state ? $state . ' ' . $record->currency : '—')
                     ->sortable(),
 
                 TextColumn::make('status')
-                    ->label('Статус')
+                    ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'active'   => 'success',
@@ -60,61 +59,82 @@ class ListingsTable
                         default    => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'active'   => 'Активно',
-                        'paused'   => 'Пауза',
-                        'archived' => 'Архив',
+                        'active'   => 'Active',
+                        'paused'   => 'Pause',
+                        'archived' => 'Archived',
                         default    => $state,
                     }),
 
                 IconColumn::make('delivery_available')
-                    ->label('Доставка')
+                    ->label('Delivery')
                     ->boolean(),
 
                 TextColumn::make('created_at')
-                    ->label('Создано')
+                    ->label('Created')
                     ->dateTime('d.m.Y')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Статус')
+                    ->label('Status')
                     ->options([
-                        'active'   => 'Активно',
-                        'paused'   => 'Пауза',
-                        'archived' => 'Архив',
+                        'active'   => 'Active',
+                        'paused'   => 'Pause',
+                        'archived' => 'Archived',
                     ]),
             ])
             ->recordActions([
                 ViewAction::make()->label(''),
                 EditAction::make()->label(''),
-                DeleteAction::make()->label(''),
+
                 Action::make('activate')
                     ->label('')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->tooltip('Активировать')
-                    ->visible(fn ($record) => $record->status !== 'active')
+                    ->tooltip('Activate')
+                    ->visible(fn ($record) => $record->status !== 'active' && $record->status !== 'archived')
                     ->action(fn ($record) => $record->update(['status' => 'active']))
                     ->requiresConfirmation(false),
+
                 Action::make('pause')
                     ->label('')
                     ->icon('heroicon-o-pause-circle')
                     ->color('warning')
-                    ->tooltip('Поставить на паузу')
-                    ->visible(fn ($record) => $record->status !== 'paused')
+                    ->tooltip('Pause')
+                    ->visible(fn ($record) => $record->status === 'active')
                     ->action(fn ($record) => $record->update(['status' => 'paused'])),
+
                 Action::make('archive')
                     ->label('')
                     ->icon('heroicon-o-archive-box')
                     ->color('danger')
-                    ->tooltip('Архивировать')
-                    ->visible(fn ($record) => $record->status !== 'archived')
+                    ->tooltip('Archive')
+                    ->visible(fn ($record) => $record->status === 'active' || $record->status === 'paused')
                     ->action(fn ($record) => $record->update(['status' => 'archived']))
+                    ->requiresConfirmation(),
+
+                Action::make('restore')
+                    ->label('')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('success')
+                    ->tooltip('Restore')
+                    ->visible(fn ($record) => $record->status === 'archived')
+                    ->action(fn ($record) => $record->update(['status' => 'active'])),
+
+                Action::make('delete')
+                    ->label('')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->tooltip('Delete')
+                    ->action(fn ($record) => [
+                        $record->update(['status' => 'archived']),
+                        $record->delete()
+                    ])
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Удалить выбранные'),
+                    DeleteBulkAction::make()->label('Delete selected'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
