@@ -40,7 +40,7 @@
                 @endif
                 <div
                     class="overflow-hidden
-                @if ($count === 1) w-full
+                @if ($count === 1) w-full h-full
                 @elseif($count === 2) h-full
                 @elseif($count === 3 && $i === 0)
                 @elseif($count >= 4 && $i === 0) row-span-2 @endif">
@@ -113,11 +113,36 @@
     <div class="max-w-6xl mx-auto px-4 pb-16">
         <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
 
+            @php
+                $isFavorited = auth()->check() && auth()->user()->favoriteListings->contains($listing->id);
+            @endphp
+
             <div class="flex-1 min-w-0">
 
-                <h1 class="text-2xl sm:text-3xl font-bold leading-tight mb-1" style="color: var(--text-primary)">
-                    {{ $listing->title }}
-                </h1>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl sm:text-3xl font-bold leading-tight mb-1" style="color: var(--text-primary)">
+                        {{ $listing->title }}
+                    </h1>
+
+                    @if ($isFavorited)
+                        <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" title="Remove favorite"
+                                class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120 ">
+                                <x-heroicon-s-heart class="w-6 h-6 text-red-500" />
+                            </button>
+                        </form>
+                    @else
+                        <form method="POST" action="{{ route('favorites.store', $listing) }}">
+                            @csrf
+                            <button type="submit" title="Favorite"
+                                class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120">
+                                <x-heroicon-o-heart class="w-6 h-6 text-black" />
+                            </button>
+                        </form>
+                    @endif
+                </div>
 
                 <div class="flex items-center gap-2 text-sm mb-6" style="color: var(--text-muted)">
                     <span>{{ $listing->category->name }}</span>
@@ -247,7 +272,7 @@
             {{-- RIGHT SIDEBAR --}}
             <div class="lg:w-[380px] shrink-0">
                 <div class="sticky top-24">
-                    <div class="rounded-2xl p-6 shadow-lg"
+                    <div class="rounded-2xl p-6"
                         style="border: 1px solid var(--background-3); background: var(--background);">
 
                         <div class="mb-5">
@@ -325,7 +350,7 @@
                                         x-bind:value="pricingMode === 'hour' ? (endHour ?? '') : ''">
 
                                     <div x-show="pricingMode === 'day'">
-                                        <div class="grid grid-cols-2 rounded-xl overflow-hidden mb-3"
+                                        <div class="grid grid-cols-2 rounded-md overflow-hidden mb-3"
                                             style="border: 1px solid var(--background-3)">
                                             <div class="p-3" style="border-right: 1px solid var(--background-3)">
                                                 <label class="block text-[10px] font-bold uppercase tracking-wide mb-1"
@@ -409,11 +434,6 @@
                                             <div x-show="bookingDate && startHour && endHour" x-transition
                                                 class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium mb-3"
                                                 style="background: #eff6ff; border: 1px solid #bfdbfe; color: var(--button)">
-                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
                                                 <span x-text="bookingDateFormatted"></span>
                                                 <span style="opacity:0.4">·</span>
                                                 <span x-text="startHour + ' – ' + endHour"></span>
@@ -449,7 +469,7 @@
                                     </div>
 
                                     <button type="submit" :disabled="!canSubmit"
-                                        class="w-full rounded-xl py-3.5 text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                        class="w-full rounded-xl py-3.5 text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                                         style="background: var(--button); color: var(--button-text);"
                                         onmouseover="if(!this.disabled) this.style.background='var(--button-h)'"
                                         onmouseout="this.style.background='var(--button)'">
@@ -457,12 +477,12 @@
                                     </button>
 
                                     @if (session('success'))
-                                        <p class="mt-3 text-xs text-center" style="color: #16a34a">
+                                        <p class="mt-3 text-xs text-center text-(--status-success)">
                                             {{ session('success') }}</p>
                                     @endif
 
                                     @if ($errors->any())
-                                        <p class="mt-3 text-xs text-center" style="color: #dc2626">
+                                        <p class="mt-3 text-xs text-center text-(--status-danger)">
                                             {{ $errors->first() }}</p>
                                     @endif
 
@@ -481,20 +501,20 @@
                                         onmouseout="this.style.background='var(--button)'">
                                         Send
                                     </button>
-                                    <p id="contactSuccess" class="hidden mt-2 text-xs text-center" style="color: #16a34a">✓
-                                        Message sendedо</p>
-                                    <p id="contactError" class="hidden mt-2 text-xs text-center" style="color: #dc2626"></p>
+                                    <p id="contactSuccess" class="hidden mt-2 text-xs text-center text-(--status-success)">✓
+                                        Message sended</p>
+                                    <p id="contactError" class="hidden mt-2 text-xs text-center text-(--status-danger)"></p>
                                 </div>
                             @else
                                 <a href="{{ route('listings.edit', $listing->slug) }}"
-                                    class="block text-center w-full rounded-xl py-3 text-sm font-medium transition-colors"
+                                    class="block text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
                                     style="border: 1px solid var(--background-3); color: var(--text-primary)">
                                     Edit listing
                                 </a>
                             @endif
                         @else
                             <a href="{{ route('login') }}"
-                                class="block text-center w-full rounded-xl py-3.5 text-sm font-semibold transition-colors"
+                                class="block text-center w-full rounded-xl py-3.5 text-sm font-semibold transition-colors cursor-pointer"
                                 style="background: var(--button); color: var(--button-text)">
                                 Login to book
                             </a>
@@ -526,7 +546,7 @@
             style="border: 1px solid var(--background-3)">
             <x-heroicon-o-heart class="w-5 h-5" style="color: var(--text-muted)" />
         </button>
-        <button class="flex-1 text-sm font-semibold rounded-xl py-3"
+        <button class="flex-1 text-sm font-semibold rounded-xl py-3 cursor-pointer"
             style="background: var(--button); color: var(--button-text)">
             Book now
         </button>

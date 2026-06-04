@@ -50,13 +50,14 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function listings()
-{
+    {
     return $this->hasMany(Listing::class);
-}
+    }
 
     public function favoriteListings()
     {
-        return $this->belongsToMany(Listing::class, 'favorites');
+    return $this->belongsToMany(Listing::class, 'favorites')
+        ->withTrashed();
     }
 
     public function bookingsAsRenter()

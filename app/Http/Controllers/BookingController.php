@@ -81,7 +81,7 @@ class BookingController extends Controller
             return back()->withErrors(['start_date' => 'These dates are already booked.'])->withInput();
         }
 
-                $booking = Booking::create([
+        $booking = Booking::create([
             'listing_id'   => $listing->id,
             'renter_id'    => auth()->id(),
             'owner_id'     => $listing->user_id,
@@ -145,7 +145,10 @@ class BookingController extends Controller
             'currency'    => $b->currency,
             'start_date'  => $b->start_date->format('d M'),
             'end_date'    => $b->end_date->format('d M Y'),
-            'listing'     => ['title' => $b->listing->title],
+            'listing'     => [
+                'title' => $b->listing->title,
+                'image' => $b->listing->images->first()?->path
+                ],
             'renter'      => [
                 'name'   => $b->renter->name,
                 'avatar' => $b->renter->avatar,
@@ -169,6 +172,12 @@ class BookingController extends Controller
             ],
         ]),
     ]);
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
+        return response()->json(['ok' => true]);
     }
 
     public function pendingCount()

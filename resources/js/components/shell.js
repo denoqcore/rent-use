@@ -1,5 +1,5 @@
 
-export default function chatComponent() {
+export default function shellComponent() {
     return {
 
         open: false,
@@ -300,7 +300,19 @@ closeChats() {
                 },
                 body: JSON.stringify({ body })
             });
+        },
+
+        async deleteBooking(id) {
+    const csrf = document.querySelector('meta[name=csrf-token]').content;
+    await fetch(`/bookings/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': csrf,
+            Accept: 'application/json'
         }
+    });
+    await this.loadBookings();
+},
     };
 
 }

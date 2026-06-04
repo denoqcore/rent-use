@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{ tab: window.location.hash === '#listings' ? 'listings' : 'profile', editInfo: false, editPassword: false }">
-        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
 
             {{-- SIDEBAR --}}
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
@@ -262,9 +262,10 @@
                     </div>
                 </div>
                 <div x-show="tab === 'listings'" x-cloak>
-                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-4 sm:p-6">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-mylisting') }}</h2>
+                            {{ __('messages.prof-mylisting') }}
+                        </h2>
 
                         @if ($listings->isEmpty())
                             <div class="flex flex-col items-center justify-center py-16 gap-3">
@@ -276,31 +277,37 @@
                                 </a>
                             </div>
                         @else
-                            <div class="flex flex-col gap-3">
+                            <div x-data="{ confirmDelete: false, deleteUrl: '', deleteTitle: '' }" class="flex flex-col gap-4">
                                 @foreach ($listings as $listing)
                                     <div
-                                        class="flex items-center gap-3 p-3 rounded-sm border border-(--background-3) hover:border-(--text-muted)/30 transition-colors">
+                                        class="flex flex-col sm:grid sm:grid-cols-[200px_1fr] md:grid-cols-[240px_1fr] gap-4 p-4 rounded-sm border border-(--background-3) hover:border-(--text-muted)/30 transition-colors sm:h-44">
+
                                         <a href="{{ route('listings.show', $listing->slug) }}"
-                                            class="shrink-0 w-16 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                            class="relative block w-full h-40 sm:h-full rounded-sm overflow-hidden bg-(--background-3) shrink-0">
                                             @if ($listing->images->isNotEmpty())
                                                 <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
                                                     class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center">
-                                                    <x-heroicon-o-photo class="w-4 h-4 text-(--text-muted) opacity-40" />
+                                                    <x-heroicon-o-photo class="w-6 h-6 text-(--text-muted) opacity-40" />
                                                 </div>
                                             @endif
                                         </a>
-                                        <div class="flex-1 min-w-0">
-                                            <a href="{{ route('listings.show', $listing->slug) }}">
-                                                <p
-                                                    class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
-                                                    {{ $listing->title }}</p>
-                                            </a>
-                                            <div class="flex items-center gap-2 mt-0.5">
+
+                                        <div class="flex flex-col justify-between min-w-0 flex-1 py-0.5 gap-4 sm:gap-0">
+                                            <div class="flex justify-between items-start gap-3">
+                                                <div class="min-w-0">
+                                                    <a href="{{ route('listings.show', $listing->slug) }}">
+                                                        <h3
+                                                            class="text-sm sm:text-base font-semibold text-(--text-primary) truncate hover:underline">
+                                                            {{ $listing->title }}
+                                                        </h3>
+                                                    </a>
+                                                    <p class="text-xs text-(--text-muted) mt-1">{{ $listing->city->name }}
+                                                    </p>
+                                                </div>
                                                 <span
-                                                    class="text-[11px] text-(--text-muted)">{{ $listing->city->name }}</span>
-                                                <span class="text-[11px] font-bold text-(--button)">
+                                                    class="text-sm sm:text-base font-bold text-(--text-price) whitespace-nowrap shrink-0">
                                                     @if ($listing->price_per_day)
                                                         {{ number_format($listing->price_per_day) }}
                                                         {{ $listing->currency }}/day
@@ -310,66 +317,127 @@
                                                     @endif
                                                 </span>
                                             </div>
-                                        </div>
-                                        <div class="flex items-center gap-2 shrink-0">
-                                            @php
-                                                $statusClass = match ($listing->status) {
-                                                    'active' => 'bg-green-500/10 text-green-500',
-                                                    'paused' => 'bg-yellow-500/10 text-yellow-500',
-                                                    'archived' => 'bg-(--background-3) text-(--text-muted)',
-                                                    default => 'bg-(--background-3) text-(--text-muted)',
-                                                };
-                                            @endphp
-                                            <span
-                                                class="text-[11px] px-2 py-0.5 rounded-full font-medium {{ $statusClass }}">
-                                                {{ $listing->status }}
-                                            </span>
 
-                                            <a href="{{ route('listings.edit', $listing->slug) }}"
-                                                class="p-1.5 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) transition-colors">
-                                                <x-heroicon-o-pencil-square class="w-4 h-4" />
-                                            </a>
+                                            <div
+                                                class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-end sm:gap-4 mt-auto">
+                                                <div class="flex items-center gap-3 text-xs text-(--text-muted)">
+                                                    <span>{{ $listing->created_at->format('d.m.Y') }}</span>
+                                                    <span class="w-1 h-1 rounded-full bg-(--background-3)"></span>
+                                                    <span>{{ $listing->category->name ?? 'Category' }}</span>
+                                                </div>
 
+                                                <div
+                                                    class="flex items-center gap-1.5 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 shrink-0">
+                                                    @php
+                                                        $statusClass = match ($listing->status) {
+                                                            'active' => 'bg-green-500/10 text-green-500',
+                                                            'paused' => 'bg-yellow-500/10 text-yellow-500',
+                                                            'archived' => 'bg-(--background-3) text-(--text-muted)',
+                                                            default => 'bg-(--background-3) text-(--text-muted)',
+                                                        };
+                                                    @endphp
+                                                    <span
+                                                        class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md font-medium mr-1 {{ $statusClass }}">
+                                                        {{ $listing->status }}
+                                                    </span>
 
-                                            <form method="POST" action="{{ route('listings.pause', $listing) }}">
-                                                @csrf
-                                                <button type="submit"
-                                                    title="{{ $listing->status === 'paused' ? 'Resume listing' : 'Pause listing' }}"
-                                                    class="p-1.5 rounded-sm transition-colors cursor-pointer
-                                                    {{ $listing->status === 'paused'
-                                                        ? 'text-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20'
-                                                        : 'text-(--text-muted) hover:text-yellow-500 hover:bg-yellow-500/10' }}">
-                                                    @if ($listing->status === 'paused')
-                                                        <x-heroicon-o-play class="w-4 h-4" />
-                                                    @else
-                                                        <x-heroicon-o-pause class="w-4 h-4" />
+                                                    <a href="{{ route('listings.edit', $listing->slug) }}"
+                                                        class="p-2 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) transition-colors">
+                                                        <x-heroicon-o-pencil-square class="w-4 h-4" />
+                                                    </a>
+
+                                                    <form method="POST"
+                                                        action="{{ route('listings.pause', $listing) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            title="{{ $listing->status === 'paused' ? 'Resume listing' : 'Pause listing' }}"
+                                                            class="p-2 rounded-sm transition-colors cursor-pointer {{ $listing->status === 'paused' ? 'text-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20' : 'text-(--text-muted) hover:text-yellow-500 hover:bg-yellow-500/10' }}">
+                                                            @if ($listing->status === 'paused')
+                                                                <x-heroicon-o-play class="w-4 h-4" />
+                                                            @else
+                                                                <x-heroicon-o-pause class="w-4 h-4" />
+                                                            @endif
+                                                        </button>
+                                                    </form>
+
+                                                    @if ($listing->status === 'active')
+                                                        <form method="POST"
+                                                            action="{{ route('listings.archive', $listing) }}">
+                                                            @csrf
+                                                            <button type="submit" title="Archive listing"
+                                                                class="p-2 rounded-sm text-(--text-muted) hover:text-green-500 hover:bg-green-500/10 transition-colors cursor-pointer">
+                                                                <x-heroicon-o-archive-box class="w-4 h-4" />
+                                                            </button>
+                                                        </form>
                                                     @endif
-                                                </button>
-                                            </form>
 
-                                            @if ($listing->status === 'archived')
-                                                <form method="POST" action="{{ route('listings.restore', $listing) }}">
-                                                    @csrf
-                                                    <button type="submit" title="Restore listing"
-                                                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-green-500 hover:bg-green-500/10 transition-colors cursor-pointer">
-                                                        <x-heroicon-o-arrow-path class="w-4 h-4" />
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                    @if ($listing->status === 'archived')
+                                                        <form method="POST"
+                                                            action="{{ route('listings.restore', $listing) }}">
+                                                            @csrf
+                                                            <button type="submit" title="Restore listing"
+                                                                class="p-2 rounded-sm text-(--text-muted) hover:text-green-500 hover:bg-green-500/10 transition-colors cursor-pointer">
+                                                                <x-heroicon-o-arrow-path class="w-4 h-4" />
+                                                            </button>
+                                                        </form>
+                                                    @endif
 
-                                            @if ($listing->status === 'active')
-                                                <form method="POST" action="{{ route('listings.destroy', $listing) }}">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit"
-                                                        onclick="return confirm('Archive this listing?')"
-                                                        class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
-                                                        <x-heroicon-o-archive-box class="w-4 h-4" />
+                                                    <button type="button"
+                                                        @click="deleteUrl = '{{ route('listings.destroy', $listing->slug) }}'; deleteTitle = '{{ e($listing->title) }}'; confirmDelete = true"
+                                                        title="Delete listing"
+                                                        class="p-2 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
+                                                        <x-heroicon-o-trash class="w-4 h-4" />
                                                     </button>
-                                                </form>
-                                            @endif
+                                                </div>
+                                            </div>
                                         </div>
+
                                     </div>
                                 @endforeach
+
+                                <div x-show="confirmDelete" x-cloak
+                                    class="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-xs"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition ease-in duration-150">
+
+                                    <div @click.away="confirmDelete = false"
+                                        class="w-full sm:max-w-md p-6 bg-(--background-2) border-t sm:border border-(--background-3) rounded-t-lg sm:rounded-sm shadow-2xl"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95"
+                                        x-transition:enter-end="translate-y-0 sm:scale-100">
+
+                                        <div class="w-12 h-1 bg-(--background-3) rounded-full mx-auto mb-5 sm:hidden">
+                                        </div>
+
+                                        <h3 class="text-base font-bold text-(--text-primary) mb-2">Delete this ad?</h3>
+
+                                        <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
+                                            Are you sure you want to completely delete <span
+                                                class="text-(--text-primary) font-semibold"
+                                                x-text="'«' + deleteTitle + '»'"></span>.
+                                            It will be impossible to restore it.
+                                        </p>
+
+                                        <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
+                                            <button type="button" @click="confirmDelete = false"
+                                                class="w-full sm:w-auto order-2 sm:order-1 px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background) cursor-pointer transition-colors">
+                                                Cancel
+                                            </button>
+
+                                            <form method="POST" :action="deleteUrl"
+                                                class="w-full sm:w-auto order-1 sm:order-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <a href="{{ route('listings.create') }}"

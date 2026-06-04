@@ -203,8 +203,12 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                         @foreach ($listings as $listing)
+                            @php
+                                $isFavorited =
+                                    auth()->check() && auth()->user()->favoriteListings->contains($listing->id);
+                            @endphp
                             <a href="{{ route('listings.show', $listing->slug) }}"
-                                class="group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
+                                class="relative group rounded-sm border border-(--background-3) bg-(--background-2) overflow-hidden hover:border-(--text-muted) transition-colors duration-200">
                                 <div class="h-44 bg-(--background-3)">
                                     @if ($listing->images->isNotEmpty())
                                         <img src="{{ asset('storage/' . $listing->images->first()->path) }}"
@@ -223,6 +227,27 @@
                                             <span class="opacity-40">/</span>
                                         @endif
                                         <span>{{ $listing->category->name }}</span>
+                                    </div>
+
+                                    <div class="absolute top-2 right-2">
+                                        @if ($isFavorited)
+                                            <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" title="Remove favorite"
+                                                    class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120 ">
+                                                    <x-heroicon-s-heart class="w-6 h-6 text-red-500" />
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('favorites.store', $listing) }}">
+                                                @csrf
+                                                <button type="submit" title="Favorite"
+                                                    class="p-1.5 cursor-pointer transition-transform duration-200 hover:scale-120">
+                                                    <x-heroicon-o-heart class="w-6 h-6 text-white" />
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                     <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}
                                     </h3>

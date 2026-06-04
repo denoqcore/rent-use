@@ -10,7 +10,7 @@ class Favorite extends Model
 
     public function listing()
     {
-        return $this->belongsTo(Listing::class);
+        return $this->belongsTo(Listing::class)->withTrashed();
     }
 
     public function user()
