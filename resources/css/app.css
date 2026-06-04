@@ -31,15 +31,39 @@
 :root {
     --background: #ffffff;
     --background-2: #f8fafc;
-    --background-3: #f1f5f9;
-    --button: #2563eb;
-    --button-h: #1d4ed8;
+    --background-3: #eef2f7;
+    --button: #1d4ed8;
+    --button-h: #1e40af;
     --button-text: #ffffff;
     --text-primary: #0f172a;
-    --text-btn-header: #000;
     --text-muted: #64748b;
-    --blackwhite: #000;
-    --whiteblack: #fff;
+    --text-soft: #94a3b8;
+
+    --price: #0b0f19;
+
+    --blackwhite: #0b0f19;
+    --whiteblack: #ffffff;
+
+    --status-success: #2563eb;
+    --bg-status-success: #dbeafe;
+
+    --status-warning: #f59e0b;
+    --bg-status-warning: #fef3c7;
+
+    --status-danger: #ef4444;
+    --bg-status-danger: #fee2e2;
+
+    --status-ok: #2563eb;
+    --bg-status-ok: #dbeafe;
+
+    --status-muted: #64748b;
+    --bg-status-muted: #e2e8f0;
+
+    --error: #dc2626;
+    --error-bg: #fef2f2;
+
+    --btn-cancel: #000;
+    --hvr-btn-cancel: #313131;
 }
 
 /* dark */
@@ -130,4 +154,30 @@ input[type="number"] {
 }
 .headroom--unpinned {
     transform: translateY(-100%);
+}
+
+body {
+    --sb-track-color: #ffffff;
+    --sb-thumb-color: #000000;
+    --sb-size: 8px;
+}
+
+body::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 1px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 1px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    body {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
 }

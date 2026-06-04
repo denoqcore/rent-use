@@ -77,7 +77,8 @@ class Listing extends Model
     }
 
     public function scopeVisible($query)
-{
-    return $query->where('status', 'active');
-}
+    {
+        return $query->where('status', 'active')
+                     ->whereNull('deleted_at');
+    }
 }

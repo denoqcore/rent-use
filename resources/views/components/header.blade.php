@@ -4,7 +4,7 @@ use Livewire\Component;
 
 new class extends Component {}; ?>
 
-<div x-data="chatComponent()" x-cloak>
+<div x-data="shellComponent()" x-cloak>
 
     {{-- DESKTOP HEADER --}}
     <header
@@ -446,7 +446,6 @@ new class extends Component {}; ?>
                                 'city',
                                 'category',
                             ])
-                            ->where('status', 'active')
                             ->latest('favorites.created_at')
                             ->get();
                     @endphp
@@ -466,9 +465,20 @@ new class extends Component {}; ?>
                         <div class="flex flex-col gap-2">
                             @foreach ($userFavorites as $fav)
                                 <div
-                                    class="flex items-center gap-3 p-2 rounded-sm hover:bg-(--background-3) transition-colors group">
-                                    <a href="{{ route('listings.show', $fav->slug) }}" @click="favoritesModal = false"
-                                        class="shrink-0 w-16 h-14 rounded-sm overflow-hidden bg-(--background-3)">
+                                    class="relative flex items-center gap-3 p-2 rounded-sm transition-colors group hover:bg-(--background-3)
+                                     {{ $fav->trashed() || $fav->status !== 'active' ? 'opacity-60' : '' }}">
+
+                                    @if ($fav->trashed() || $fav->status !== 'active')
+                                        <div
+                                            class="absolute inset-0 left-60 z-10 flex items-center justify-center rounded-sm">
+                                            <span
+                                                class="px-3 py-1 text-xs font-semibold text-white bg-black/70 rounded-sm">
+                                                {{ $fav->trashed() ? 'Deleted' : 'Inactive' }}
+                                            </span>
+                                        </div>
+                                    @endif
+
+                                    <div class="shrink-0 w-16 h-14 rounded-sm overflow-hidden bg-(--background-3)">
                                         @if ($fav->images->isNotEmpty())
                                             <img src="{{ asset('storage/' . $fav->images->first()->path) }}"
                                                 alt="{{ $fav->title }}" class="w-full h-full object-cover">
@@ -477,35 +487,48 @@ new class extends Component {}; ?>
                                                 <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted) opacity-40" />
                                             </div>
                                         @endif
-                                    </a>
+                                    </div>
+
                                     <div class="flex-1 min-w-0">
-                                        <a href="{{ route('listings.show', $fav->slug) }}"
-                                            @click="favoritesModal = false">
-                                            <p
-                                                class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
-                                                {{ $fav->title }}</p>
-                                        </a>
+                                        @if (!$fav->trashed() && $fav->status === 'active')
+                                            <a href="{{ route('listings.show', $fav->slug) }}"
+                                                @click="favoritesModal = false">
+                                                <p
+                                                    class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
+                                                    {{ $fav->title }}
+                                                </p>
+                                            </a>
+                                        @else
+                                            <p class="text-sm font-semibold text-(--text-primary) truncate">
+                                                {{ $fav->title }}
+                                            </p>
+                                        @endif
+
                                         <div class="flex items-center gap-2 mt-0.5">
                                             <span class="flex items-center gap-1 text-[11px] text-(--text-muted)">
                                                 <x-heroicon-s-map-pin class="w-2.5 h-2.5 shrink-0" />
                                                 {{ $fav->city->name }}
                                             </span>
+
                                             <span class="text-[11px] font-bold text-(--button)">
                                                 @if ($fav->price_per_day)
                                                     {{ number_format($fav->price_per_day, 0, '.', ' ') }}
-                                                    {{ $fav->currency }}<span
-                                                        class="text-(--text-muted) font-normal">/day</span>
+                                                    {{ $fav->currency }}
+                                                    <span class="text-(--text-muted) font-normal">/day</span>
                                                 @elseif($fav->price_per_hour)
                                                     {{ number_format($fav->price_per_hour, 0, '.', ' ') }}
-                                                    {{ $fav->currency }}<span
-                                                        class="text-(--text-muted) font-normal">/hr</span>
+                                                    {{ $fav->currency }}
+                                                    <span class="text-(--text-muted) font-normal">/hr</span>
                                                 @endif
                                             </span>
                                         </div>
                                     </div>
+
                                     <form method="POST" action="{{ route('favorites.destroy', $fav) }}"
-                                        class="shrink-0">
-                                        @csrf @method('DELETE')
+                                        class="shrink-0 relative z-20">
+                                        @csrf
+                                        @method('DELETE')
+
                                         <button type="submit"
                                             class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
                                             <x-heroicon-o-x-mark class="w-4 h-4" />
@@ -532,7 +555,7 @@ new class extends Component {}; ?>
                 x-transition:leave="transform transition ease-in-out duration-300"
                 x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
                 @keydown.escape.window="bookingsModal = false"
-                class="relative z-10 w-screen max-w-md flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
+                class="relative z-10 w-screen max-w-lg flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
 
                 <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
                     <div class="flex items-center gap-2">
@@ -583,45 +606,70 @@ new class extends Component {}; ?>
                         <div x-show="myRentals.length > 0" class="flex flex-col gap-2">
                             <template x-for="booking in myRentals" :key="booking.id">
                                 <div
-                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
+                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
                                     <a :href="'/listings/' + booking.listing.slug" @click="bookingsModal = false"
-                                        class="flex items-center gap-3 group">
-                                        <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
+                                        class="flex gap-3 group">
+                                        <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
                                             <template x-if="booking.listing.image">
                                                 <img :src="'/storage/' + booking.listing.image"
-                                                    class="w-full h-full object-cover">
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                            </template>
+                                            <template x-if="!booking.listing.image">
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
+                                                </div>
                                             </template>
                                         </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline"
-                                                x-text="booking.listing.title"></p>
-                                            <p class="text-[11px] text-(--text-muted)" x-text="booking.listing.city"></p>
+                                        <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                            <div>
+                                                <div class="flex items-start justify-between gap-3">
+                                                    <div class="min-w-0">
+                                                        <p class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline"
+                                                            x-text="booking.listing.title"></p>
+                                                        <p class="text-xs text-(--text-muted)"
+                                                            x-text="booking.listing.city"></p>
+                                                    </div>
+                                                    <div class="text-right shrink-0">
+                                                        <p class="text-sm font-bold text-(--text-price)"
+                                                            x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
+                                                    <x-heroicon-o-calendar-days class="w-3 h-3" />
+                                                    <span
+                                                        x-text="booking.pricing_mode === 'hour'
+                                                                ? booking.start_date + ' · ' + booking.start_hour + ' – ' + booking.end_hour
+                                                                : booking.start_date + ' — ' + booking.end_date">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
+                                                @click.prevent>
+                                                <span
+                                                    class="px-2 py-0.5 rounded-sm text-sm md:text-xs font-medium capitalize"
+                                                    :class="{
+                                                        'bg-(--bg-status-warning) text-(--status-warning)': booking
+                                                            .status === 'pending',
+                                                        'bg-(--bg-status-ok) text-(--status-ok)': booking
+                                                            .status === 'confirmed',
+                                                        'bg-(--bg-status-danger) text-(--status-danger)': booking
+                                                            .status === 'cancelled',
+                                                        'bg-(--bg-status-muted) text-(--status-muted)': booking
+                                                            .status === 'completed',
+                                                    }"
+                                                    x-text="booking.status">
+                                                </span>
+                                                <template x-if="booking.status === 'pending'">
+                                                    <button @click.stop.prevent="cancelBooking(booking.id)"
+                                                        class="text-md md:text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                        {{ __('messages.cancel') }}
+                                                    </button>
+                                                </template>
+                                            </div>
+
                                         </div>
                                     </a>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-(--text-muted)"
-                                            x-text="booking.pricing_mode === 'hour' ? booking.start_date + ' · ' + booking.start_hour + ' – ' + booking.end_hour : booking.start_date + ' — ' + booking.end_date">
-                                        </span>
-                                        <span class="font-semibold text-(--text-primary)"
-                                            x-text="booking.total_price + ' ' + booking.currency"></span>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <span class="px-2 py-0.5 rounded-full text-[11px] font-medium"
-                                            :class="{
-                                                'bg-yellow-400/10 text-yellow-500': booking.status === 'pending',
-                                                'bg-green-400/10 text-green-500': booking.status === 'confirmed',
-                                                'bg-red-400/10 text-red-400': booking.status === 'cancelled',
-                                                'bg-gray-400/10 text-gray-400': booking.status === 'completed',
-                                            }"
-                                            x-text="booking.status">
-                                        </span>
-                                        <template x-if="booking.status === 'pending'">
-                                            <button @click="cancelBooking(booking.id)"
-                                                class="text-[11px] text-red-400 hover:text-red-300 cursor-pointer">
-                                                {{ __('messages.cancel') }}
-                                            </button>
-                                        </template>
-                                    </div>
                                 </div>
                             </template>
                         </div>
@@ -635,57 +683,93 @@ new class extends Component {}; ?>
                             </p>
                             <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_requests_desc') }}</p>
                         </div>
+
                         <div x-show="incomingRequests.length > 0" class="flex flex-col gap-2">
                             <template x-for="booking in incomingRequests" :key="booking.id">
                                 <div
-                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) flex flex-col gap-2">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="shrink-0 w-9 h-9 rounded-sm bg-(--background-3) overflow-hidden flex items-center justify-center">
-                                            <template x-if="booking.renter.avatar">
-                                                <img :src="'/storage/' + booking.renter.avatar"
+                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
+                                    <div class="flex gap-3">
+                                        <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
+                                            <template x-if="booking.listing.image">
+                                                <img :src="'/storage/' + booking.listing.image"
                                                     class="w-full h-full object-cover">
                                             </template>
-                                            <template x-if="!booking.renter.avatar">
-                                                <span class="text-xs font-medium text-(--text-muted) uppercase"
-                                                    x-text="booking.renter.name.charAt(0)"></span>
+                                            <template x-if="!booking.listing.image">
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
+                                                </div>
                                             </template>
                                         </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-semibold text-(--text-primary) truncate"
-                                                x-text="booking.renter.name"></p>
-                                            <p class="text-[11px] text-(--text-muted) truncate"
-                                                x-text="booking.listing.title"></p>
+                                        <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                            <div>
+                                                <div class="flex items-start justify-between gap-3">
+                                                    <div class="min-w-0">
+                                                        <p class="text-sm font-semibold text-(--text-primary) truncate"
+                                                            x-text="booking.listing.title"></p>
+                                                        <p class="text-xs text-(--text-muted)"
+                                                            x-text="booking.renter.name"></p>
+                                                    </div>
+                                                    <div class="text-right shrink-0">
+                                                        <p class="text-sm font-bold text-(--text-price)"
+                                                            x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
+                                                    <x-heroicon-o-calendar-days class="w-3 h-3" />
+                                                    <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
+                                                @click.stop.prevent>
+
+                                                <template x-if="booking.status === 'pending'">
+                                                    <div class="flex items-center justify-between w-full">
+                                                        <span
+                                                            class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize bg-(--bg-status-warning) text-(--status-warning)"
+                                                            x-text="booking.status">
+                                                        </span>
+                                                        <div class="flex gap-2">
+                                                            <button @click="confirmBooking(booking.id)"
+                                                                class="py-0.5 px-2 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition">
+                                                                {{ __('messages.confirm') }}
+                                                            </button>
+                                                            <button @click="cancelBooking(booking.id)"
+                                                                class="py-0.5 px-2 text-xs font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-sm cursor-pointer transition">
+                                                                {{ __('messages.decline') }}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </template>
+
+                                                <template x-if="booking.status !== 'pending'">
+                                                    <div class="flex items-center justify-between w-full">
+                                                        <span class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize"
+                                                            :class="{
+                                                                'bg-(--bg-status-ok) text-(--status-ok)': booking
+                                                                    .status === 'confirmed',
+                                                                'bg-(--bg-status-danger) text-(--status-danger)': booking
+                                                                    .status === 'cancelled',
+                                                                'bg-(--bg-status-muted) text-(--status-muted)': booking
+                                                                    .status === 'completed',
+                                                            }"
+                                                            x-text="booking.status">
+                                                        </span>
+                                                        <template
+                                                            x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
+                                                            <button @click.stop.prevent="deleteBooking(booking.id)"
+                                                                class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                                {{ __('messages.delete') }}
+                                                            </button>
+                                                        </template>
+                                                    </div>
+                                                </template>
+
+                                            </div>
                                         </div>
+
                                     </div>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-(--text-muted)"
-                                            x-text="booking.start_date + ' — ' + booking.end_date"></span>
-                                        <span class="font-semibold text-(--text-primary)"
-                                            x-text="booking.total_price + ' ' + booking.currency"></span>
-                                    </div>
-                                    <template x-if="booking.status === 'pending'">
-                                        <div class="flex gap-2 mt-1">
-                                            <button @click="confirmBooking(booking.id)"
-                                                class="flex-1 py-1.5 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition-colors">
-                                                {{ __('messages.confirm') }}
-                                            </button>
-                                            <button @click="cancelBooking(booking.id)"
-                                                class="flex-1 py-1.5 text-xs font-medium bg-red-400/10 text-red-400 hover:bg-red-400/20 rounded-sm cursor-pointer transition-colors">
-                                                {{ __('messages.decline') }}
-                                            </button>
-                                        </div>
-                                    </template>
-                                    <template x-if="booking.status !== 'pending'">
-                                        <span class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit"
-                                            :class="{
-                                                'bg-green-400/10 text-green-500': booking.status === 'confirmed',
-                                                'bg-red-400/10 text-red-400': booking.status === 'cancelled',
-                                                'bg-gray-400/10 text-gray-400': booking.status === 'completed',
-                                            }"
-                                            x-text="booking.status">
-                                        </span>
-                                    </template>
                                 </div>
                             </template>
                         </div>
@@ -789,7 +873,7 @@ new class extends Component {}; ?>
                         </template>
                         <template x-for="msg in activeMessages" :key="msg.id">
                             <div :class="msg.is_mine ? 'items-end' : 'items-start'" class="flex flex-col gap-1">
-                                <div class="max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed break-words"
+                                <div class="max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed wrap-break-word"
                                     :style="msg.is_mine ?
                                         'background: var(--button); color: var(--button-text); border-bottom-right-radius: 4px' :
                                         'background: var(--background-3); color: var(--text-primary); border-bottom-left-radius: 4px'"

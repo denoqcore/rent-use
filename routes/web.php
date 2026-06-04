@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{listing:slug}/archive', [ListingController::class, 'archive'])->name('listings.archive');
         Route::post('/{listing}/restore', [ListingController::class, 'restore'])->name('listings.restore');
         Route::delete('/{listing:slug}', [ListingController::class, 'destroy'])->name('listings.destroy');
-        Route::put('/{listing:slug}', [ListingController::class, 'update'])->name('listings.update');
+        Route::patch('/listings/{listing}', [ListingController::class, 'update']);
     });
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookings/{listing}', [BookingController::class, 'store'])->name('bookings.store')->middleware('throttle:20,1');
     Route::patch('/bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy']);
 
     Route::get('/chats', [ChatController::class, 'index']);
     Route::get('/chats/{chat}', [ChatController::class, 'show']);

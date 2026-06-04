@@ -277,7 +277,6 @@
                                 </a>
                             </div>
                         @else
-                            {{-- Добавляем x-data для единого модального окна на всю вкладку, чтобы избежать дублирования разметки --}}
                             <div x-data="{ confirmDelete: false, deleteUrl: '', deleteTitle: '' }" class="flex flex-col gap-4">
                                 @foreach ($listings as $listing)
                                     <div
@@ -308,7 +307,7 @@
                                                     </p>
                                                 </div>
                                                 <span
-                                                    class="text-sm sm:text-base font-bold text-(--text-primary) whitespace-nowrap shrink-0">
+                                                    class="text-sm sm:text-base font-bold text-(--text-price) whitespace-nowrap shrink-0">
                                                     @if ($listing->price_per_day)
                                                         {{ number_format($listing->price_per_day) }}
                                                         {{ $listing->currency }}/day

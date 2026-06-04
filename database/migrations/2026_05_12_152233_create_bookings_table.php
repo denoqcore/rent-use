@@ -28,6 +28,9 @@ return new class extends Migration
             $table->unsignedInteger('deposit')->nullable();
             $table->enum('currency', ['MDL', 'EUR', 'USD']);
 
+            $table->boolean('hidden_for_renter')->default(false);
+            $table->boolean('hidden_for_owner')->default(false);
+
             $table->enum('status', [
                 'pending',
                 'confirmed',

@@ -9,8 +9,8 @@ import './bootstrap';
 
 import Collapse from '@alpinejs/collapse';
 import bookingForm from './components/booking';
-import chatComponent from './components/chat';
 import galleryComponent from './components/gallery';
+import shellComponent from './components/shell';
 
 // Swiper
 window.Swiper      = Swiper;
@@ -23,7 +23,7 @@ window.flatpickr   = flatpickr;
 
 // Alpine
 window.bookingForm      = bookingForm;
-window.chatComponent    = chatComponent;
+window.shellComponent    = shellComponent;
 window.galleryComponent = galleryComponent;
 window.Alpine.plugin(Collapse)
 
