@@ -17,6 +17,7 @@ Route::get('/listings/create', function () {
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/listings/{slug}', [ListingController::class, 'show'])->name('listings.show');
+Route::get('/user/{user}', [ProfileController::class, 'showPublic'])->name('profile.public');
 
 Route::get('/lang/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'ro', 'ru'])) abort(400);
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chats/{chat}', [ChatController::class, 'show']);
     Route::get('/chat/{listing}', [ChatController::class, 'openOrCreate']);
     Route::post('/chat/{chat}/send', [ChatController::class, 'send'])->middleware('throttle:30,1');
+    Route::post('/user/{user}/message', [ChatController::class, 'openOrCreateByUser'])->name('chat.user');
 
     Route::get('/api/bookings/pending-count', function () {
         return response()->json([

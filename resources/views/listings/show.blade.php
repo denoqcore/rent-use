@@ -173,19 +173,10 @@
                         </div>
                     @endif
                     <div>
-                        <p class="text-sm font-semibold" style="color: var(--text-primary)">{{ $listing->user->name }}
-                        </p>
-                        {{-- <p class="text-xs" style="color: var(--text-muted)">
-                            @if ($listing->user->is_online)
-                                <span class="inline-flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full inline-block"
-                                        style="background: #4ade80"></span>
-                                    Online
-                                </span>
-                            @else
-                                {{ $listing->user->last_seen_at?->diffForHumans() ?? 'Offline' }}
-                            @endif
-                        </p> --}}
+                        <a href="{{ route('profile.public', $listing->user) }}"
+                            class="text-sm font-semibold hover:underline text-(--text-primary)">
+                            {{ $listing->user->name }}
+                        </a>
                     </div>
                 </div>
 
@@ -270,7 +261,7 @@
             </div>
 
             {{-- RIGHT SIDEBAR --}}
-            <div class="lg:w-[380px] shrink-0">
+            <div class="lg:w-95 shrink-0">
                 <div class="sticky top-24">
                     <div class="rounded-2xl p-6"
                         style="border: 1px solid var(--background-3); background: var(--background);">
@@ -456,16 +447,22 @@
                                         @if ($listing->deposit)
                                             <div class="flex justify-between" style="color: var(--text-muted)">
                                                 <span>Deposit</span>
-                                                <span>{{ number_format($listing->deposit) }}
-                                                    {{ $listing->currency }}</span>
-                                            </div>
-                                            <div class="flex justify-between font-semibold pt-2"
-                                                style="color: var(--text-primary); border-top: 1px solid var(--background-3)">
-                                                <span>Total</span>
-                                                <span
-                                                    x-text="(totalPrice + {{ $listing->deposit ?? 0 }}) + ' {{ $listing->currency }}'"></span>
+                                                <span>
+                                                    {{ number_format($listing->deposit, 0, ',', ' ') }}
+                                                    {{ $listing->currency }}
+                                                </span>
                                             </div>
                                         @endif
+
+                                        <div class="flex justify-between items-center pt-3 mt-1 text-base font-semibold"
+                                            style="color: var(--text-primary); border-top: 1px solid var(--background-3)">
+
+                                            <span>Total</span>
+
+                                            <span class="text-lg font-bold text-(--text-price)"
+                                                x-text="new Intl.NumberFormat('de-DE').format(totalPrice + {{ $listing->deposit ?? 0 }}) + ' {{ $listing->currency }}'">
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <button type="submit" :disabled="!canSubmit"

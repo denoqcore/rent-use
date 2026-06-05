@@ -4,7 +4,7 @@ use Livewire\Component;
 
 new class extends Component {}; ?>
 
-<div x-data="shellComponent()" x-cloak>
+<div x-cloak>
 
     {{-- DESKTOP HEADER --}}
     <header

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
@@ -16,6 +17,21 @@ class ProfileController extends Controller
         $bookings = $user->bookingsAsRenter()->with(['listing.images', 'listing.city'])->latest()->get();
 
         return view('profile.profile', compact('user', 'listings', 'bookings'));
+    }
+
+    public function showPublic(User $user)
+    {
+        $listings = $user->listings()
+            ->where('status', 'active')
+            ->with(['images', 'category', 'city'])
+            ->latest()
+            ->paginate(10);
+
+        return view('profile.show', [
+            'profileUser'         => $user,
+            'listings'            => $listings,
+            'activeListingsCount' => $listings->total(),
+        ]);
     }
 
     public function updateInfo(Request $request)

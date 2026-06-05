@@ -5,8 +5,6 @@
 @section('content')
     <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{ tab: window.location.hash === '#listings' ? 'listings' : 'profile', editInfo: false, editPassword: false }">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
-
-            {{-- SIDEBAR --}}
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
                 <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) mb-2 flex items-center gap-3">
                     <div
@@ -488,9 +486,10 @@
                                                     {{ $booking->end_date->format('d M Y') }}
                                                 @endif
                                             </span>
-                                            <span
-                                                class="font-semibold text-(--text-primary)">{{ number_format($booking->total_price) }}
-                                                {{ $booking->currency }}</span>
+                                            <span class="font-semibold text-(--text-primary)">
+                                                {{ number_format($booking->total_price, 0, ',', ' ') }}
+                                                {{ $booking->currency }}
+                                            </span>
                                         </div>
                                         @php
                                             $statusConfig = [
