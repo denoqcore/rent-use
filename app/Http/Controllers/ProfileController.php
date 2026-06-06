@@ -27,10 +27,30 @@ class ProfileController extends Controller
             ->latest()
             ->paginate(10);
 
+        $reviews      = $user->receivedReviews()->with(['reviewer', 'votes'])->latest()->get();
+        $avgRating    = $user->averageRating();
+        $reviewCount  = $user->reviewCount();
+        $distribution = $user->ratingDistribution();
+        $userReview   = auth()->check()
+            ? $user->receivedReviews()->where('reviewer_id', auth()->id())->first()
+            : null;
+
+        $myVotes = auth()->check()
+            ? \App\Models\ReviewVote::where('user_id', auth()->id())
+                ->whereIn('review_id', $reviews->pluck('id'))
+                ->pluck('is_like', 'review_id')
+            : collect();
+
         return view('profile.show', [
             'profileUser'         => $user,
             'listings'            => $listings,
             'activeListingsCount' => $listings->total(),
+            'reviews'             => $reviews,
+            'avgRating'           => $avgRating,
+            'reviewCount'         => $reviewCount,
+            'distribution'        => $distribution,
+            'userReview'          => $userReview,
+            'myVotes'             => $myVotes,
         ]);
     }
 

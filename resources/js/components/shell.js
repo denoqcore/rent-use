@@ -23,6 +23,10 @@ export default function shellComponent() {
         chatInput: '',
         unreadTotal: 0,
 
+        reviewModal: false,
+        reviewRating: 0,
+        reviewHover: 0,
+
         pendingBookings: 0,
         bookingsLoading: false,
         incomingRequests: [],
@@ -75,10 +79,10 @@ export default function shellComponent() {
         this.pendingBookings++;
     });
 },
-closeChats() {
-    this.chatsModal = false;
-    this.chatView = 'list';
-},
+        closeChats() {
+            this.chatsModal = false;
+            this.chatView = 'list';
+        },
 
         async openChats() {
         this.chatsModal = true;
@@ -155,6 +159,8 @@ closeChats() {
         });
     },
 
+
+
         async loadPendingBookings() {
             try {
                 const res = await fetch('/api/bookings/pending-count', {
@@ -166,20 +172,6 @@ closeChats() {
                 console.error('pendingBookings error:', e);
             }
         },
-
-        async loadBookings() {
-            try {
-                const res = await fetch('/api/bookings', {
-                    headers: { Accept: 'application/json' }
-                });
-                const data = await res.json();
-                this.incomingRequests = data.incoming;
-                this.myRentals = data.rentals;
-                this.pendingBookings = data.incoming.filter(b => b.status === 'pending').length;
-            } catch (e) {
-                console.error('loadBookings error:', e);
-            }
-    },
 
         async loadBookings() {
         this.bookingsLoading = true;
@@ -303,17 +295,18 @@ closeChats() {
         },
 
         async deleteBooking(id) {
-    const csrf = document.querySelector('meta[name=csrf-token]').content;
-    await fetch(`/bookings/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': csrf,
-            Accept: 'application/json'
-        }
-    });
-    await this.loadBookings();
-},
+        const csrf = document.querySelector('meta[name=csrf-token]').content;
+        await fetch(`/bookings/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrf,
+                Accept: 'application/json'
+            }
+        });
+        await this.loadBookings();
+        },
     };
+
 
 }
 

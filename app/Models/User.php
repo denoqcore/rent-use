@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -84,5 +85,41 @@ class User extends Authenticatable implements FilamentUser
     {
         return Chat::where('owner_id', $this->id)
                    ->orWhere('renter_id', $this->id);
+    }
+
+       public function receivedReviews()
+    {
+        return $this->hasMany(Review::class, 'reviewed_user_id');
+    }
+
+    public function givenReviews()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function averageRating(): float
+    {
+        return round($this->receivedReviews()->avg('rating') ?? 0, 1);
+    }
+
+    public function reviewCount(): int
+    {
+        return $this->receivedReviews()->count();
+    }
+
+    public function ratingDistribution(): array
+    {
+        $counts = $this->receivedReviews()
+            ->selectRaw('rating, count(*) as total')
+            ->groupBy('rating')
+            ->pluck('total', 'rating')
+            ->toArray();
+
+        $result = [];
+        for ($star = 5; $star >= 1; $star--) {
+            $result[$star] = $counts[$star] ?? 0;
+        }
+
+        return $result;
     }
 }
