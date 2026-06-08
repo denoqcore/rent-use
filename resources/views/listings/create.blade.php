@@ -37,7 +37,7 @@
             description: '{{ old('description') }}',
             isSubmitting: false,
             images: [],
-
+        
             init() {
                 @if(!$errors->any())
                 if (sessionStorage.getItem('listing_draft')) {
@@ -394,6 +394,13 @@
                                     x-text="currency"></span>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 pt-1" x-show="parent == transportCategoryId">
+                        <label class="flex items-center gap-2.5 text-sm text-(--text-muted) cursor-pointer select-none">
+                            <input type="checkbox" name="requires_document" value="1" class="accent-(--button)">
+                            {{ __('messages.requires_document') }}
+                        </label>
                     </div>
 
                     <div class="flex gap-2 pt-2">

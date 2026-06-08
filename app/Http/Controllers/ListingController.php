@@ -14,6 +14,7 @@ class ListingController extends Controller
 {
     use AuthorizesRequests;
     public function create()
+
 {
     $cities = Cities::orderBy('order')->get();
     $categories = Category::whereNull('parent_id')->with('children')->get();
@@ -22,24 +23,63 @@ class ListingController extends Controller
     : null;
     return view('listings.create', compact('categories', 'cities', 'selectedCity'));
 }
+    public function index()
+    {
+        $listings = Listing::query()
+            ->where('status', 'active')
+            ->orderByRaw("
+                CASE
+                    WHEN is_boosted = 1 AND boosted_until > NOW() THEN 0
+                    WHEN EXISTS (
+                        SELECT 1 FROM users
+                        WHERE users.id = listings.user_id
+                        AND users.plan = 'premium'
+                        AND users.plan_expires_at > NOW()
+                    ) THEN 1
+                    WHEN EXISTS (
+                        SELECT 1 FROM users
+                        WHERE users.id = listings.user_id
+                        AND users.plan = 'pro'
+                        AND users.plan_expires_at > NOW()
+                    ) THEN 2
+                    ELSE 3
+                END
+            ")
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('listings.index', compact('listings'));
+}
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
+            return back()->withErrors([
+                'limit' => 'You have reached the maximum number of active listings for your plan.'
+            ]);
+    }
+
+
         $validated = $request->validate([
-            'category_id'      => 'required|exists:categories,id',
-            'title'            => 'required|string|min:5|max:100',
-            'description'      => 'required|string|min:10|max:2000',
-            'city_id'          => 'required|exists:cities,id',
-            'price_per_day'    => 'nullable|numeric|min:1|max:99999',
-            'price_per_hour'   => 'nullable|numeric|min:1|max:99999',
-            'deposit'          => 'nullable|numeric|min:0|max:999999',
-            'currency'         => ['required', 'in:MDL,EUR,USD'],
-            'delivery_price'   => 'nullable|numeric|min:0|max:99999',
-            'delivery_available' => 'nullable|boolean',
-            'requires_document'  => 'nullable|boolean',
-            'images'           => 'nullable|array|max:8',
-            'images.*'         => 'image|mimes:jpg,jpeg,png,webp|max:5120',
-        ]);
+        'category_id'        => 'required|exists:categories,id',
+        'title'              => 'required|string|min:5|max:100',
+        'description'        => 'required|string|min:10|max:2000',
+        'city_id'            => 'required|exists:cities,id',
+        'price_per_day'      => 'nullable|numeric|min:1|max:99999',
+        'price_per_hour'     => 'nullable|numeric|min:1|max:99999',
+        'deposit'            => 'nullable|numeric|min:0|max:999999',
+        'currency'           => 'required|in:MDL,EUR,USD',
+        'delivery_price'     => 'nullable|numeric|min:0|max:99999',
+        'delivery_available' => 'nullable|boolean',
+        'requires_document'  => 'nullable|boolean',
+        'images'             => 'nullable|array|max:8',
+        'images.*'           => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+    ]);
+
+        $maxPhotos = $user->maxPhotos();
+        $photos = array_slice($request->file('images', []), 0, $maxPhotos);
 
         if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
 
@@ -64,7 +104,7 @@ class ListingController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            foreach (array_slice($request->file('images'), 0, 8) as $index => $image) {
+            foreach ($photos as $index => $image) {
                 $path = $image->store('listings', 'public');
                 $listing->images()->create([
                     'path'    => $path,
@@ -72,7 +112,7 @@ class ListingController extends Controller
                     'order'   => $index,
                 ]);
             }
-        }
+    }
 
         return redirect()->route('listings.show', $listing->slug)
             ->with('success', 'Listing published!');
@@ -165,16 +205,18 @@ class ListingController extends Controller
     }
 
     if ($request->hasFile('images')) {
-        $currentCount = $listing->images()->count();
-        foreach (array_slice($request->file('images'), 0, 8 - $currentCount) as $index => $image) {
-            $path = $image->store('listings', 'public');
-            $listing->images()->create([
-                'path'    => $path,
-                'is_main' => $currentCount === 0 && $index === 0,
-                'order'   => $currentCount + $index,
-            ]);
-        }
+    $maxPhotos = $listing->user->maxPhotos();
+    $currentCount = $listing->images()->count();
+    $allowed = max(0, $maxPhotos - $currentCount);
+    foreach (array_slice($request->file('images'), 0, $allowed) as $index => $image) {
+        $path = $image->store('listings', 'public');
+        $listing->images()->create([
+            'path'    => $path,
+            'is_main' => $currentCount === 0 && $index === 0,
+            'order'   => $currentCount + $index,
+        ]);
     }
+}
 
     return redirect()->route('listings.show', $listing->slug)
         ->with('success', 'Listing updated');
@@ -226,5 +268,4 @@ public function destroy(Listing $listing)
         ->withFragment('listings')
         ->with('success', 'Listing deleted');
 }
-
 }
