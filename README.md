@@ -45,3 +45,7 @@ docker exec -it rent_use_app php artisan octane:reload
 
 docker exec -it rent_use_app php artisan make:filament-resource Listing --generate --view
 docker exec -it rent_use_app php artisan make:filament-resource User --generate
+
+# Stripe
+
+stripe listen --forward-to http://localhost:8000/webhook/stripe
