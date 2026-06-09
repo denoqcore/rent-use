@@ -3,10 +3,17 @@
 @section('title', 'rent.use | ' . $user->name)
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{ tab: window.location.hash === '#listings' ? 'listings' : 'profile', editInfo: false, editPassword: false }">
+    <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{
+        tab: {
+            '#listings': 'listings',
+            '#bookings': 'bookings',
+            '#subscription': 'subscription',
+            '#support': 'support',
+        } [window.location.hash] ?? 'profile',
+        editInfo: false,
+        editPassword: false
+    }">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
-
-            {{-- SIDEBAR --}}
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
                 <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) mb-2 flex items-center gap-3">
                     <div
@@ -23,7 +30,7 @@
                     </div>
                 </div>
 
-                @foreach ([['key' => 'profile', 'icon' => 'heroicon-o-user', 'label' => __('messages.profile')], ['key' => 'listings', 'icon' => 'heroicon-o-squares-2x2', 'label' => __('messages.prof-mylisting')], ['key' => 'bookings', 'icon' => 'heroicon-o-calendar', 'label' => __('messages.prof-bookings')], ['key' => 'support', 'icon' => 'heroicon-o-lifebuoy', 'label' => __('messages.prof-support')]] as $item)
+                @foreach ([['key' => 'profile', 'icon' => 'heroicon-o-user', 'label' => __('messages.profile')], ['key' => 'listings', 'icon' => 'heroicon-o-squares-2x2', 'label' => __('messages.prof-mylisting')], ['key' => 'bookings', 'icon' => 'heroicon-o-calendar', 'label' => __('messages.prof-bookings')], ['key' => 'subscription', 'icon' => 'heroicon-o-star', 'label' => 'Subscription'], ['key' => 'support', 'icon' => 'heroicon-o-lifebuoy', 'label' => __('messages.prof-support')]] as $item)
                     <button @click="tab = '{{ $item['key'] }}'"
                         class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-all text-left cursor-pointer group"
                         :class="tab === '{{ $item['key'] }}'
@@ -488,9 +495,10 @@
                                                     {{ $booking->end_date->format('d M Y') }}
                                                 @endif
                                             </span>
-                                            <span
-                                                class="font-semibold text-(--text-primary)">{{ number_format($booking->total_price) }}
-                                                {{ $booking->currency }}</span>
+                                            <span class="font-semibold text-(--text-primary)">
+                                                {{ number_format($booking->total_price, 0, ',', ' ') }}
+                                                {{ $booking->currency }}
+                                            </span>
                                         </div>
                                         @php
                                             $statusConfig = [
@@ -510,6 +518,177 @@
                         @endif
                     </div>
                 </div>
+
+                <div x-show="tab === 'subscription'" x-cloak>
+
+                    {{-- Текущий план --}}
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Текущий план
+                        </h2>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                @if ($user->plan === 'premium')
+                                    <span
+                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">PREMIUM</span>
+                                @elseif($user->plan === 'pro')
+                                    <span
+                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">PRO</span>
+                                @else
+                                    <span
+                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">STARTER</span>
+                                @endif
+
+                                @if (now()->diffInDays($user->plan_expires_at) <= 5 && $user->plan_expires_at->isFuture())
+                                    <span class="text-xs text-(--text-muted)">
+                                        до {{ $user->plan_expires_at->format('d.m.Y') }}
+                                        @if ($user->plan_expires_at->diffInDays(now()) <= 5 && $user->plan_expires_at->isFuture())
+                                            <span class="text-red-400 ml-1">· истекает скоро</span>
+                                        @endif
+                                    </span>
+                                @endif
+                            </div>
+
+                            @if ($user->plan !== 'starter')
+                                <form method="POST" action="{{ route('subscription.cancel') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="text-xs text-red-400 hover:text-red-300 border border-red-400/20 hover:bg-red-400/10 px-3 py-1.5 rounded-sm transition-colors cursor-pointer">
+                                        Отменить подписку
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        {{-- Лимиты текущего плана --}}
+                        <div class="mt-4 grid grid-cols-3 gap-3">
+                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
+                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxListings() }}</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">объявлений</p>
+                            </div>
+                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
+                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxPhotos() }}</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">фото</p>
+                            </div>
+                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
+                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxBoostedListings() }}</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">буст</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Карточки тарифов --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        @foreach ([
+            'pro' => [
+                'label' => 'PRO',
+                'price' => '199 MDL',
+                'color' => 'blue',
+                'features' => ['До 12 объявлений', 'До 6 фото', '1 буст в топ', 'Приоритет в поиске'],
+            ],
+            'premium' => [
+                'label' => 'PREMIUM',
+                'price' => '349 MDL',
+                'color' => 'yellow',
+                'features' => ['До 20 объявлений', 'До 8 фото', '3 буста в топ', 'Наивысший приоритет', 'Значок в профиле'],
+            ],
+        ] as $key => $plan)
+                            @php $isCurrent = $user->plan === $key && $user->isActivePlan(); @endphp
+                            <div
+                                class="rounded-sm border p-5 flex flex-col gap-4
+                {{ $isCurrent
+                    ? ($key === 'premium'
+                        ? 'border-yellow-400/30 bg-yellow-400/5'
+                        : 'border-blue-400/30 bg-blue-400/5')
+                    : 'border-(--background-3) bg-(--background-2)' }}">
+
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="text-sm font-bold
+                        {{ $key === 'premium' ? 'text-yellow-400' : 'text-blue-400' }}">
+                                        {{ $plan['label'] }}
+                                    </span>
+                                    @if ($isCurrent)
+                                        <span
+                                            class="text-[11px] px-2 py-0.5 rounded-sm
+                            {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
+                                            Активен
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <p class="text-2xl font-black text-(--text-primary)">{{ $plan['price'] }}<span
+                                        class="text-sm font-normal text-(--text-muted)">/мес</span></p>
+
+                                <ul class="flex flex-col gap-2">
+                                    @foreach ($plan['features'] as $feature)
+                                        <li class="flex items-center gap-2 text-xs text-(--text-muted)">
+                                            <x-heroicon-o-check class="w-3.5 h-3.5 text-green-400 shrink-0" />
+                                            {{ $feature }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                @if (!$isCurrent)
+                                    <a href="{{ route('subscription.checkout', $key) }}"
+                                        class="mt-auto text-center py-2 text-xs font-semibold rounded-sm transition-colors
+                        {{ $key === 'premium'
+                            ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
+                            : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
+                                        Выбрать {{ $plan['label'] }}
+                                    </a>
+                                @else
+                                    <span
+                                        class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm">
+                                        Текущий план
+                                    </span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">История
+                            платежей</h2>
+
+                        @php $payments = $user->subscriptionPayments()->latest()->take(10)->get(); @endphp
+
+                        @if ($payments->isEmpty())
+                            <p class="text-sm text-(--text-muted) text-center py-8">Платежей пока нет</p>
+                        @else
+                            <div class="flex flex-col gap-2">
+                                @foreach ($payments as $payment)
+                                    <div
+                                        class="flex items-center justify-between py-3 border-b border-(--background-3) last:border-0 text-xs">
+                                        <div class="flex items-center gap-3">
+                                            <span
+                                                class="font-semibold text-(--text-primary) uppercase">{{ $payment->plan }}</span>
+                                            <span
+                                                class="text-(--text-muted)">{{ $payment->created_at->format('d.m.Y') }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-(--text-primary) font-semibold">{{ $payment->amount }}
+                                                {{ $payment->currency }}</span>
+                                            @php
+                                                $statusClass = match ($payment->status) {
+                                                    'paid' => 'bg-green-400/10 text-green-400 border-green-400/20',
+                                                    'pending'
+                                                        => 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20',
+                                                    'cancelled' => 'bg-red-400/10 text-red-400 border-red-400/20',
+                                                    default => 'bg-(--background-3) text-(--text-muted)',
+                                                };
+                                            @endphp
+                                            <span
+                                                class="px-2 py-0.5 rounded-sm border {{ $statusClass }}">{{ $payment->status }}</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+
                 <div x-show="tab === 'support'" x-cloak>
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">

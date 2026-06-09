@@ -11,9 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
-   ->withMiddleware(function (Middleware $middleware) {
-    $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
-})
 
 ->withMiddleware(function (Middleware $middleware) {
     $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
@@ -22,7 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
         'auth'  => \Illuminate\Auth\Middleware\Authenticate::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
     ]);
+
+    $middleware->validateCsrfTokens(except: [
+        'webhook/stripe',
+    ]);
 })
+
 
 
     ->withExceptions(function (Exceptions $exceptions): void {

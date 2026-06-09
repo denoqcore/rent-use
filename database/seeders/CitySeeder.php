@@ -26,6 +26,20 @@ class CitySeeder extends Seeder
                 'order' => 2,
             ],
             [
+                 'name_ru' => 'Тирасполь',
+                 'name_ro' => 'Tiraspol',
+                 'name_en' => 'Tiraspol',
+                 'is_suburb' => false,
+                 'order' => 6,
+            ],
+            [
+                'name_ru' => 'Бендеры',
+                'name_ro' => 'Bender',
+                'name_en' => 'Bender',
+                'is_suburb' => false,
+                'order' => 7,
+            ],
+            [
                 'name_ru' => 'Кагул',
                 'name_ro' => 'Cahul',
                 'name_en' => 'Cahul',
@@ -46,8 +60,6 @@ class CitySeeder extends Seeder
                 'is_suburb' => false,
                 'order' => 5,
             ],
-
-            // пригороды
             [
                 'name_ru' => 'Дурлешты',
                 'name_ro' => 'Durlești',
@@ -68,6 +80,13 @@ class CitySeeder extends Seeder
                 'name_en' => 'Stauceni',
                 'is_suburb' => true,
                 'order' => 12,
+            ],
+            [
+                'name_ru' => 'Крикова',
+                'name_ro' => 'Cricova',
+                'name_en' => 'Cricova',
+                'is_suburb' => true,
+                'order' => 104,
             ],
         ];
 

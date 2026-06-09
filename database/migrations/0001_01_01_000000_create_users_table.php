@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->boolean('is_admin')->default(false);
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('avatar')->nullable();

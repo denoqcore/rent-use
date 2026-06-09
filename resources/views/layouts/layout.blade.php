@@ -27,7 +27,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-(--background) transition-colors duration-300">
+<body class="bg-(--background) transition-colors duration-300" x-data="shellComponent()" x-cloak>
 
     <livewire:header />
 
