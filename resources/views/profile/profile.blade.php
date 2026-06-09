@@ -539,7 +539,7 @@
                                         class="px-2.5 py-1 rounded-sm text-xs font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">STARTER</span>
                                 @endif
 
-                                @if ($user->plan !== 'starter' && $user->plan_expires_at)
+                                @if (now()->diffInDays($user->plan_expires_at) <= 5 && $user->plan_expires_at->isFuture())
                                     <span class="text-xs text-(--text-muted)">
                                         до {{ $user->plan_expires_at->format('d.m.Y') }}
                                         @if ($user->plan_expires_at->diffInDays(now()) <= 5 && $user->plan_expires_at->isFuture())

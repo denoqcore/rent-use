@@ -159,13 +159,13 @@ public function webhook(Request $request)
         $payment = \App\Models\SubscriptionPayment::create([
             'user_id'    => $user->id,
             'plan'       => $metadata->plan,
-            'amount'     => 0,
-            'currency'   => 'MDL',
+            'amount'     => $session->amount_total / 100,
+            'currency'   => strtoupper($session->currency),
             'status'     => 'paid',
             'payment_id' => $session->payment_intent,
             'paid_at'    => now(),
             'expires_at' => $expiresAt,
-        ]);
+    ]);
 
         $user->update([
             'plan' => $metadata->plan,
