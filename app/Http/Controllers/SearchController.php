@@ -58,6 +58,8 @@ class SearchController extends Controller
         }
 
         $sort = $request->get('sort', 'latest');
+        $query->orderByRaw('(is_boosted = 1 AND boosted_until > NOW()) DESC');
+
         match ($sort) {
             'price_asc'  => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) ASC'),
             'price_desc' => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) DESC'),

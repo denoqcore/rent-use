@@ -209,7 +209,6 @@
                             </div>
 
                             <div class="p-3 flex flex-col gap-1">
-
                                 <div
                                     class="flex items-center gap-1 text-[10px] text-(--text-muted) tracking-wide font-medium truncate">
                                     <span>{{ $listing->category->parent->name ?? '' }}</span>

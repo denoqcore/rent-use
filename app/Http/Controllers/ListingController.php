@@ -146,7 +146,9 @@ class ListingController extends Controller
         ->values()
         ->toArray();
 
-    return view('listings.show', compact('listing', 'bookedDates'));
+    $initialMode = $listing->price_per_day ? 'day' : 'hour';
+
+return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
 }
 
     public function edit(Listing $listing)

@@ -313,16 +313,39 @@
                                                     <p class="text-xs text-(--text-muted) mt-1">{{ $listing->city->name }}
                                                     </p>
                                                 </div>
-                                                <span
-                                                    class="text-sm sm:text-base font-bold text-(--text-price) whitespace-nowrap shrink-0">
-                                                    @if ($listing->price_per_day)
-                                                        {{ number_format($listing->price_per_day) }}
-                                                        {{ $listing->currency }}/day
-                                                    @elseif ($listing->price_per_hour)
-                                                        {{ number_format($listing->price_per_hour) }}
-                                                        {{ $listing->currency }}/hr
-                                                    @endif
-                                                </span>
+                                                <div class="flex flex-col items-end gap-1.5 shrink-0">
+                                                    <span
+                                                        class="text-sm sm:text-base font-bold text-(--text-price) whitespace-nowrap">
+                                                        @if ($listing->price_per_day)
+                                                            {{ number_format($listing->price_per_day) }}
+                                                            {{ $listing->currency }}/day
+                                                        @elseif ($listing->price_per_hour)
+                                                            {{ number_format($listing->price_per_hour) }}
+                                                            {{ $listing->currency }}/hr
+                                                        @endif
+                                                    </span>
+                                                    <div class="mt-5">
+                                                        @if ($listing->status === 'active')
+                                                            @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
+                                                                <span
+                                                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs text-(--text-primary)">
+                                                                    <x-heroicon-o-fire class="w-4 h-4" />
+                                                                    Boosted {{ $listing->boosted_until->diffForHumans() }}
+                                                                </span>
+                                                            @else
+                                                                <form method="POST"
+                                                                    action="{{ route('listings.boost', $listing) }}">
+                                                                    @csrf
+                                                                    <button type="submit"
+                                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs cursor-pointer border border-(--button) text-(--text-primary) hover:bg-(--button)/10 transition-colors">
+                                                                        <x-heroicon-o-arrow-up class="w-4 h-4" />
+                                                                        Boost
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div
@@ -520,10 +543,8 @@
                 </div>
 
                 <div x-show="tab === 'subscription'" x-cloak>
-
-                    {{-- Текущий план --}}
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Текущий план
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Current plan
                         </h2>
 
                         <div class="flex items-center justify-between">
@@ -539,12 +560,10 @@
                                         class="px-2.5 py-1 rounded-sm text-xs font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">STARTER</span>
                                 @endif
 
-                                @if (now()->diffInDays($user->plan_expires_at) <= 5 && $user->plan_expires_at->isFuture())
+                                @if ($user->plan_expires_at && $user->plan_expires_at->isFuture() && now()->diffInDays($user->plan_expires_at) <= 5)
                                     <span class="text-xs text-(--text-muted)">
-                                        до {{ $user->plan_expires_at->format('d.m.Y') }}
-                                        @if ($user->plan_expires_at->diffInDays(now()) <= 5 && $user->plan_expires_at->isFuture())
-                                            <span class="text-red-400 ml-1">· истекает скоро</span>
-                                        @endif
+                                        Until {{ $user->plan_expires_at->format('d.m.Y') }}
+                                        <span class="text-red-400 ml-1">Is expiring</span>
                                     </span>
                                 @endif
                             </div>
@@ -554,43 +573,40 @@
                                     @csrf
                                     <button type="submit"
                                         class="text-xs text-red-400 hover:text-red-300 border border-red-400/20 hover:bg-red-400/10 px-3 py-1.5 rounded-sm transition-colors cursor-pointer">
-                                        Отменить подписку
+                                        Cancel subscription
                                     </button>
                                 </form>
                             @endif
                         </div>
-
-                        {{-- Лимиты текущего плана --}}
                         <div class="mt-4 grid grid-cols-3 gap-3">
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">объявлений</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">listings</p>
                             </div>
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxPhotos() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">фото</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">photo</p>
                             </div>
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxBoostedListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">буст</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">boost</p>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Карточки тарифов --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         @foreach ([
             'pro' => [
                 'label' => 'PRO',
                 'price' => '199 MDL',
                 'color' => 'blue',
-                'features' => ['До 12 объявлений', 'До 6 фото', '1 буст в топ', 'Приоритет в поиске'],
+                'features' => ['Up to 12 listings', 'Up to 8 photos', '1 boost to the top day', 'Search priority'],
             ],
             'premium' => [
                 'label' => 'PREMIUM',
                 'price' => '349 MDL',
                 'color' => 'yellow',
-                'features' => ['До 20 объявлений', 'До 8 фото', '3 буста в топ', 'Наивысший приоритет', 'Значок в профиле'],
+                'features' => ['Up to 20 listings', 'Up to 8 photos', '3 boost to the top day', 'Search priority'],
             ],
         ] as $key => $plan)
                             @php $isCurrent = $user->plan === $key && $user->isActivePlan(); @endphp
@@ -612,13 +628,13 @@
                                         <span
                                             class="text-[11px] px-2 py-0.5 rounded-sm
                             {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
-                                            Активен
+                                            Active
                                         </span>
                                     @endif
                                 </div>
 
                                 <p class="text-2xl font-black text-(--text-primary)">{{ $plan['price'] }}<span
-                                        class="text-sm font-normal text-(--text-muted)">/мес</span></p>
+                                        class="text-sm font-normal text-(--text-muted)">/month</span></p>
 
                                 <ul class="flex flex-col gap-2">
                                     @foreach ($plan['features'] as $feature)
@@ -635,12 +651,12 @@
                         {{ $key === 'premium'
                             ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
                             : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
-                                        Выбрать {{ $plan['label'] }}
+                                        Choose {{ $plan['label'] }}
                                     </a>
                                 @else
                                     <span
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm">
-                                        Текущий план
+                                        Current plan
                                     </span>
                                 @endif
                             </div>
@@ -648,13 +664,13 @@
                     </div>
 
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">История
-                            платежей</h2>
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Paid history
+                        </h2>
 
                         @php $payments = $user->subscriptionPayments()->latest()->take(10)->get(); @endphp
 
                         @if ($payments->isEmpty())
-                            <p class="text-sm text-(--text-muted) text-center py-8">Платежей пока нет</p>
+                            <p class="text-sm text-(--text-muted) text-center py-8">No payments yet</p>
                         @else
                             <div class="flex flex-col gap-2">
                                 @foreach ($payments as $payment)

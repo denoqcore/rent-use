@@ -545,6 +545,24 @@
                                     Edit listing
                                 </a>
                             @endif
+
+                            @if (auth()->id() === $listing->user_id)
+                                @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
+                                    <span class="px-3 py-2 text-sm font-bold rounded-sm"
+                                        style="background: var(--button); color: var(--button-text)">
+                                        ⚡ Boosted until {{ $listing->boosted_until->format('H:i, d M') }}
+                                    </span>
+                                @else
+                                    <form method="POST" action="{{ route('listings.boost', $listing) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-3 py-2 text-sm font-semibold rounded-sm cursor-pointer border"
+                                            style="border-color: var(--button); color: var(--button)">
+                                            ↑ Boost to Top
+                                        </button>
+                                    </form>
+                                @endif
+                            @endif
                         @else
                             <a href="{{ route('login') }}"
                                 class="block text-center w-full rounded-xl py-3.5 text-sm font-semibold transition-colors cursor-pointer"

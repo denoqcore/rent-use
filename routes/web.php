@@ -11,6 +11,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewVoteController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\BoostController;
 
 Route::get('/listings/create',function(){return 'CREATE OK';});
 Route::get('/',[HomeController::class,'index']);
@@ -47,16 +48,17 @@ Route::middleware('auth')->group(function(){
     Route::post('/profile/info',[ProfileController::class,'updateInfo'])->name('profile.info');
     Route::post('/profile/avatar',[ProfileController::class,'updateAvatar'])->name('profile.avatar');
     Route::post('/profile/password',[ProfileController::class,'updatePassword'])->name('profile.password');
+    Route::post('/listings/{listing}/boost', [BoostController::class, 'boost'])->name('listings.boost');
 
     Route::prefix('listings')->group(function(){
-    Route::get('/create',[ListingController::class,'create'])->name('listings.create');
-    Route::post('/',[ListingController::class,'store'])->middleware('throttle:10,1')->name('listings.store');
-    Route::get('/{listing:slug}/edit',[ListingController::class,'edit'])->name('listings.edit');
-    Route::post('/{listing}/pause',[ListingController::class,'pause'])->name('listings.pause');
-    Route::post('/{listing:slug}/archive',[ListingController::class,'archive'])->name('listings.archive');
-    Route::post('/{listing}/restore',[ListingController::class,'restore'])->name('listings.restore');
-    Route::delete('/{listing:slug}',[ListingController::class,'destroy'])->name('listings.destroy');
-    Route::patch('/{listing}',[ListingController::class,'update'])->name('listings.update');
+        Route::get('/create',[ListingController::class,'create'])->name('listings.create');
+        Route::post('/',[ListingController::class,'store'])->middleware('throttle:10,1')->name('listings.store');
+        Route::get('/{listing:slug}/edit',[ListingController::class,'edit'])->name('listings.edit');
+        Route::post('/{listing}/pause',[ListingController::class,'pause'])->name('listings.pause');
+        Route::post('/{listing:slug}/archive',[ListingController::class,'archive'])->name('listings.archive');
+        Route::post('/{listing}/restore',[ListingController::class,'restore'])->name('listings.restore');
+        Route::delete('/{listing:slug}',[ListingController::class,'destroy'])->name('listings.destroy');
+        Route::patch('/{listing}',[ListingController::class,'update'])->name('listings.update');
 });
 
 Route::get('/favorites',[FavoriteController::class,'index'])->name('favorites.index');

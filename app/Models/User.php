@@ -22,6 +22,8 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'plan',
         'plan_expires_at',
+        'boosts_used_today',
+        'boosts_reset_date',
         'is_online',
         'last_seen_at',
     ];
@@ -38,6 +40,7 @@ class User extends Authenticatable implements FilamentUser
             'last_seen_at'      => 'datetime',
             'is_online'         => 'boolean',
             'plan_expires_at'   => 'datetime',
+            'boosts_reset_date' => 'date',
             'is_admin'          => 'boolean',
             'password'          => 'hashed',
         ];
@@ -176,5 +179,26 @@ class User extends Authenticatable implements FilamentUser
     public function subscriptionPayments()
     {
         return $this->hasMany(SubscriptionPayment::class);
+    }
+
+        public function boostLimitPerDay(): int
+    {
+        return match ($this->plan) {
+            'premium' => 3,
+            'pro'     => 2,
+            default   => 1,
+        };
+    }
+
+    public function canBoost(): bool
+    {
+        if ($this->boosts_reset_date !== now()->toDateString()) {
+            $this->update([
+                'boosts_used_today' => 0,
+                'boosts_reset_date' => now()->toDateString(),
+            ]);
+        }
+
+        return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
     }
 }
