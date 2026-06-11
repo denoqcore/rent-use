@@ -12,11 +12,22 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user = Auth::user();
+        $user     = Auth::user();
         $listings = $user->listings()->with('images')->latest()->get();
         $bookings = $user->bookingsAsRenter()->with(['listing.images', 'listing.city'])->latest()->get();
 
-        return view('profile.profile', compact('user', 'listings', 'bookings'));
+        $avgRating    = $user->averageRating();
+        $reviewCount  = $user->reviewCount();
+        $distribution = $user->ratingDistribution();
+
+        return view('profile.profile', compact(
+            'user',
+            'listings',
+            'bookings',
+            'avgRating',
+            'reviewCount',
+            'distribution',
+        ));
     }
 
     public function showPublic(User $user)

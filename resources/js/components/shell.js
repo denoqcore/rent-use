@@ -212,12 +212,18 @@ export default function shellComponent() {
         await this.loadBookings();
     },
 
-        async sendFirstMessage(listingId) {
-            const textarea = document.getElementById('contactMessage');
-            const btn      = document.getElementById('contactSendBtn');
-            const success  = document.getElementById('contactSuccess');
-            const error    = document.getElementById('contactError');
-            const body     = textarea?.value.trim();
+        async sendFirstMessage(listingId, context = 'default') {
+            const textareaId = context === 'sheet' ? 'contactMessageSheet' : 'contactMessage';
+            const btnId      = context === 'sheet' ? 'contactSendBtnSheet' : 'contactSendBtn';
+            const successId  = context === 'sheet' ? 'contactSuccessSheet' : 'contactSuccess';
+            const errorId    = context === 'sheet' ? 'contactErrorSheet'   : 'contactError';
+
+            const textarea = document.getElementById(textareaId);
+            const btn      = document.getElementById(btnId);
+            const success  = document.getElementById(successId);
+            const error    = document.getElementById(errorId);
+
+            const body = textarea?.value?.trim();
 
             if (!body) {
                 if (textarea) {
@@ -227,9 +233,11 @@ export default function shellComponent() {
                 return;
             }
 
-            btn.disabled        = true;
-            btn.textContent     = 'Отправляем...';
-            error.classList.add('hidden');
+            if (btn) {
+                btn.disabled    = true;
+                btn.textContent = 'Sending...';
+            }
+            if (error) error.classList.add('hidden');
 
             try {
                 const chatRes  = await fetch(`/chat/${listingId}`, {
@@ -247,16 +255,28 @@ export default function shellComponent() {
                     body: JSON.stringify({ body })
                 });
 
-                textarea.value        = '';
-                textarea.style.display = 'none';
-                btn.style.display      = 'none';
-                success.classList.remove('hidden');
+                if (textarea) textarea.value = '';
+                if (success)  success.classList.remove('hidden');
+
+
+                if (context !== 'sheet') {
+                    if (textarea) textarea.style.display = 'none';
+                    if (btn)      btn.style.display      = 'none';
+                } else {
+                    setTimeout(() => {
+                        if (success) success.classList.add('hidden');
+                    }, 1500);
+                }
 
             } catch (e) {
-                error.textContent = 'Error, try again';
-                error.classList.remove('hidden');
-                btn.disabled    = false;
-                btn.textContent = 'Send';
+                if (error) {
+                    error.textContent = 'Error, try again';
+                    error.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled    = false;
+                    btn.textContent = 'Send';
+                }
             }
         },
 

@@ -254,11 +254,10 @@
                                             $listing->boosted_until?->isFuture() &&
                                             in_array($listing->user->plan, ['pro', 'premium']) &&
                                             $listing->user->isActivePlan())
-                                        <div class="absolute top-2 left-2">
+                                        <div class="absolute top-3.75 left-3">
                                             <span
-                                                class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-yellow-400/15 text-yellow-400">
-                                                <x-heroicon-o-star class="w-3 h-3" />
-                                                TOP
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
+                                                <x-heroicon-s-star class="w-4 h-4" />
                                             </span>
                                         </div>
                                     @endif

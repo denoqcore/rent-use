@@ -108,7 +108,6 @@
                                 <p class="text-sm font-black text-(--text-primary)">{{ $user->name }}</p>
                                 <p class="text-xs text-(--text-muted)">{{ __('messages.prof-member-since') }}
                                     {{ $user->created_at->format('M Y') }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">Click avatar to change</p>
                             </div>
                         </div>
 
@@ -119,7 +118,8 @@
                             </div>
                             <div class="flex items-center justify-between py-3 border-b border-(--background-3)">
                                 <span class="text-xs text-(--text-muted)">{{ __('messages.prof-phone') }}</span>
-                                <span class="text-sm text-(--text-primary)">{{ $user->phone ?? '—' }}</span>
+                                <span
+                                    class="text-sm text-(--text-primary)">{{ $user->phone ? formatPhone($user->phone) : '—' }}</span>
                             </div>
                             <div class="flex items-center justify-between py-3">
                                 <span class="text-xs text-(--text-muted)">{{ __('messages.prof-identity') }}</span>
@@ -257,12 +257,12 @@
                                 {{ __('messages.prof-listing') }}</p>
                         </div>
                         <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) text-center">
-                            <p class="text-2xl font-black text-(--text-primary)">0.0</p>
+                            <p class="text-2xl font-black text-(--text-primary)">{{ number_format($avgRating, 1) }}</p>
                             <p class="text-xs text-(--text-muted) mt-1 uppercase tracking-wider">
                                 {{ __('messages.prof-rating') }}</p>
                         </div>
                         <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) text-center">
-                            <p class="text-2xl font-black text-(--text-primary)">0</p>
+                            <p class="text-2xl font-black text-(--text-primary)">{{ $reviewCount }}</p>
                             <p class="text-xs text-(--text-muted) mt-1 uppercase tracking-wider">
                                 {{ __('messages.prof-reviews') }}</p>
                         </div>

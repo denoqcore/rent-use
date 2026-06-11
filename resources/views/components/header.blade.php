@@ -5,8 +5,6 @@ use Livewire\Component;
 new class extends Component {}; ?>
 
 <div x-cloak>
-
-    {{-- DESKTOP HEADER --}}
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
@@ -127,10 +125,12 @@ new class extends Component {}; ?>
                             <div
                                 class="absolute -top-1.5 right-4 w-3 h-3 bg-(--background-2) border-l border-t border-(--background-3) rotate-45">
                             </div>
+
                             <div class="p-3 border-b border-(--background-3)">
                                 <p class="text-xs font-semibold text-(--text-primary)">{{ Auth::user()->name }}</p>
                                 <p class="text-xs text-(--text-muted) truncate">{{ Auth::user()->email }}</p>
                             </div>
+
                             <div class="p-1.5 flex flex-col gap-0.5">
                                 <a href="/profile"
                                     class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm group">
@@ -228,7 +228,6 @@ new class extends Component {}; ?>
         </div>
     </header>
 
-
     <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-(--background) border-t border-(--background-3)"
         style="padding-bottom: env(safe-area-inset-bottom)">
         <div class="flex items-center justify-around h-16 px-2">
@@ -250,6 +249,7 @@ new class extends Component {}; ?>
                     <span class="text-[10px] font-medium">{{ __('messages.rent') }}</span>
                 </a>
             @endauth
+
             @auth
                 <button @click="favoritesModal = true"
                     class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-(--text-muted) hover:text-(--text-primary) transition-colors cursor-pointer">
@@ -263,6 +263,7 @@ new class extends Component {}; ?>
                     <span class="text-[10px] font-medium">{{ __('messages.favorite') }}</span>
                 </a>
             @endauth
+
             @auth
                 <a href="{{ route('listings.create') }}" class="flex flex-col items-center gap-1 cursor-pointer">
                     <div class="w-8 h-8 rounded-2xl flex items-center justify-center shadow-lg transition-colors"
@@ -298,17 +299,18 @@ new class extends Component {}; ?>
             @endauth
 
             @auth
+                @php $authUser = Auth::user(); @endphp
                 <div class="relative">
                     <button @click="userMenu = !userMenu"
                         class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl cursor-pointer">
                         <div
                             class="w-7 h-7 rounded-full overflow-hidden bg-(--background-3) flex items-center justify-center">
-                            @if (Auth::user()->avatar)
-                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                            @if ($authUser->avatar)
+                                <img src="{{ asset('storage/' . $authUser->avatar) }}"
                                     class="w-full h-full object-cover">
                             @else
                                 <span class="text-xs font-semibold text-(--text-muted) uppercase">
-                                    {{ mb_substr(Auth::user()->name, 0, 1) }}
+                                    {{ mb_substr($authUser->name, 0, 1) }}
                                 </span>
                             @endif
                         </div>
@@ -317,17 +319,38 @@ new class extends Component {}; ?>
 
                     <div x-show="userMenu" x-cloak @click.away="userMenu = false"
                         class="absolute bottom-full right-0 mb-2 w-52 rounded-xl border border-(--background-3) bg-(--background-2) shadow-2xl z-50 overflow-hidden">
+
+                        {{-- Шапка: имя, email, план --}}
                         <div class="p-3 border-b border-(--background-3)">
-                            <p class="text-xs font-semibold text-(--text-primary)">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-(--text-muted) truncate">{{ Auth::user()->email }}</p>
+                            <p class="text-xs font-semibold text-(--text-primary)">{{ $authUser->name }}</p>
+                            <p class="text-xs text-(--text-muted) truncate mb-2">{{ $authUser->email }}</p>
+
+                            @if ($authUser->plan === 'premium')
+                                <span
+                                    class="inline-block px-2.5 py-1 rounded-sm text-xs font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                                    PREMIUM
+                                </span>
+                            @elseif ($authUser->plan === 'pro')
+                                <span
+                                    class="inline-block px-2.5 py-1 rounded-sm text-xs font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                                    PRO
+                                </span>
+                            @else
+                                <span
+                                    class="inline-block px-2.5 py-1 rounded-sm text-xs font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">
+                                    STARTER
+                                </span>
+                            @endif
                         </div>
+
+                        {{-- Пункты меню --}}
                         <div class="p-1.5 flex flex-col gap-0.5">
                             <a href="/profile"
                                 class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-lg">
                                 <x-heroicon-o-user class="w-4 h-4 shrink-0" />
                                 Profile
                             </a>
-                            @if (auth()->user()?->is_admin)
+                            @if ($authUser->is_admin)
                                 <a href="/admin"
                                     class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-lg">
                                     <x-heroicon-o-wrench class="w-4 h-4 shrink-0" />
@@ -387,6 +410,8 @@ new class extends Component {}; ?>
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Выход --}}
                         <div class="p-1.5 border-t border-(--background-3)">
                             <button type="button" @click="logoutModal = true; userMenu = false"
                                 class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-400/10 rounded-lg cursor-pointer">
@@ -509,7 +534,6 @@ new class extends Component {}; ?>
                                                 <x-heroicon-s-map-pin class="w-2.5 h-2.5 shrink-0" />
                                                 {{ $fav->city->name }}
                                             </span>
-
                                             <span class="text-[11px] font-bold text-(--button)">
                                                 @if ($fav->price_per_day)
                                                     {{ number_format($fav->price_per_day, 0, '.', ' ') }}
@@ -528,7 +552,6 @@ new class extends Component {}; ?>
                                         class="shrink-0 relative z-20">
                                         @csrf
                                         @method('DELETE')
-
                                         <button type="submit"
                                             class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
                                             <x-heroicon-o-x-mark class="w-4 h-4" />
@@ -667,7 +690,6 @@ new class extends Component {}; ?>
                                                     </button>
                                                 </template>
                                             </div>
-
                                         </div>
                                     </a>
                                 </div>
@@ -715,7 +737,6 @@ new class extends Component {}; ?>
                                                         </p>
                                                     </div>
                                                 </div>
-
                                                 <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
                                                     <x-heroicon-o-calendar-days class="w-3 h-3" />
                                                     <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
@@ -723,7 +744,6 @@ new class extends Component {}; ?>
                                             </div>
                                             <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
                                                 @click.stop.prevent>
-
                                                 <template x-if="booking.status === 'pending'">
                                                     <div class="flex items-center justify-between w-full">
                                                         <span
@@ -742,7 +762,6 @@ new class extends Component {}; ?>
                                                         </div>
                                                     </div>
                                                 </template>
-
                                                 <template x-if="booking.status !== 'pending'">
                                                     <div class="flex items-center justify-between w-full">
                                                         <span class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize"
@@ -765,10 +784,8 @@ new class extends Component {}; ?>
                                                         </template>
                                                     </div>
                                                 </template>
-
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </template>
