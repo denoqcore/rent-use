@@ -8,3 +8,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('subscriptions:expire')->daily();
+Schedule::command('boosts:expire')->everyFifteenMinutes();

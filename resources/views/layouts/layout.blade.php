@@ -31,6 +31,10 @@
 
     <livewire:header />
 
+    @if (session('error'))
+        {{ session('error') }}
+    @endif
+
     <main>
         @yield('content')
     </main>

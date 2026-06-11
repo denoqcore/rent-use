@@ -314,6 +314,19 @@
                                         </div>
                                     @endif
 
+                                    @if (
+                                        $listing->is_boosted &&
+                                            $listing->boosted_until?->isFuture() &&
+                                            in_array($listing->user->plan, ['pro', 'premium']) &&
+                                            $listing->user->isActivePlan())
+                                        <div class="absolute top-8 right-3">
+                                            <span
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
+                                                <x-heroicon-s-star class="w-4 h-4" />
+                                            </span>
+                                        </div>
+                                    @endif
+
                                     <input type="hidden" name="pricing_mode" x-bind:value="pricingMode">
                                     <input type="hidden" name="booking_date"
                                         x-bind:value="pricingMode === 'hour' && bookingDate ? bookingDate.toISOString().split(
@@ -468,7 +481,6 @@
 
                                 </form>
 
-                                {{-- USER BLOCK --}}
                                 <div class="mt-4 pt-4" style="border-top: 1px solid var(--background-3)">
                                     <a href="{{ route('profile.public', $listing->user) }}"
                                         class="flex items-center gap-3 mb-3 group">
@@ -515,7 +527,7 @@
                                                 class="flex items-center justify-center gap-2 w-full rounded-xl py-2.5 text-sm font-semibold transition-colors"
                                                 style="border: 1px solid var(--background-3); color: var(--text-primary)">
                                                 <x-heroicon-o-phone class="w-4 h-4" />
-                                                {{ $listing->user->phone }}
+                                                {{ $listing->user->phone ? formatPhone($listing->user->phone) : '—' }}
                                             </a>
                                         </div>
                                     @endif
@@ -544,6 +556,24 @@
                                     style="border: 1px solid var(--background-3); color: var(--text-primary)">
                                     Edit listing
                                 </a>
+                            @endif
+
+                            @if (auth()->id() === $listing->user_id)
+                                @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
+                                    <span class="px-3 py-2 text-sm font-bold rounded-sm"
+                                        style="background: var(--button); color: var(--button-text)">
+                                        ⚡ Boosted until {{ $listing->boosted_until->format('H:i, d M') }}
+                                    </span>
+                                @else
+                                    <form method="POST" action="{{ route('listings.boost', $listing) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-3 py-2 text-sm font-semibold rounded-sm cursor-pointer border"
+                                            style="border-color: var(--button); color: var(--button)">
+                                            ↑ Boost to Top
+                                        </button>
+                                    </form>
+                                @endif
                             @endif
                         @else
                             <a href="{{ route('login') }}"

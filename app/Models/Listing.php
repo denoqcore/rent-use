@@ -32,6 +32,8 @@ class Listing extends Model
     protected $casts = [
         'delivery_available' => 'boolean',
         'requires_document'  => 'boolean',
+        'boosted_until' => 'datetime',
+        'is_boosted'    => 'boolean',
     ];
 
     public function user(): BelongsTo

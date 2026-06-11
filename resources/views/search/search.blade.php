@@ -249,6 +249,19 @@
                                             </form>
                                         @endif
                                     </div>
+                                    @if (
+                                        $listing->is_boosted &&
+                                            $listing->boosted_until?->isFuture() &&
+                                            in_array($listing->user->plan, ['pro', 'premium']) &&
+                                            $listing->user->isActivePlan())
+                                        <div class="absolute top-3.75 left-3">
+                                            <span
+                                                class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
+                                                <x-heroicon-s-star class="w-4 h-4" />
+                                            </span>
+                                        </div>
+                                    @endif
+
                                     <h3 class="text-sm font-bold text-(--text-primary) truncate">{{ $listing->title }}
                                     </h3>
                                     <div

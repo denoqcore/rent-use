@@ -186,6 +186,19 @@
                                     @endif
                                 </a>
 
+                                @if (
+                                    $listing->is_boosted &&
+                                        $listing->boosted_until?->isFuture() &&
+                                        in_array($listing->user->plan, ['pro', 'premium']) &&
+                                        $listing->user->isActivePlan())
+                                    <div class="absolute top-3.75 left-3">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
+                                            <x-heroicon-s-star class="w-4 h-4" />
+                                        </span>
+                                    </div>
+                                @endif
+
                                 <div class="absolute top-2 right-2">
                                     @if ($isFavorited)
                                         <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
@@ -209,7 +222,6 @@
                             </div>
 
                             <div class="p-3 flex flex-col gap-1">
-
                                 <div
                                     class="flex items-center gap-1 text-[10px] text-(--text-muted) tracking-wide font-medium truncate">
                                     <span>{{ $listing->category->parent->name ?? '' }}</span>
