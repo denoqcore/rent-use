@@ -55,7 +55,6 @@
                         <div class="p-4 flex flex-col items-center gap-3">
                             @auth
                                 @if (auth()->id() !== $profileUser->id)
-                                    {{-- Кнопки телефон + сообщение --}}
                                     <div class="w-full flex gap-2">
 
                                         @if ($profileUser->phone)
@@ -70,7 +69,6 @@
                                         @endif
 
                                         @if ($listings->isNotEmpty())
-                                            {{-- Десктоп: toggle textarea --}}
                                             <button x-data @click="$dispatch('toggle-contact-form')"
                                                 class="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-sm text-sm font-semibold transition-colors cursor-pointer lg:flex hidden"
                                                 style="background: var(--button); color: var(--button-text)"
@@ -80,7 +78,6 @@
                                                 {{ __('messages.send-message') }}
                                             </button>
 
-                                            {{-- Мобайл: открыть sheet --}}
                                             <button @click="$dispatch('open-message-sheet')"
                                                 class="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-sm text-sm font-semibold transition-colors cursor-pointer lg:hidden"
                                                 style="background: var(--button); color: var(--button-text)"
@@ -92,8 +89,6 @@
                                         @endif
 
                                     </div>
-
-                                    {{-- Десктоп форма (скрыта по умолчанию) --}}
                                     @if ($listings->isNotEmpty())
                                         <div x-data="{ open: false }" @toggle-contact-form.window="open = !open" x-show="open"
                                             x-transition:enter="transition ease-out duration-200"
@@ -123,7 +118,6 @@
                                         </div>
                                     @endif
 
-                                    {{-- Мобайл bottom sheet --}}
                                     @if ($listings->isNotEmpty())
                                         <div x-data="{ open: false }" @open-message-sheet.window="open = true" x-show="open"
                                             x-cloak class="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
