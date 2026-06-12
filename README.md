@@ -48,4 +48,5 @@ docker exec -it rent_use_app php artisan make:filament-resource User --generate
 
 # Stripe
 
+docker compose exec app php artisan serve --host=0.0.0.0
 stripe listen --forward-to http://localhost:8000/webhook/stripe

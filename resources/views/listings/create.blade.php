@@ -364,17 +364,26 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-1 max-w-35">
-                        <label class="text-xs text-(--text-muted)">{{ __('messages.deposit') }}</label>
-                        <div class="relative">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs text-(--text-muted)">
+                            {{ __('messages.deposit') }}
+                        </label>
+
+                        <div class="relative max-w-35">
                             <input type="number" min="0"
                                 @keydown="if($event.key === '-' || $event.key === 'e') $event.preventDefault()"
                                 name="deposit"
                                 class="w-full bg-(--background-2) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 pr-12 rounded-sm focus:outline-none focus:border-(--text-muted)">
+
                             <span
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-(--text-muted) font-bold"
-                                x-text="currency"></span>
+                                x-text="currency">
+                            </span>
                         </div>
+
+                        <p class="text-xs text-(--text-muted)">
+                            *Set to <span class="text-(--button)">0</span> for no deposit
+                        </p>
                     </div>
 
                     <div class="flex flex-col gap-2 pt-1">

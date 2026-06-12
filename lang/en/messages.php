@@ -14,6 +14,9 @@ return [
     'search' => 'Search',
     'favorite' => 'Favorite',
     'messages' => 'Messages',
+    'menu' => 'Menu',
+    'profile' => 'Profile',
+    'login' => 'Login',
     'rent' => 'Rent',
     'sign-out' => 'Sign out',
     'dark-mode' => 'Dark mode',
@@ -38,13 +41,16 @@ return [
     'empty-title' => 'Nothing here yet',
     'empty-desc'  => 'Items and listings will appear here',
 
-    //booking modal
+    //header modal
     'my_rentals'         => 'My Rentals',
     'incoming_requests'  => 'Requests',
     'no_rentals_title'   => 'No rentals yet',
     'no_rentals_desc'    => 'Book something and it will appear here.',
     'no_requests_title'  => 'No requests yet',
     'no_requests_desc'   => 'When someone books your listing, you will see it here.',
+    'status_messages'    => 'No messages yet',
+    'status_desc_messages' => 'Write to a listing owner to start a conversation',
+    'messages_you'       => 'You',
     'status_pending'     => 'Pending',
     'status_confirmed'   => 'Confirmed',
     'status_cancelled'   => 'Cancelled',
@@ -52,6 +58,7 @@ return [
     'confirm'            => 'Confirm',
     'decline'            => 'Decline',
     'cancel'             => 'Cancel',
+    'delete'             => 'Delete',
 
     //favorite
 
@@ -59,9 +66,6 @@ return [
     'no_favorites_desc'  => 'Tap the heart on any listing to save it here.',
 
     // profile page
-
-    'profile' => 'Profile',
-
     'prof-personal-details' => 'Personal details',
     'prof-edit' => 'Edit',
     'prof-member-since'=> 'Member since',
@@ -92,6 +96,21 @@ return [
 
     'email' => 'Email',
     'password' => 'Password',
+
+    // listing show blade
+
+    'document_req' => 'Document required',
+    'description' => 'Description',
+    'details' => 'Details',
+    'city' => 'City',
+    'category' => 'Category',
+    'price-day' => 'Price / Day',
+    'price-hour' => 'Price / Hour',
+    'deposit' => 'Deposit',
+    'delivery' => 'Delivery',
+    'document' => 'Document',
+    'required' => 'Required',
+    'day' => 'day',
 
     // benefits
 

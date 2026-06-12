@@ -70,7 +70,7 @@
 
                                         @if ($listings->isNotEmpty())
                                             <button x-data @click="$dispatch('toggle-contact-form')"
-                                                class="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-sm text-sm font-semibold transition-colors cursor-pointer lg:flex hidden"
+                                                class="flex-1 items-center justify-center gap-1.5 py-3 rounded-sm text-sm font-semibold transition-colors cursor-pointer lg:flex hidden"
                                                 style="background: var(--button); color: var(--button-text)"
                                                 onmouseover="this.style.background='var(--button-h)'"
                                                 onmouseout="this.style.background='var(--button)'">
@@ -410,7 +410,7 @@
 
                                                 @if ($review->comment)
                                                     <p
-                                                        class="mt-1.5 text-sm text-(--text-secondary) leading-relaxed break-words">
+                                                        class="mt-1.5 text-sm text-(--text-secondary) leading-relaxed wrap-break-word">
                                                         {{ $review->comment }}
                                                     </p>
                                                 @endif

@@ -41,7 +41,12 @@ Route::middleware('auth')->prefix('subscription')->group(function () {
 });
 
 // Without crf, auth
-Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])->name('stripe.webhook');
+// Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
+//     ->name('stripe.webhook')
+//     ->withoutMiddleware([
+//         \Illuminate\Session\Middleware\StartSession::class,
+//         \Illuminate\Cookie\Middleware\EncryptCookies::class,
+//     ]);
 
 Route::middleware('auth')->group(function(){
     Route::get('/profile',[ProfileController::class,'show'])->name('profile');
@@ -58,7 +63,7 @@ Route::middleware('auth')->group(function(){
         Route::post('/{listing:slug}/archive',[ListingController::class,'archive'])->name('listings.archive');
         Route::post('/{listing}/restore',[ListingController::class,'restore'])->name('listings.restore');
         Route::delete('/{listing:slug}',[ListingController::class,'destroy'])->name('listings.destroy');
-        Route::patch('/{listing}',[ListingController::class,'update'])->name('listings.update');
+        Route::patch('/{listing:slug}',[ListingController::class,'update'])->name('listings.update');
 });
 
 Route::get('/favorites',[FavoriteController::class,'index'])->name('favorites.index');

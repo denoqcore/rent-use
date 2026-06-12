@@ -8,7 +8,7 @@
         window.galleryImages = @json($listing->images->pluck('path')->values());
     </script>
 
-    <div class="max-w-6xl pt-25 mx-auto px-4 pt-4 pb-2 mt-4 lg:mt-15">
+    <div class="max-w-6xl pt-25 mx-auto px-4 pb-2 mt-4 lg:mt-15">
         <nav class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted)">
             <a href="/" class="hover:opacity-70 transition-opacity" style="color: var(--text-muted)">Home</a>
             <span>›</span>
@@ -42,7 +42,7 @@
                 <div
                     class="overflow-hidden
                 @if ($count === 1) w-full h-full
-                @elseif($count === 2) h-full
+                @elseif($count === 2)
                 @elseif($count === 3 && $i === 0)
                 @elseif($count >= 4 && $i === 0) row-span-2 @endif">
                     <img src="{{ asset('storage/' . $image->path) }}"
@@ -101,7 +101,7 @@
             <div id="galleryThumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 max-w-full" style="scrollbar-width:none;">
                 @foreach ($images as $i => $image)
                     <div onclick="galleryGoTo({{ $i }})" data-thumb="{{ $i }}"
-                        class="flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden cursor-pointer transition-all duration-150"
+                        class="shrink-0 w-16 h-11 rounded-lg overflow-hidden cursor-pointer transition-all duration-150"
                         style="border: 2px solid transparent; opacity: 0.5;">
                         <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover">
                     </div>
@@ -156,7 +156,7 @@
                         <span>·</span>
                         <span class="flex items-center gap-1" style="color: #d97706;">
                             <x-heroicon-o-identification class="w-3.5 h-3.5" />
-                            Document required
+                            {{ __('messages.document_req') }}
                         </span>
                     @endif
                 </div>
@@ -166,7 +166,8 @@
                 <div class="h-px mb-6" style="background: var(--background-3)"></div>
 
                 <div class="mb-6">
-                    <h2 class="text-base font-semibold mb-3" style="color: var(--text-primary)">Description</h2>
+                    <h2 class="text-base font-semibold mb-3" style="color: var(--text-primary)">
+                        {{ __('messages.description') }}</h2>
                     <p class="text-sm leading-relaxed whitespace-pre-line" style="color: var(--text-muted)">
                         {{ $listing->description }}</p>
                 </div>
@@ -174,25 +175,28 @@
                 <div class="h-px mb-6" style="background: var(--background-3)"></div>
 
                 <div>
-                    <h2 class="text-base font-semibold mb-3" style="color: var(--text-primary)">Details</h2>
+                    <h2 class="text-base font-semibold mb-3" style="color: var(--text-primary)">
+                        {{ __('messages.details') }}</h2>
                     <div class="grid grid-cols-2 gap-3 text-sm">
 
                         <div class="flex flex-col gap-0.5">
-                            <span class="text-xs uppercase tracking-wide" style="color: var(--text-muted)">City</span>
+                            <span class="text-xs uppercase tracking-wide"
+                                style="color: var(--text-muted)">{{ __('messages.city') }}</span>
                             <span class="font-medium"
                                 style="color: var(--text-primary)">{{ $listing->city->name }}</span>
                         </div>
 
                         <div class="flex flex-col gap-0.5">
-                            <span class="text-xs uppercase tracking-wide" style="color: var(--text-muted)">Category</span>
+                            <span class="text-xs uppercase tracking-wide"
+                                style="color: var(--text-muted)">{{ __('messages.category') }}</span>
                             <span class="font-medium"
                                 style="color: var(--text-primary)">{{ $listing->category->name }}</span>
                         </div>
 
                         @if ($listing->price_per_day)
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-xs uppercase tracking-wide" style="color: var(--text-muted)">Price /
-                                    day</span>
+                                <span class="text-xs uppercase tracking-wide"
+                                    style="color: var(--text-muted)">{{ __('messages.price-day') }}</span>
                                 <span class="font-medium" style="color: var(--text-primary)">
                                     {{ number_format($listing->price_per_day) }} {{ $listing->currency }}
                                 </span>
@@ -201,8 +205,8 @@
 
                         @if ($listing->price_per_hour)
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-xs uppercase tracking-wide" style="color: var(--text-muted)">Price /
-                                    hour</span>
+                                <span class="text-xs uppercase tracking-wide"
+                                    style="color: var(--text-muted)">{{ __('messages.price-hour') }}</span>
                                 <span class="font-medium" style="color: var(--text-primary)">
                                     {{ number_format($listing->price_per_hour) }} {{ $listing->currency }}
                                 </span>
@@ -212,7 +216,7 @@
                         @if ($listing->deposit)
                             <div class="flex flex-col gap-0.5">
                                 <span class="text-xs uppercase tracking-wide"
-                                    style="color: var(--text-muted)">Deposit</span>
+                                    style="color: var(--text-muted)">{{ __('messages.deposit') }}</span>
                                 <span class="font-medium" style="color: var(--text-primary)">
                                     {{ number_format($listing->deposit) }} {{ $listing->currency }}
                                 </span>
@@ -222,7 +226,7 @@
                         @if ($listing->delivery_available)
                             <div class="flex flex-col gap-0.5">
                                 <span class="text-xs uppercase tracking-wide"
-                                    style="color: var(--text-muted)">Delivery</span>
+                                    style="color: var(--text-muted)">{{ __('messages.delivery') }}</span>
                                 <span class="font-medium"
                                     style="color: {{ $listing->delivery_price ? 'var(--text-primary)' : '#16a34a' }}">
                                     {{ $listing->delivery_price ? number_format($listing->delivery_price) . ' ' . $listing->currency : 'Free' }}
@@ -233,8 +237,8 @@
                         @if ($listing->requires_document)
                             <div class="flex flex-col gap-0.5">
                                 <span class="text-xs uppercase tracking-wide"
-                                    style="color: var(--text-muted)">Document</span>
-                                <span class="font-medium" style="color: #d97706;">Required</span>
+                                    style="color: var(--text-muted)">{{ __('messages.document') }}</span>
+                                <span class="font-medium" style="color: #d97706;">{{ __('messages.required') }}</span>
                             </div>
                         @endif
 
@@ -448,6 +452,12 @@
                                                     {{ $listing->currency }}
                                                 </span>
                                             </div>
+                                            <div class="flex gap-2 text-(--text-muted)"">
+                                                <span>
+                                                    <x-heroicon-o-arrow-path class="w-4 h-4" />
+                                                </span>
+                                                <p class="text-xs">The deposit will be refunded</p>
+                                            </div>
                                         @endif
 
                                         <div class="flex justify-between items-center pt-3 mt-1 text-base font-semibold"
@@ -560,17 +570,20 @@
 
                             @if (auth()->id() === $listing->user_id)
                                 @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
-                                    <span class="px-3 py-2 text-sm font-bold rounded-sm"
-                                        style="background: var(--button); color: var(--button-text)">
-                                        ⚡ Boosted until {{ $listing->boosted_until->format('H:i, d M') }}
+                                    <span
+                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
+                                        style="border: 1px solid var(--background-3); color: var(--text-primary)">
+                                        <x-heroicon-o-chevron-double-up class="w-4 h-4" />
+                                        Available in
+                                        {{ now()->diffForHumans($listing->boosted_until, true) }}
                                     </span>
                                 @else
                                     <form method="POST" action="{{ route('listings.boost', $listing) }}">
                                         @csrf
                                         <button type="submit"
-                                            class="px-3 py-2 text-sm font-semibold rounded-sm cursor-pointer border"
-                                            style="border-color: var(--button); color: var(--button)">
-                                            ↑ Boost to Top
+                                            class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
+                                            style="border: 1px solid var(--background-3); color: var(--text-primary)">
+                                            <x-heroicon-o-chevron-double-up class="w-4 h-4" /> Boost
                                         </button>
                                     </form>
                                 @endif
