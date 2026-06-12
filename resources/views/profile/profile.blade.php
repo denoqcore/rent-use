@@ -315,7 +315,7 @@
                                                 </div>
                                                 <div class="flex flex-col items-end gap-1.5 shrink-0">
                                                     <span
-                                                        class="text-sm sm:text-base font-bold text-(--text-price) whitespace-nowrap">
+                                                        class="text-sm sm:text-base font-bold text-(--blackwhite) whitespace-nowrap">
                                                         @if ($listing->price_per_day)
                                                             {{ number_format($listing->price_per_day) }}
                                                             {{ $listing->currency }}/day
@@ -329,16 +329,17 @@
                                                             @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
                                                                 <span
                                                                     class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs text-(--text-primary)">
-                                                                    <x-heroicon-o-fire class="w-4 h-4" />
-                                                                    Boosted {{ $listing->boosted_until->diffForHumans() }}
+                                                                    <x-heroicon-o-chevron-double-up class="w-3 h-3" />
+                                                                    Available in
+                                                                    {{ now()->diffForHumans($listing->boosted_until, true) }}
                                                                 </span>
                                                             @else
                                                                 <form method="POST"
                                                                     action="{{ route('listings.boost', $listing) }}">
                                                                     @csrf
                                                                     <button type="submit"
-                                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs cursor-pointer border border-(--button) text-(--text-primary) hover:bg-(--button)/10 transition-colors">
-                                                                        <x-heroicon-o-arrow-up class="w-4 h-4" />
+                                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs cursor-pointer border border-(--blackwhite) text-(--text-primary) transition-colors">
+                                                                        <x-heroicon-o-chevron-double-up class="w-3 h-3" />
                                                                         Boost
                                                                     </button>
                                                                 </form>

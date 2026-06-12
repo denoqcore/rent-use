@@ -31,9 +31,9 @@ new class extends Component {}; ?>
 
         <div class="max-w-6xl w-full mx-auto px-3 flex items-center justify-between gap-8" style="height:72px">
             <div class="flex items-center gap-4">
-                <a href="/"
-                    class="rounded-xl border-b border-transparent p-1 transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:outline-none">
-                    <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-14 h-8">
+                <a href="/" class="rounded-xl border-b border-transparent text-(--text-muted) ml-2">
+                    {{-- <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-14 h-8"> --}}
+                    <x-heroicon-s-stop-circle class="w-5 h-5" />
                 </a>
                 <a href="/search"
                     class="shrink-0 px-3 py-1.5 text-sm font-bold text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-2) rounded-sm">

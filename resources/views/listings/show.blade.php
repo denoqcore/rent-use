@@ -560,17 +560,20 @@
 
                             @if (auth()->id() === $listing->user_id)
                                 @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
-                                    <span class="px-3 py-2 text-sm font-bold rounded-sm"
-                                        style="background: var(--button); color: var(--button-text)">
-                                        ⚡ Boosted until {{ $listing->boosted_until->format('H:i, d M') }}
+                                    <span
+                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
+                                        style="border: 1px solid var(--background-3); color: var(--text-primary)">
+                                        <x-heroicon-o-chevron-double-up class="w-4 h-4" />
+                                        Available in
+                                        {{ now()->diffForHumans($listing->boosted_until, true) }}
                                     </span>
                                 @else
                                     <form method="POST" action="{{ route('listings.boost', $listing) }}">
                                         @csrf
                                         <button type="submit"
-                                            class="px-3 py-2 text-sm font-semibold rounded-sm cursor-pointer border"
-                                            style="border-color: var(--button); color: var(--button)">
-                                            ↑ Boost to Top
+                                            class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
+                                            style="border: 1px solid var(--background-3); color: var(--text-primary)">
+                                            <x-heroicon-o-chevron-double-up class="w-4 h-4" /> Boost
                                         </button>
                                     </form>
                                 @endif

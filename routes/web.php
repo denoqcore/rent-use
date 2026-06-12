@@ -41,7 +41,12 @@ Route::middleware('auth')->prefix('subscription')->group(function () {
 });
 
 // Without crf, auth
-Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])->name('stripe.webhook');
+// Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
+//     ->name('stripe.webhook')
+//     ->withoutMiddleware([
+//         \Illuminate\Session\Middleware\StartSession::class,
+//         \Illuminate\Cookie\Middleware\EncryptCookies::class,
+//     ]);
 
 Route::middleware('auth')->group(function(){
     Route::get('/profile',[ProfileController::class,'show'])->name('profile');

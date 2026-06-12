@@ -271,7 +271,7 @@
                                             <span
                                                 class="text-[11px] font-medium truncate">{{ $listing->city->name }}</span>
                                         </div>
-                                        <span class="text-xs font-bold text-(--button) whitespace-nowrap ml-2">
+                                        <span class="text-xs font-bold text-(--blackwhite) whitespace-nowrap ml-2">
                                             @if ($listing->price_per_day)
                                                 {{ number_format($listing->price_per_day, 0, '.', ' ') }}
                                                 {{ $listing->currency }}<span
