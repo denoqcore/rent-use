@@ -77,7 +77,7 @@
                 $refs.fileInput.files = dt.files;
             ">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 <input type="hidden" name="currency" :value="currency">
                 <div class="flex flex-col gap-2">
                     <label class="text-xs text-(--text-muted)">Category</label>

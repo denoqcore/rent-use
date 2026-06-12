@@ -50,6 +50,12 @@ class SubscriptionController extends Controller
 
     public function checkout(Request $request, string $plan)
 {
+     $user = auth()->user();
+
+    if ($user->isActivePlan() && $user->plan !== 'starter') {
+        return redirect()->route('profile')->withFragment('subscription')->with('error', 'You already have an active subscription.');
+    }
+
     if (!array_key_exists($plan, $this->plans)) {
         abort(404);
     }

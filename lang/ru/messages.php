@@ -11,6 +11,9 @@ return [
     'support' => 'Поддержка',
     'close' => 'Закрыть',
     'started' => 'Начать',
+    'menu' => 'Меню',
+    'login' => 'Аутентификация',
+    'profile' => 'Профиль',
     'search' => 'Поиск',
     'favorite' => 'Избранное',
     'messages' => 'Сообщения',
@@ -37,13 +40,16 @@ return [
     'empty-title' => 'Пока ничего нет',
     'empty-desc'  => ' Здесь будут отображаться товары и объявления',
 
-    //rent modal
+    //header modal
     'my_rentals'         => 'Мои аренды',
     'incoming_requests'  => 'Заявки',
     'no_rentals_title'   => 'Пока нет аренд',
     'no_rentals_desc'    => 'Забронируйте что-нибудь, и оно появится здесь.',
     'no_requests_title'  => 'Пока нет заявок',
     'no_requests_desc'   => 'Когда кто-то забронирует ваше объявление, вы увидите это здесь.',
+    'status_messages'    => 'Пока нет сообщений',
+    'status_desc_messages' => 'Напишите владельцу объявления, чтобы начать общение',
+    'messages_you'       => 'Вы',
     'status_pending'     => 'Ожидает',
     'status_confirmed'   => 'Подтверждено',
     'status_cancelled'   => 'Отменено',
@@ -57,8 +63,6 @@ return [
     'no_favorites_desc'  => 'Нажми на сердечко на любом объявлении, чтобы сохранить его здесь.',
 
     // profile page
-
-    'profile' => 'Профиль',
 
     'prof-personal-details' => 'Личные данные',
     'prof-edit' => 'Редактировать',

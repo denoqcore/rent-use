@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function(){
         Route::post('/{listing:slug}/archive',[ListingController::class,'archive'])->name('listings.archive');
         Route::post('/{listing}/restore',[ListingController::class,'restore'])->name('listings.restore');
         Route::delete('/{listing:slug}',[ListingController::class,'destroy'])->name('listings.destroy');
-        Route::patch('/{listing}',[ListingController::class,'update'])->name('listings.update');
+        Route::patch('/{listing:slug}',[ListingController::class,'update'])->name('listings.update');
 });
 
 Route::get('/favorites',[FavoriteController::class,'index'])->name('favorites.index');

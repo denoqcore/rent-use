@@ -12,13 +12,32 @@ class ExpireSubscriptions extends Command
 
     public function handle(): void
     {
-        $count = User::where('plan', '!=', 'starter')
+        $users = User::where('plan', '!=', 'starter')
             ->where('plan_expires_at', '<', now())
-            ->update([
+            ->get();
+
+        foreach ($users as $user) {
+            $user->update([
                 'plan'            => 'starter',
                 'plan_expires_at' => null,
             ]);
 
-        $this->info("Downgraded {$count} expired subscriptions.");
+            $limit = $user->maxListings();
+
+            $excess = $user->listings()
+                ->where('status', 'active')
+                ->orderByDesc('created_at')
+                ->skip($limit)
+                ->get();
+
+            foreach ($excess as $listing) {
+                $listing->update([
+                    'status'        => 'paused',
+                    'paused_reason' => 'plan_limit',
+                ]);
+            }
+        }
+
+        $this->info("Downgraded {$users->count()} expired subscriptions.");
     }
 }

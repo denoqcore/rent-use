@@ -20,6 +20,14 @@ class ProfileController extends Controller
         $reviewCount  = $user->reviewCount();
         $distribution = $user->ratingDistribution();
 
+        $planLimits = [
+        'starter' => 4,
+        'pro'     => 12,
+        'premium' => 20,
+        ];
+        $listingsCount = $listings->count();
+        $listingsLimit = $planLimits[$user->plan] ?? 4;
+
         return view('profile.profile', compact(
             'user',
             'listings',
@@ -27,6 +35,8 @@ class ProfileController extends Controller
             'avgRating',
             'reviewCount',
             'distribution',
+            'listingsCount',
+            'listingsLimit',
         ));
     }
 

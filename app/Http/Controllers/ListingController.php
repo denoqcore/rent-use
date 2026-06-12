@@ -225,20 +225,37 @@ return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
 }
 
 
-    public function pause(Listing $listing)
+public function pause(Listing $listing)
 {
     $this->authorize('update', $listing);
-    $newStatus = $listing->status === 'paused' ? 'active' : 'paused';
-    $listing->update(['status' => $newStatus]);
-    return redirect()->route('profile')->withFragment('listings')->with('success',
-        $newStatus === 'paused' ? 'Listing paused' : 'Listing activated'
-    );
+
+    if ($listing->status === 'paused') {
+        $user = $listing->user;
+        if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
+            return back()->withErrors([
+                'limit' => 'You have reached your plan limit. Upgrade or pause another listing first.'
+            ])->withFragment('listings');
+        }
+        $listing->update(['status' => 'active', 'paused_reason' => null]);
+        return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing activated');
+    }
+
+    $listing->update(['status' => 'paused', 'paused_reason' => 'manual']);
+    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing paused');
 }
 
 public function restore(Listing $listing)
 {
     $this->authorize('update', $listing);
-    $listing->update(['status' => 'active']);
+
+    $user = $listing->user;
+    if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
+        return back()->withErrors([
+            'limit' => 'You have reached your plan limit. Upgrade or pause another listing first.'
+        ])->withFragment('listings');
+    }
+
+    $listing->update(['status' => 'active', 'paused_reason' => null]);
     return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing restored');
 }
 

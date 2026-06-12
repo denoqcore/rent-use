@@ -314,13 +314,11 @@ new class extends Component {}; ?>
                                 </span>
                             @endif
                         </div>
-                        <span class="text-[10px] font-medium text-(--text-muted)">Menu</span>
+                        <span class="text-[10px] font-medium text-(--text-muted)">{{ __('messages.menu') }}</span>
                     </button>
 
                     <div x-show="userMenu" x-cloak @click.away="userMenu = false"
                         class="absolute bottom-full right-0 mb-2 w-52 rounded-xl border border-(--background-3) bg-(--background-2) shadow-2xl z-50 overflow-hidden">
-
-                        {{-- Шапка: имя, email, план --}}
                         <div class="p-3 border-b border-(--background-3)">
                             <p class="text-xs font-semibold text-(--text-primary)">{{ $authUser->name }}</p>
                             <p class="text-xs text-(--text-muted) truncate mb-2">{{ $authUser->email }}</p>
@@ -342,8 +340,6 @@ new class extends Component {}; ?>
                                 </span>
                             @endif
                         </div>
-
-                        {{-- Пункты меню --}}
                         <div class="p-1.5 flex flex-col gap-0.5">
                             <a href="/profile"
                                 class="flex items-center gap-2.5 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-lg">
@@ -410,8 +406,6 @@ new class extends Component {}; ?>
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Выход --}}
                         <div class="p-1.5 border-t border-(--background-3)">
                             <button type="button" @click="logoutModal = true; userMenu = false"
                                 class="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-400/10 rounded-lg cursor-pointer">
@@ -425,7 +419,7 @@ new class extends Component {}; ?>
                 <a href="{{ route('login') }}"
                     class="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-(--text-muted)">
                     <x-heroicon-o-user class="w-5 h-5" />
-                    <span class="text-[10px] font-medium">Login</span>
+                    <span class="text-[10px] font-medium">{{ __('messages.login') }}</span>
                 </a>
             @endauth
 
@@ -681,7 +675,12 @@ new class extends Component {}; ?>
                                                         'bg-(--bg-status-muted) text-(--status-muted)': booking
                                                             .status === 'completed',
                                                     }"
-                                                    x-text="booking.status">
+                                                    x-text="{
+                                                        pending: '{{ __('messages.status_pending') }}',
+                                                        confirmed: '{{ __('messages.status_confirmed') }}',
+                                                        cancelled: '{{ __('messages.status_cancelled') }}',
+                                                        completed: '{{ __('messages.status_completed') }}'
+                                                         }[booking.status] || booking.status">
                                                 </span>
                                                 <template x-if="booking.status === 'pending'">
                                                     <button @click.stop.prevent="cancelBooking(booking.id)"
@@ -773,7 +772,11 @@ new class extends Component {}; ?>
                                                                 'bg-(--bg-status-muted) text-(--status-muted)': booking
                                                                     .status === 'completed',
                                                             }"
-                                                            x-text="booking.status">
+                                                            x-text="{
+                                                                confirmed: '{{ __('messages.status_confirmed') }}',
+                                                                cancelled: '{{ __('messages.status_cancelled') }}',
+                                                                completed: '{{ __('messages.status_completed') }}'
+                                                            }[booking.status] || booking.status">
                                                         </span>
                                                         <template
                                                             x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
@@ -837,8 +840,8 @@ new class extends Component {}; ?>
                     <div x-show="!chatsLoading && chats.length === 0"
                         class="flex flex-col items-center justify-center gap-3 py-16 text-center px-6">
                         <x-heroicon-o-chat-bubble-bottom-center class="w-10 h-10 text-(--text-muted) opacity-20" />
-                        <p class="text-sm font-medium text-(--text-primary)">No messages yet</p>
-                        <p class="text-xs text-(--text-muted)">Write to a listing owner to start a conversation</p>
+                        <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.status_messages') }}</p>
+                        <p class="text-xs text-(--text-muted)">{{ __('messages.status_desc_messages') }}</p>
                     </div>
                     <div x-show="!chatsLoading && chats.length > 0" class="flex flex-col p-3 gap-1">
                         <template x-for="chat in chats" :key="chat.id">
@@ -863,7 +866,8 @@ new class extends Component {}; ?>
                                     </div>
                                     <div class="flex items-center justify-between gap-2 mt-0.5">
                                         <p class="text-xs text-(--text-muted) truncate">
-                                            <span x-show="chat.last_message?.is_mine">You: </span>
+                                            <span x-show="chat.last_message?.is_mine">{{ __('messages.messages_you') }}:
+                                            </span>
                                             <span x-text="chat.last_message?.body ?? chat.listing.title"></span>
                                         </p>
                                         <span x-show="chat.unread > 0" x-text="chat.unread"

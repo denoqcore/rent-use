@@ -80,7 +80,7 @@
                                 x-data="{ preview: null }" class="relative shrink-0">
                                 @csrf
                                 <label
-                                    class="w-14 h-14 rounded-sm bg-(--background-3) flex items-center justify-center cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden block">
+                                    class="w-14 h-14 rounded-sm bg-(--background-3) flex items-center justify-center cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden">
                                     <template x-if="preview">
                                         <img :src="preview" class="w-full h-full object-cover absolute inset-0">
                                     </template>
@@ -270,9 +270,23 @@
                 </div>
                 <div x-show="tab === 'listings'" x-cloak>
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-4 sm:p-6">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-mylisting') }}
-                        </h2>
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
+                                {{ __('messages.prof-mylisting') }}
+                            </h2>
+
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-(--text-primary) tabular-nums">
+                                    {{ $listingsCount }} <span class="text-(--text-muted)">/ {{ $listingsLimit }}</span>
+                                </span>
+                                @if ($listingsCount >= $listingsLimit)
+                                    <a href="{{ route('subscription.index') }}"
+                                        class="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-md border border-(--background-3) bg-(--background) text-(--text-primary) hover:bg-(--background-3) transition-colors">
+                                        {{ __('messages.prof-upgrade') }}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
 
                         @if ($listings->isEmpty())
                             <div class="flex flex-col items-center justify-center py-16 gap-3">
@@ -480,9 +494,10 @@
                     </div>
                 </div>
                 <div x-show="tab === 'bookings'" x-cloak>
-                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
+                    <div class="rounded-lg border border-(--background-3) bg-(--background-2) p-4 sm:p-6">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-6">
-                            {{ __('messages.prof-bookings') }}</h2>
+                            {{ __('messages.prof-bookings') }}
+                        </h2>
 
                         @if ($bookings->isEmpty())
                             <div class="flex flex-col items-center justify-center py-16 gap-3">
@@ -490,60 +505,123 @@
                                 <p class="text-sm text-(--text-muted)">{{ __('messages.prof-nobookings') }}</p>
                             </div>
                         @else
-                            <div class="flex flex-col gap-3">
+                            <div x-data="{ confirmDelete: false, deleteUrl: '' }" class="flex flex-col gap-4">
                                 @foreach ($bookings as $booking)
-                                    <div class="p-3 rounded-sm border border-(--background-3) flex flex-col gap-2">
+                                    <div
+                                        class="flex flex-col sm:grid sm:grid-cols-[240px_1fr] gap-4 p-4 rounded-lg border border-(--background-3) hover:border-(--text-muted)/30 transition-colors sm:h-44">
+
                                         <a href="{{ route('listings.show', $booking->listing->slug) }}"
-                                            class="flex items-center gap-3 group">
-                                            <div class="shrink-0 w-14 h-12 rounded-sm overflow-hidden bg-(--background-3)">
-                                                @if ($booking->listing->images->isNotEmpty())
-                                                    <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
-                                                        class="w-full h-full object-cover">
-                                                @endif
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p
-                                                    class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline">
-                                                    {{ $booking->listing->title }}</p>
-                                                <p class="text-[11px] text-(--text-muted)">
-                                                    {{ $booking->listing->city->name }}</p>
-                                            </div>
+                                            class="relative block w-full h-40 sm:h-full rounded-md overflow-hidden bg-(--background-3) shrink-0">
+                                            @if ($booking->listing->images->isNotEmpty())
+                                                <img src="{{ asset('storage/' . $booking->listing->images->first()->path) }}"
+                                                    class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <x-heroicon-o-photo class="w-6 h-6 text-(--text-muted) opacity-40" />
+                                                </div>
+                                            @endif
                                         </a>
-                                        <div class="flex items-center justify-between text-xs">
-                                            <span class="text-(--text-muted)">
-                                                @if ($booking->pricing_mode === 'hour')
-                                                    {{ $booking->start_date->format('d M Y') }} ·
-                                                    {{ $booking->start_hour }} – {{ $booking->end_hour }}
-                                                @else
-                                                    {{ $booking->start_date->format('d M') }} —
-                                                    {{ $booking->end_date->format('d M Y') }}
-                                                @endif
-                                            </span>
-                                            <span class="font-semibold text-(--text-primary)">
-                                                {{ number_format($booking->total_price, 0, ',', ' ') }}
-                                                {{ $booking->currency }}
-                                            </span>
+
+                                        <div class="flex flex-col justify-between min-w-0 flex-1 py-0.5 gap-4 sm:gap-0">
+                                            <div class="flex justify-between items-start gap-3">
+                                                <div class="min-w-0">
+                                                    <a href="{{ route('listings.show', $booking->listing->slug) }}">
+                                                        <h3
+                                                            class="text-sm sm:text-base font-semibold text-(--text-primary) truncate hover:underline">
+                                                            {{ $booking->listing->title }}
+                                                        </h3>
+                                                    </a>
+                                                    <p class="text-xs text-(--text-muted) mt-1">
+                                                        {{ $booking->listing->city->name }}</p>
+                                                </div>
+                                                <span
+                                                    class="text-sm sm:text-base font-bold text-(--blackwhite) whitespace-nowrap shrink-0">
+                                                    {{ number_format($booking->total_price, 0, ',', ' ') }}
+                                                    {{ $booking->currency }}
+                                                </span>
+                                            </div>
+
+                                            <div
+                                                class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-end mt-auto">
+                                                <div class="flex items-center gap-2 text-xs text-(--text-muted)">
+                                                    @if ($booking->pricing_mode === 'hour')
+                                                        <span>{{ $booking->start_date->format('d M Y') }} ·
+                                                            {{ $booking->start_hour }} – {{ $booking->end_hour }}</span>
+                                                    @else
+                                                        <span>{{ $booking->start_date->format('d M') }} —
+                                                            {{ $booking->end_date->format('d M Y') }}</span>
+                                                        <span class="w-1 h-1 rounded-full bg-(--background-3)"></span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="flex items-center gap-1.5 shrink-0">
+                                                    @php
+                                                        $statusClass = match ($booking->status) {
+                                                            'pending' => 'bg-yellow-400/10 text-yellow-500',
+                                                            'confirmed' => 'bg-green-400/10 text-green-500',
+                                                            'cancelled' => 'bg-red-400/10 text-red-400',
+                                                            'completed' => 'bg-(--background-3) text-(--text-muted)',
+                                                            default => 'bg-(--background-3) text-(--text-muted)',
+                                                        };
+                                                    @endphp
+                                                    <span
+                                                        class="text-[11px] font-medium px-2.5 py-1 rounded-full mr-1 {{ $statusClass }}">
+                                                        {{ $booking->status }}
+                                                    </span>
+                                                    <button type="button" {{-- @click="deleteUrl = '{{ route('bookings.destroy', $booking) }}'; confirmDelete = true" --}} title="Delete booking"
+                                                        class="p-2 rounded-md text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
+                                                        <x-heroicon-o-trash class="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        @php
-                                            $statusConfig = [
-                                                'pending' => 'bg-yellow-400/10 text-yellow-500',
-                                                'confirmed' => 'bg-green-400/10 text-green-500',
-                                                'cancelled' => 'bg-red-400/10 text-red-400',
-                                                'completed' => 'bg-(--background-3) text-(--text-muted)',
-                                            ];
-                                        @endphp
-                                        <span
-                                            class="px-2 py-0.5 rounded-full text-[11px] font-medium w-fit {{ $statusConfig[$booking->status] ?? '' }}">
-                                            {{ $booking->status }}
-                                        </span>
                                     </div>
                                 @endforeach
+
+                                {{-- <div x-show="confirmDelete" x-cloak
+                                    class="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-xs"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition ease-in duration-150">
+                                    <div @click.away="confirmDelete = false"
+                                        class="w-full sm:max-w-md p-6 bg-(--background-2) border-t sm:border border-(--background-3) rounded-t-lg sm:rounded-lg shadow-2xl"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95"
+                                        x-transition:enter-end="translate-y-0 sm:scale-100">
+                                        <div class="w-12 h-1 bg-(--background-3) rounded-full mx-auto mb-5 sm:hidden">
+                                        </div>
+                                        <h3 class="text-base font-bold text-(--text-primary) mb-2">Delete booking?</h3>
+                                        <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
+                                            This will remove the booking from your history.
+                                        </p>
+                                        <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
+                                            <button type="button" @click="confirmDelete = false"
+                                                class="w-full sm:w-auto order-2 sm:order-1 px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-md border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background) cursor-pointer transition-colors">
+                                                Cancel
+                                            </button>
+                                            <form method="POST" :action="deleteUrl"
+                                                class="w-full sm:w-auto order-1 sm:order-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-md bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div> --}}
                             </div>
                         @endif
                     </div>
                 </div>
 
                 <div x-show="tab === 'subscription'" x-cloak>
+                    @if (session('error'))
+                        <div class="mb-4 px-4 py-3 rounded-sm text-sm text-red-400 bg-red-400/10 border border-red-400/20">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Current plan
                         </h2>
@@ -568,16 +646,6 @@
                                     </span>
                                 @endif
                             </div>
-
-                            @if ($user->plan !== 'starter')
-                                <form method="POST" action="{{ route('subscription.cancel') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="text-xs text-red-400 hover:text-red-300 border border-red-400/20 hover:bg-red-400/10 px-3 py-1.5 rounded-sm transition-colors cursor-pointer">
-                                        Cancel subscription
-                                    </button>
-                                </form>
-                            @endif
                         </div>
                         <div class="mt-4 grid grid-cols-3 gap-3">
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
@@ -613,22 +681,22 @@
                             @php $isCurrent = $user->plan === $key && $user->isActivePlan(); @endphp
                             <div
                                 class="rounded-sm border p-5 flex flex-col gap-4
-                {{ $isCurrent
-                    ? ($key === 'premium'
-                        ? 'border-yellow-400/30 bg-yellow-400/5'
-                        : 'border-blue-400/30 bg-blue-400/5')
-                    : 'border-(--background-3) bg-(--background-2)' }}">
+                             {{ $isCurrent
+                                 ? ($key === 'premium'
+                                     ? 'border-yellow-400/30 bg-yellow-400/5'
+                                     : 'border-blue-400/30 bg-blue-400/5')
+                                 : 'border-(--background-3) bg-(--background-2)' }}">
 
                                 <div class="flex items-center justify-between">
                                     <span
                                         class="text-sm font-bold
-                        {{ $key === 'premium' ? 'text-yellow-400' : 'text-blue-400' }}">
+                                        {{ $key === 'premium' ? 'text-yellow-400' : 'text-blue-400' }}">
                                         {{ $plan['label'] }}
                                     </span>
                                     @if ($isCurrent)
                                         <span
                                             class="text-[11px] px-2 py-0.5 rounded-sm
-                            {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
+                                               {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
                                             Active
                                         </span>
                                     @endif
@@ -646,19 +714,24 @@
                                     @endforeach
                                 </ul>
 
-                                @if (!$isCurrent)
-                                    <a href="{{ route('subscription.checkout', $key) }}"
-                                        class="mt-auto text-center py-2 text-xs font-semibold rounded-sm transition-colors
-                        {{ $key === 'premium'
-                            ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
-                            : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
-                                        Choose {{ $plan['label'] }}
-                                    </a>
-                                @else
+                                @if ($isCurrent)
                                     <span
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm">
                                         Current plan
                                     </span>
+                                @elseif ($user->isActivePlan() && $user->plan !== 'starter')
+                                    <span
+                                        class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm opacity-50 cursor-not-allowed">
+                                        Active subscription
+                                    </span>
+                                @else
+                                    <a href="{{ route('subscription.checkout', $key) }}"
+                                        class="mt-auto text-center py-2 text-xs font-semibold rounded-sm transition-colors
+                                        {{ $key === 'premium'
+                                            ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
+                                            : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
+                                        Choose {{ $plan['label'] }}
+                                    </a>
                                 @endif
                             </div>
                         @endforeach
@@ -687,14 +760,21 @@
                                             <span class="text-(--text-primary) font-semibold">{{ $payment->amount }}
                                                 {{ $payment->currency }}</span>
                                             @php
-                                                $statusClass = match ($payment->status) {
-                                                    'paid' => 'bg-green-400/10 text-green-400 border-green-400/20',
-                                                    'pending'
-                                                        => 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20',
-                                                    'cancelled' => 'bg-red-400/10 text-red-400 border-red-400/20',
+                                                $statusClass = match ($listing->status) {
+                                                    'active' => 'bg-green-500/10 text-green-500',
+                                                    'paused' => 'bg-yellow-500/10 text-yellow-500',
+                                                    'archived' => 'bg-(--background-3) text-(--text-muted)',
                                                     default => 'bg-(--background-3) text-(--text-muted)',
                                                 };
                                             @endphp
+                                            <span
+                                                class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md font-medium mr-1 {{ $statusClass }}">
+                                                @if ($listing->status === 'paused' && $listing->paused_reason === 'plan_limit')
+                                                    Paused — plan limit
+                                                @else
+                                                    {{ $listing->status }}
+                                                @endif
+                                            </span>
                                             <span
                                                 class="px-2 py-0.5 rounded-sm border {{ $statusClass }}">{{ $payment->status }}</span>
                                         </div>
