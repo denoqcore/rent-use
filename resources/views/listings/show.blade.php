@@ -253,6 +253,19 @@
                     <div class="rounded-2xl p-6"
                         style="border: 1px solid var(--background-3); background: var(--background);">
 
+                        @if (
+                            $listing->is_boosted &&
+                                $listing->boosted_until?->isFuture() &&
+                                in_array($listing->user->plan, ['pro', 'premium', 'vip']) &&
+                                $listing->user->isActivePlan())
+                            <div class="absolute top-3 right-3">
+                                <span
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
+                                    <x-heroicon-s-star class="w-4 h-4" />
+                                </span>
+                            </div>
+                        @endif
+
                         <div class="mb-5">
                             @if ($listing->price_per_day)
                                 <div class="text-2xl font-bold" style="color: var(--text-primary)">
@@ -315,19 +328,6 @@
                                                     'color: var(--text-muted)'">
                                                 Per hour
                                             </button>
-                                        </div>
-                                    @endif
-
-                                    @if (
-                                        $listing->is_boosted &&
-                                            $listing->boosted_until?->isFuture() &&
-                                            in_array($listing->user->plan, ['pro', 'premium']) &&
-                                            $listing->user->isActivePlan())
-                                        <div class="absolute top-8 right-3">
-                                            <span
-                                                class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
-                                                <x-heroicon-s-star class="w-4 h-4" />
-                                            </span>
                                         </div>
                                     @endif
 
