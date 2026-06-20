@@ -11,7 +11,7 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Listing::with(['images', 'category.parent'])
+        $query = Listing::with(['images', 'category.parent', 'user'])
             ->where('status', 'active');
 
         if ($request->filled('q')) {
@@ -58,7 +58,24 @@ class SearchController extends Controller
         }
 
         $sort = $request->get('sort', 'latest');
-        $query->orderByRaw('(is_boosted = 1 AND boosted_until > NOW()) DESC');
+        $query->orderByRaw("
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM users
+                    WHERE users.id = listings.user_id
+                    AND users.plan = 'premium'
+                    AND users.plan_expires_at > NOW()
+                ) THEN 0
+                WHEN EXISTS (
+                    SELECT 1 FROM users
+                    WHERE users.id = listings.user_id
+                    AND users.plan = 'pro'
+                    AND users.plan_expires_at > NOW()
+                ) THEN 1
+                ELSE 2
+            END
+        ");
+        $query->orderByRaw("CASE WHEN is_boosted = 1 AND boosted_until > NOW() THEN 0 ELSE 1 END");
 
         match ($sort) {
             'price_asc'  => $query->orderByRaw('COALESCE(price_per_day, price_per_hour) ASC'),

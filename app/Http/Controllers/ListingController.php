@@ -26,27 +26,29 @@ class ListingController extends Controller
     public function index()
     {
         $listings = Listing::query()
-            ->where('status', 'active')
-            ->orderByRaw("
-                CASE
-                    WHEN is_boosted = 1 AND boosted_until > NOW() THEN 0
-                    WHEN EXISTS (
-                        SELECT 1 FROM users
-                        WHERE users.id = listings.user_id
-                        AND users.plan = 'premium'
-                        AND users.plan_expires_at > NOW()
-                    ) THEN 1
-                    WHEN EXISTS (
-                        SELECT 1 FROM users
-                        WHERE users.id = listings.user_id
-                        AND users.plan = 'pro'
-                        AND users.plan_expires_at > NOW()
-                    ) THEN 2
-                    ELSE 3
-                END
-            ")
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        ->where('status', 'active')
+        ->orderByRaw("
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM users
+                    WHERE users.id = listings.user_id
+                    AND users.plan = 'premium'
+                    AND users.plan_expires_at > NOW()
+                ) THEN 0
+                WHEN EXISTS (
+                    SELECT 1 FROM users
+                    WHERE users.id = listings.user_id
+                    AND users.plan = 'pro'
+                    AND users.plan_expires_at > NOW()
+                ) THEN 1
+                ELSE 2
+            END
+        ")
+        ->orderByRaw("
+            CASE WHEN is_boosted = 1 AND boosted_until > NOW() THEN 0 ELSE 1 END
+        ")
+        ->orderBy('created_at', 'desc')
+        ->paginate(20);
 
         return view('listings.index', compact('listings'));
 }
