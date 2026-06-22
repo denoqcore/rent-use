@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedInteger('delivery_price')->nullable();
             $table->boolean('requires_document')->default(false);
             $table->enum('status', ['active', 'paused', 'archived'])->default('active');
-            $table->string('paused_reason')->nullable()->after('status');
+            $table->string('paused_reason')->nullable();
             $table->timestamps();
         });
     }

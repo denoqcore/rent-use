@@ -20,10 +20,10 @@ class User extends Authenticatable implements FilamentUser
         'phone',
         'avatar',
         'password',
-        'plan',
-        'plan_expires_at',
-        'boosts_used_today',
-        'boosts_reset_date',
+        // 'plan',
+        // 'plan_expires_at',
+        // 'boosts_used_today',
+        // 'boosts_reset_date',
         'is_online',
         'last_seen_at',
     ];
@@ -132,17 +132,17 @@ class User extends Authenticatable implements FilamentUser
     // plans
 
     public function isActivePlan(): bool
-    {
-        if ($this->plan === 'starter') return true;
+{
+    if ($this->plan === 'starter') return true;
 
-        $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
+    $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
 
-        if (!$active && $this->plan !== 'starter') {
-            $this->update(['plan' => 'starter', 'plan_expires_at' => null]);
-        }
-
-        return $active;
+    if (!$active && $this->plan !== 'starter') {
+        $this->forceFill(['plan' => 'starter', 'plan_expires_at' => null])->save();
     }
+
+    return $active;
+}
 
 
     public function planLabel(): string
@@ -202,15 +202,15 @@ class User extends Authenticatable implements FilamentUser
         };
     }
 
-    public function canBoost(): bool
-    {
-        if ($this->boosts_reset_date !== now()->toDateString()) {
-            $this->update([
-                'boosts_used_today' => 0,
-                'boosts_reset_date' => now()->toDateString(),
-            ]);
-        }
-
-        return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
+ public function canBoost(): bool
+{
+    if ($this->boosts_reset_date !== now()->toDateString()) {
+        $this->forceFill([
+            'boosts_used_today' => 0,
+            'boosts_reset_date' => now()->toDateString(),
+        ])->save();
     }
+
+    return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
+}
 }

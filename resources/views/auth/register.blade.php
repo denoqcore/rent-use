@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="min-h-[calc(102vh-72px)] pt-30 lg:pt-0 flex items-center justify-center px-6 py-12"
+    <div class="min-h-[calc(102vh-72px)] pt-30 lg:pt-25 flex items-center justify-center px-6 py-12"
         style="background-color: var(--background)">
 
         <div class="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
@@ -62,7 +62,6 @@
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-(--text-muted)">
                             {{ __('messages.register-phone') }}
-                            <span class="opacity-40 font-normal ml-1">{{ __('messages.register-phone-optional') }}</span>
                         </label>
                         <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="+373 xxx xxx"
                             class="px-4 py-3 rounded-sm text-sm text-(--text-primary) placeholder:text-(--text-muted)
