@@ -92,6 +92,8 @@ return [
     'prof-notickets' => 'Тикетов пока нет',
     'prof-create-ticket' => 'Создать тикет',
 
+    'send-message' => 'Сообщение',
+
     'email' => 'Email',
     'password' => 'Пароль',
 

@@ -93,6 +93,7 @@ return [
     'prof-support' => 'Support',
     'prof-notickets' => 'No support tickets yet',
     'prof-create-ticket' => 'Create ticket',
+    'send-message' => 'Message',
 
     'email' => 'Email',
     'password' => 'Password',
