@@ -26,9 +26,7 @@
 
                 <div>
                     <h1
-                        class="text-[40px] md:text-[60px] lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px]
-                    text-(--text-primary) max-w-xl mb-5">
-
+                        class="text-[40px] md:text-[60px] lg:text-[56px] font-black leading-[1.05] tracking-[-1.5px] text-(--text-primary) max-w-xl mb-5 text-balance">
                         {{ __('messages.rent-hero') }}
 
                         <span class="relative inline-block">
@@ -45,7 +43,7 @@
                         {{ __('messages.browse') }}
                     </a>
                 </div>
-
+                ц
                 <div class="hidden lg:block w-full max-w-xl">
                     <form method="GET" action="{{ route('search') }}"
                         class="flex items-center gap-0 rounded-md border border-(--background-3)
@@ -186,18 +184,7 @@
                                     @endif
                                 </a>
 
-                                @if (
-                                    $listing->is_boosted &&
-                                        $listing->boosted_until?->isFuture() &&
-                                        in_array($listing->user->plan, ['pro', 'premium']) &&
-                                        $listing->user->isActivePlan())
-                                    <div class="absolute top-3.75 left-3">
-                                        <span
-                                            class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">
-                                            <x-heroicon-s-star class="w-4 h-4" />
-                                        </span>
-                                    </div>
-                                @endif
+                                <x-listing-star :listing="$listing" />
 
                                 <div class="absolute top-2 right-2">
                                     @if ($isFavorited)

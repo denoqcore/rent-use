@@ -3,7 +3,7 @@
 return [
 
     // Header + home + hero
-    'portfolio_disclaimer' => 'Этот сайт является вымышленным проектом для портфолио и не представляет настоящую платформу аренды.',
+    'portfolio_disclaimer' => 'Сайт является вымышленным проектом для портфолио и не представляет настоящую платформу.',
     'welcome' => 'Добро пожаловать',
     'home' => 'Главная',
     'browse' => 'Обзор',
@@ -155,7 +155,7 @@ return [
     'register-login-link' => 'Войти',
 
     'register-username' => 'Имя пользователя',
-    'register-phone' => 'Телефон',
+    'register-phone' => 'Номер телефона',
     'register-phone-optional' => 'необязательно',
 
     'register-pass' => 'Пароль',

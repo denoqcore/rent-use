@@ -17,7 +17,7 @@ new class extends Component {}; ?>
                         </span>
                     </a>
                 </div>
-                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-lg">
+                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-xl">
                     {{ __('messages.portfolio_disclaimer') }}
                 </p>
                 <a href="https://github.com/markwellq" target="_blank"

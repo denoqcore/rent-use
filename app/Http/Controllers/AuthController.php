@@ -34,8 +34,8 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ])->onlyInput('email');
+            'email' => __('errors.invalid-credentials'),
+        ]);
     }
 
     public function showRegister()
