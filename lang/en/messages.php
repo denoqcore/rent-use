@@ -93,6 +93,7 @@ return [
     'prof-support' => 'Support',
     'prof-notickets' => 'No support tickets yet',
     'prof-create-ticket' => 'Create ticket',
+    'send-message' => 'Message',
 
     'email' => 'Email',
     'password' => 'Password',
@@ -100,7 +101,6 @@ return [
     // listing show blade
 
     'document_req' => 'Document required',
-    'description' => 'Description',
     'details' => 'Details',
     'city' => 'City',
     'category' => 'Category',
@@ -170,7 +170,7 @@ return [
     'register-login-link' => 'Sign in',
 
     'register-username' => 'Username',
-    'register-phone' => 'Telephone',
+    'register-phone' => 'Phone',
     'register-phone-optional' => 'optional',
 
     'register-pass' => 'Password',
@@ -213,7 +213,6 @@ return [
 
     'title' => 'Title',
     'description' => 'Description',
-    'city' => 'City',
     'not_found' => 'City not found',
 
 
@@ -224,7 +223,6 @@ return [
     'both'         => 'Both',
     'price_per_day' => 'Price / day',
     'price_per_hour' => 'Price / hour',
-    'deposit' => 'Deposit',
 
     'optional' => 'optional',
 
@@ -247,7 +245,6 @@ return [
     //browse page
     'filters'            => 'Filters',
     'results'            => 'results',
-    'category'           => 'Category',
     'all'                => 'All',
     'all-cities'         => 'All cities',
     'price'              => 'Price',
@@ -262,4 +259,16 @@ return [
     'apply'              => 'Apply',
     'reset'              => 'Reset',
     'no-results'         => 'No listings found',
+
+
+    // Errors
+    'log-error' => 'Invalid email or password.',
+    'reg-error-email' => '',
+    'reg-error-username' => '',
+    'reg-error-phone' => '',
+    // 'reg-error-email' => '',
+
 ];
+
+
+

@@ -94,6 +94,8 @@ return [
     'prof-notickets' => 'Nu ai încă tichete',
     'prof-create-ticket' => 'Creează tichet',
 
+    'send-message' => 'Mesaj',
+
     'email' => 'Email',
     'password' => 'Parolă',
 

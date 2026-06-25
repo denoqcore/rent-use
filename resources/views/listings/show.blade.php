@@ -250,14 +250,19 @@
             {{-- RIGHT SIDEBAR --}}
             <div class="lg:w-95 shrink-0">
                 <div class="sticky top-24">
-                    <div class="rounded-2xl p-6"
+                    <div class="relative rounded-2xl p-6"
                         style="border: 1px solid var(--background-3); background: var(--background);">
 
-                        @if (
-                            $listing->is_boosted &&
-                                $listing->boosted_until?->isFuture() &&
-                                in_array($listing->user->plan, ['pro', 'premium', 'vip']) &&
-                                $listing->user->isActivePlan())
+                        @php
+                            $user = $listing->user;
+                            $showStar =
+                                $user->isActivePlan() &&
+                                ($user->plan === 'premium' ||
+                                    ($user->plan === 'pro' &&
+                                        $listing->is_boosted &&
+                                        $listing->boosted_until?->isFuture()));
+                        @endphp
+                        @if ($showStar)
                             <div class="absolute top-3 right-3">
                                 <span
                                     class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-sm bg-(--bg-star) text-(--star-color)">

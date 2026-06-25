@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="min-h-[calc(102vh-72px)] pt-30 lg:pt-0 flex items-center justify-center px-6 py-12"
+    <div class="min-h-[calc(102vh-72px)] pt-30 lg:pt-25 flex items-center justify-center px-6 py-12"
         style="background-color: var(--background)">
 
         <div class="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
@@ -21,19 +21,21 @@
                 </div>
 
                 <div class="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5">
-                    <span class="mt-0.5 shrink-0">
-                        <x-heroicon-o-exclamation-triangle class="h-4 w-4 text-red-700" />
-                    </span>
+                    <x-heroicon-o-information-circle class="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                     <p class="text-sm leading-relaxed text-red-700">
                         {!! __('messages.register-disclaimer') !!}
                     </p>
                 </div>
 
                 @if ($errors->any())
-                    <div class="mb-6 p-4 rounded-sm border border-red-500/30 bg-red-500/10 mt-1">
-                        @foreach ($errors->all() as $error)
-                            <p class="text-sm text-red-300">{{ $error }}</p>
-                        @endforeach
+                    <div
+                        class="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 mt-2">
+                        <x-heroicon-o-exclamation-triangle class="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                        <ul class="flex flex-col gap-0.5">
+                            @foreach ($errors->all() as $error)
+                                <li class="text-sm text-red-700/80 list-disc">{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
@@ -62,7 +64,6 @@
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-(--text-muted)">
                             {{ __('messages.register-phone') }}
-                            <span class="opacity-40 font-normal ml-1">{{ __('messages.register-phone-optional') }}</span>
                         </label>
                         <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="+373 xxx xxx"
                             class="px-4 py-3 rounded-sm text-sm text-(--text-primary) placeholder:text-(--text-muted)

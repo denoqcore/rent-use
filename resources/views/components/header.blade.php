@@ -17,7 +17,7 @@ new class extends Component {}; ?>
                         </span>
                     </a>
                 </div>
-                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-lg">
+                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-xl">
                     {{ __('messages.portfolio_disclaimer') }}
                 </p>
                 <a href="https://github.com/markwellq" target="_blank"
@@ -126,9 +126,27 @@ new class extends Component {}; ?>
                                 class="absolute -top-1.5 right-4 w-3 h-3 bg-(--background-2) border-l border-t border-(--background-3) rotate-45">
                             </div>
 
-                            <div class="p-3 border-b border-(--background-3)">
-                                <p class="text-xs font-semibold text-(--text-primary)">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-(--text-muted) truncate">{{ Auth::user()->email }}</p>
+                            <div class="relative p-3 border-b border-(--background-3)">
+                                <p class="text-xs font-semibold text-(--text-primary) truncate pr-16">
+                                    {{ Auth::user()->name }}</p>
+                                <p class="text-xs text-(--text-muted) truncate pr-16">{{ Auth::user()->email }}</p>
+
+                                @if (Auth::user()->plan === 'premium')
+                                    <span
+                                        class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                                        PREMIUM
+                                    </span>
+                                @elseif (Auth::user()->plan === 'pro')
+                                    <span
+                                        class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                                        PRO
+                                    </span>
+                                @else
+                                    <span
+                                        class="absolute top-3 right-3 inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">
+                                        STARTER
+                                    </span>
+                                @endif
                             </div>
 
                             <div class="p-1.5 flex flex-col gap-0.5">

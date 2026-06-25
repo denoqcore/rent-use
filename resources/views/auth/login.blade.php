@@ -18,20 +18,24 @@
                     </p>
                 </div>
 
-                <div class="flex items-start mb-10 gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5">
-                    <span class="mt-0.5 shrink-0">
-                        <x-heroicon-o-exclamation-triangle class="h-4 w-4 text-red-700" />
-                    </span>
+                {{-- Disclaimer --}}
+                <div class="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 mb-4">
+                    <x-heroicon-o-information-circle class="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                     <p class="text-sm leading-relaxed text-red-700">
                         {!! __('messages.register-disclaimer') !!}
                     </p>
                 </div>
 
+                {{-- Validation errors --}}
                 @if ($errors->any())
-                    <div class="mb-6 p-4 rounded-sm border border-red-400/20 bg-red-400/5">
-                        @foreach ($errors->all() as $error)
-                            <p class="text-sm text-red-400">{{ $error }}</p>
-                        @endforeach
+                    <div
+                        class="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 mb-6">
+                        <x-heroicon-o-exclamation-triangle class="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                        <ul class="flex flex-col gap-0.5">
+                            @foreach ($errors->all() as $error)
+                                <li class="text-sm text-red-700/80 list-disc">{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 

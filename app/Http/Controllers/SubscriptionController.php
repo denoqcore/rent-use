@@ -121,10 +121,10 @@ class SubscriptionController extends Controller
         ]);
 
         $user = auth()->user();
-        $user->update([
+        $user->forceFill([
             'plan'            => $payment->plan,
             'plan_expires_at' => $expiresAt,
-        ]);
+        ])->save();
 
         return redirect()->route('subscription.index')
             ->with('success', 'Subscription successfully activated.');
@@ -173,10 +173,10 @@ public function webhook(Request $request)
             'expires_at' => $expiresAt,
     ]);
 
-        $user->update([
+        $user->forceFill([
             'plan' => $metadata->plan,
             'plan_expires_at' => $expiresAt,
-        ]);
+        ])->save();
 
         \Log::info('SUBSCRIPTION ACTIVATED', [
             'user_id' => $user->id,
@@ -195,10 +195,10 @@ public function cancel(Request $request)
             return back()->with('error', "You don't have an active subscription.");
         }
 
-        $user->update([
+        $user->forceFill([
             'plan'            => 'starter',
             'plan_expires_at' => null,
-        ]);
+        ])->save();
 
         return redirect()->route('profile')
             ->withFragment('subscription')

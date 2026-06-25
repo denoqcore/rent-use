@@ -26,6 +26,7 @@ class ListingController extends Controller
     public function index()
     {
         $listings = Listing::query()
+        ->with(['images', 'category.parent', 'city', 'user'])
         ->where('status', 'active')
         ->orderByRaw("
             CASE

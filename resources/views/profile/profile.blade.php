@@ -3,7 +3,7 @@
 @section('title', 'rent.use | ' . $user->name)
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] w-full pt-40 py-12 bg-(--background)" x-data="{
+    <section class="min-h-[calc(100vh-72px)] w-full pt-20 lg:pt-40 py-12 bg-(--background)" x-data="{
         tab: {
             '#listings': 'listings',
             '#bookings': 'bookings',
@@ -80,7 +80,7 @@
                                 x-data="{ preview: null }" class="relative shrink-0">
                                 @csrf
                                 <label
-                                    class="w-14 h-14 rounded-sm bg-(--background-3) flex items-center justify-center cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden">
+                                    class="w-16 h-16 rounded-sm bg-(--background-3) flex items-center justify-center cursor-pointer hover:shadow-lg transition-all relative group overflow-hidden">
                                     <template x-if="preview">
                                         <img :src="preview" class="w-full h-full object-cover absolute inset-0">
                                     </template>
@@ -99,15 +99,37 @@
                                     </div>
                                     <input type="file" name="avatar" accept="image/*" class="hidden"
                                         @change="
-                                        preview = URL.createObjectURL($event.target.files[0]);
-                                        $nextTick(() => $el.closest('form').submit());
-                                    ">
+                preview = URL.createObjectURL($event.target.files[0]);
+                $nextTick(() => $el.closest('form').submit());
+            ">
                                 </label>
                             </form>
-                            <div>
-                                <p class="text-sm font-black text-(--text-primary)">{{ $user->name }}</p>
-                                <p class="text-xs text-(--text-muted)">{{ __('messages.prof-member-since') }}
-                                    {{ $user->created_at->format('M Y') }}</p>
+
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-3">
+                                    <p class="text-sm font-black text-(--text-primary)">{{ $user->name }}</p>
+
+                                    @if (Auth::user()->plan === 'premium')
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                                            PREMIUM
+                                        </span>
+                                    @elseif (Auth::user()->plan === 'pro')
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                                            PRO
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">
+                                            STARTER
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <p class="text-xs text-(--text-muted)">
+                                    {{ __('messages.prof-member-since') }} {{ $user->created_at->format('M Y') }}
+                                </p>
                             </div>
                         </div>
 
@@ -759,24 +781,6 @@
                                         <div class="flex items-center gap-3">
                                             <span class="text-(--text-primary) font-semibold">{{ $payment->amount }}
                                                 {{ $payment->currency }}</span>
-                                            @php
-                                                $statusClass = match ($listing->status) {
-                                                    'active' => 'bg-green-500/10 text-green-500',
-                                                    'paused' => 'bg-yellow-500/10 text-yellow-500',
-                                                    'archived' => 'bg-(--background-3) text-(--text-muted)',
-                                                    default => 'bg-(--background-3) text-(--text-muted)',
-                                                };
-                                            @endphp
-                                            <span
-                                                class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md font-medium mr-1 {{ $statusClass }}">
-                                                @if ($listing->status === 'paused' && $listing->paused_reason === 'plan_limit')
-                                                    Paused — plan limit
-                                                @else
-                                                    {{ $listing->status }}
-                                                @endif
-                                            </span>
-                                            <span
-                                                class="px-2 py-0.5 rounded-sm border {{ $statusClass }}">{{ $payment->status }}</span>
                                         </div>
                                     </div>
                                 @endforeach
