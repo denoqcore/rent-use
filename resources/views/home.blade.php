@@ -43,7 +43,6 @@
                         {{ __('messages.browse') }}
                     </a>
                 </div>
-                ц
                 <div class="hidden lg:block w-full max-w-xl">
                     <form method="GET" action="{{ route('search') }}"
                         class="flex items-center gap-0 rounded-md border border-(--background-3)

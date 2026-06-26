@@ -42,6 +42,7 @@
     <livewire:footer />
     @livewireScripts
     @stack('scripts')
+    <x-toast />
 </body>
 
 </html>

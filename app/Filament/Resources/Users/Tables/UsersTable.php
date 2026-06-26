@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 
 class UsersTable
 {
@@ -24,36 +25,39 @@ class UsersTable
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
-                TextColumn::make('avatar')
-                    ->searchable(),
+                TextColumn::make('plan')
+                    ->label('Plan')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'premium' => 'success',
+                        'pro'     => 'info',
+                        'starter' => 'gray',
+                        default   => 'gray',
+                    })
+                    ->sortable(),
+                TextColumn::make('plan_expires_at')
+                    ->label('Plan expires')
+                    ->dateTime('d.m.Y')
+                    ->placeholder('—')
+                    ->sortable(),
                 TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                IconColumn::make('is_online')
-                    ->boolean(),
-                TextColumn::make('last_seen_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('response_count')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('message_count')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('avg_response_minutes')
-                    ->numeric()
+                    ->label('Verified')
+                    ->dateTime('d.m.Y')
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Registered')
+                    ->dateTime('d.m.Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('plan')
+                    ->label('Plan')
+                    ->options([
+                        'starter' => 'Starter',
+                        'pro'     => 'Pro',
+                        'premium' => 'Premium',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

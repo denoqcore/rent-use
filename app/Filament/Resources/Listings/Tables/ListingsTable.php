@@ -13,6 +13,10 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ForceDeleteAction;
 
 class ListingsTable
 {
@@ -69,12 +73,23 @@ class ListingsTable
                     ->label('Delivery')
                     ->boolean(),
 
+                IconColumn::make('is_boosted')
+                    ->label('Boost')
+                    ->boolean()
+                    ->sortable(),
+
+                TextColumn::make('boosted_until')
+                    ->label('Boost until')
+                    ->dateTime('d.m.Y H:i')
+                    ->placeholder('—')
+                    ->sortable(),
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime('d.m.Y')
                     ->sortable(),
             ])
-            ->filters([
+                ->filters([
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
@@ -82,6 +97,10 @@ class ListingsTable
                         'paused'   => 'Pause',
                         'archived' => 'Archived',
                     ]),
+
+                Filter::make('boosted_active')
+                    ->label('Currently boosted')
+                    ->query(fn ($query) => $query->where('is_boosted', true)->where('boosted_until', '>', now())),
             ])
             ->recordActions([
                 ViewAction::make()->label(''),
@@ -121,15 +140,14 @@ class ListingsTable
                     ->visible(fn ($record) => $record->status === 'archived')
                     ->action(fn ($record) => $record->update(['status' => 'active'])),
 
-                Action::make('delete')
+                Action::make('delete'),
+                RestoreAction::make(),
+                ForceDeleteAction::make()
                     ->label('')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->tooltip('Delete')
-                    ->action(fn ($record) => [
-                        $record->update(['status' => 'archived']),
-                        $record->delete()
-                    ])
+                    ->action(fn ($record) => $record->delete())
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
