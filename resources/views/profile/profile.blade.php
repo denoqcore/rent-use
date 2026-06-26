@@ -55,12 +55,6 @@
             </aside>
 
             <div class="flex-1 min-w-0 w-full">
-                @if (session('success_info') || session('success_password') || session('success'))
-                    <div
-                        class="mb-4 px-4 py-3 rounded-sm text-sm text-green-500 bg-green-500/10 border border-green-500/20">
-                        {{ session('success_info') ?? (session('success_password') ?? session('success')) }}
-                    </div>
-                @endif
                 <div x-show="tab === 'profile'" x-cloak x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
@@ -639,11 +633,6 @@
                 </div>
 
                 <div x-show="tab === 'subscription'" x-cloak>
-                    @if (session('error'))
-                        <div class="mb-4 px-4 py-3 rounded-sm text-sm text-red-400 bg-red-400/10 border border-red-400/20">
-                            {{ session('error') }}
-                        </div>
-                    @endif
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Current plan
                         </h2>

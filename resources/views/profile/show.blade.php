@@ -292,12 +292,6 @@
                                 @endif
                             @endauth
                         </div>
-                        @if (session('success'))
-                            <div
-                                class="mb-4 text-xs px-3 py-2 rounded-sm bg-green-500/10 text-green-500 border border-green-500/20">
-                                {{ session('success') }}
-                            </div>
-                        @endif
                         <div class="flex flex-col sm:flex-row gap-8">
                             <div class="flex flex-col items-start gap-1 shrink-0">
                                 <p class="text-4xl font-black text-(--text-primary)">
