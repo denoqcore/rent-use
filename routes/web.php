@@ -49,13 +49,13 @@ Route::middleware('auth')->prefix('subscription')->group(function () {
 //     ]);
 
 Route::middleware('auth')->group(function(){
-    Route::get('/profile',[ProfileController::class,'show'])->name('profile');
-    Route::post('/profile/info',[ProfileController::class,'updateInfo'])->name('profile.info');
-    Route::post('/profile/avatar',[ProfileController::class,'updateAvatar'])->name('profile.avatar');
-    Route::post('/profile/password',[ProfileController::class,'updatePassword'])->name('profile.password');
-    Route::post('/listings/{listing}/boost', [BoostController::class, 'boost'])->name('listings.boost');
+Route::get('/profile',[ProfileController::class,'show'])->name('profile');
+Route::post('/profile/info',[ProfileController::class,'updateInfo'])->name('profile.info');
+Route::post('/profile/avatar',[ProfileController::class,'updateAvatar'])->name('profile.avatar');
+Route::post('/profile/password',[ProfileController::class,'updatePassword'])->name('profile.password');
+Route::post('/listings/{listing}/boost', [BoostController::class, 'boost'])->name('listings.boost');
 
-    Route::prefix('listings')->group(function(){
+Route::prefix('listings')->group(function(){
         Route::get('/create',[ListingController::class,'create'])->name('listings.create');
         Route::post('/',[ListingController::class,'store'])->middleware('throttle:10,1')->name('listings.store');
         Route::get('/{listing:slug}/edit',[ListingController::class,'edit'])->name('listings.edit');
@@ -79,11 +79,15 @@ Route::patch('/bookings/{booking}/confirm',[BookingController::class,'confirm'])
 Route::patch('/bookings/{booking}/cancel',[BookingController::class,'cancel'])->name('bookings.cancel');
 Route::delete('/bookings/{booking}',[BookingController::class,'destroy']);
 
-Route::get('/chats',[ChatController::class,'index']);
-Route::get('/chats/{chat}',[ChatController::class,'show']);
-Route::get('/chat/{listing}',[ChatController::class,'openOrCreate']);
-Route::post('/chat/{chat}/send',[ChatController::class,'send'])->middleware('throttle:30,1');
-Route::post('/user/{user}/message',[ChatController::class,'openOrCreateByUser'])->name('chat.user');
+Route::get('/chats', [ChatController::class, 'index']);
+Route::get('/chats/{chat}', [ChatController::class, 'show']);
+Route::post('/chats/{chat}/read', [ChatController::class, 'markRead']);
+Route::post('/chat/listing/{listing}', [ChatController::class, 'openOrCreate']);
+Route::post('/chat/user/{user}', [ChatController::class, 'openOrCreate']);
+Route::post('/chat/{chat}/send', [ChatController::class, 'send'])->middleware('throttle:30,1');
+Route::patch('/chat/message/{message}', [ChatController::class, 'edit']);
+Route::delete('/chat/message/{message}', [ChatController::class, 'destroy']);
+// Route::post('/user/{user}/message',[ChatController::class,'openOrCreateByUser'])->name('chat.user');
 
 Route::get('/api/bookings/pending-count',[BookingController::class,'pendingCount']);
 Route::get('/api/bookings',[BookingController::class,'apiIndex']);

@@ -2,60 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageDeleted;
+use App\Events\MessageEdited;
+use App\Events\MessageRead;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\ChatMessage;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Listing;
+use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
     use AuthorizesRequests;
 
-    public function openOrCreate(Listing $listing)
+     public function openOrCreate(Request $request, ?Listing $listing = null, ?User $user = null)
     {
-        $chat = Chat::firstOrCreate(
-            [
-                'listing_id' => $listing->id,
-                'renter_id'  => auth()->id(),
-            ],
-            [
-                'owner_id' => $listing->user_id,
-            ]
-        );
+        $otherUserId = $listing ? $listing->user_id : $user->id;
 
-        $messages = $chat->messages()->with('sender')->get();
+        if ($otherUserId === auth()->id()) {
+            return response()->json(['error' => 'Cannot chat with yourself'], 422);
+        }
 
-        return response()->json([
-            'chat'     => $chat,
-            'messages' => $messages->map(fn($m) => [
-                'id'        => $m->id,
-                'body'      => $m->body,
-                'sender_id' => $m->sender_id,
-                'created_at'=> $m->created_at->format('H:i'),
-                'sender'    => [
-                    'id'     => $m->sender->id,
-                    'name'   => $m->sender->name,
-                    'avatar' => $m->sender->avatar,
-                ],
-            ]),
-        ]);
+        $chat = Chat::findOrCreateBetween(auth()->id(), $otherUserId);
+
+        return response()->json(['chat' => ['id' => $chat->id]]);
     }
 
     public function send(Request $request, Chat $chat)
     {
         $this->authorize('participate', $chat);
 
-        $request->validate(['body' => 'required|string|max:2000']);
-
-        $message = $chat->messages()->create([
-            'sender_id' => auth()->id(),
-            'body'      => $request->body,
+        $request->validate([
+            'body'       => 'required|string|max:2000',
+            'listing_id' => 'nullable|exists:listings,id',
         ]);
 
-        $message->load('sender');
+        $message = $chat->messages()->create([
+            'sender_id'  => auth()->id(),
+            'body'       => $request->body,
+            'listing_id' => $request->listing_id ?? null,
+        ]);
 
+        $message->load('sender', 'listing');
         $chat->update(['last_message_at' => now()]);
 
         broadcast(new MessageSent($message));
@@ -63,24 +53,93 @@ class ChatController extends Controller
         return response()->json(['ok' => true]);
     }
 
-public function index()
-{
-    $chats = Chat::where('owner_id', auth()->id())
-        ->orWhere('renter_id', auth()->id())
-        ->with(['listing', 'owner', 'renter', 'lastMessage'])
-        ->orderByDesc('last_message_at')
-        ->get();
+    public function edit(Request $request, ChatMessage $message)
+    {
+        if ($message->sender_id !== auth()->id()) {
+            abort(403);
+        }
 
-    return response()->json($chats->map(function ($chat) {
+        $request->validate(['body' => 'required|string|max:2000']);
+
+        $message->update([
+            'body'      => $request->body,
+            'edited_at' => now(),
+        ]);
+
+        broadcast(new MessageEdited($message));
+
+        return response()->json(['ok' => true]);
+    }
+
+    public function destroy(ChatMessage $message)
+    {
+        if ($message->sender_id !== auth()->id()) {
+            abort(403);
+        }
+
+        broadcast(new MessageDeleted($message));
+        $message->delete();
+
+        return response()->json(['ok' => true]);
+    }
+
+    public function markRead(Chat $chat)
+    {
+        $this->authorize('participate', $chat);
+
+        $chat->messages()
+            ->whereNull('read_at')
+            ->where('sender_id', '!=', auth()->id())
+            ->update(['read_at' => now()]);
+
+        broadcast(new MessageRead($chat->id, auth()->id()));
+
+        return response()->json(['ok' => true]);
+    }
+
+    public function index()
+    {
+        $chats = Chat::where('owner_id', auth()->id())
+            ->orWhere('renter_id', auth()->id())
+            ->with(['owner', 'renter', 'lastMessage'])
+            ->orderByDesc('last_message_at')
+            ->get();
+
+        return response()->json($chats->map(fn($chat) => $this->formatChat($chat)));
+    }
+
+    public function show(Chat $chat)
+    {
+        $this->authorize('participate', $chat);
+
+        $chat->messages()
+            ->whereNull('read_at')
+            ->where('sender_id', '!=', auth()->id())
+            ->update(['read_at' => now()]);
+
+        broadcast(new MessageRead($chat->id, auth()->id()));
+
+        $chat->load(['owner', 'renter', 'messages.sender', 'messages.listing']);
         $other = $chat->otherUser();
 
-        return [
-            'id'      => $chat->id,
-            'listing' => [
-                'id'    => $chat->listing->id,
-                'title' => $chat->listing->title,
-                'image' => $chat->listing->images()->first()?->path,
+        return response()->json([
+            'chat' => [
+                'id'         => $chat->id,
+                'other_user' => [
+                    'id'     => $other->id,
+                    'name'   => $other->name,
+                    'avatar' => $other->avatar,
+                ],
             ],
+            'messages' => $chat->messages->map(fn($m) => $this->formatMessage($m)),
+        ]);
+    }
+
+    private function formatChat(Chat $chat): array
+    {
+        $other = $chat->otherUser();
+        return [
+            'id'         => $chat->id,
             'other_user' => [
                 'id'     => $other->id,
                 'name'   => $other->name,
@@ -96,45 +155,28 @@ public function index()
                 ->where('sender_id', '!=', auth()->id())
                 ->count(),
         ];
-    }));
-}
+    }
 
-public function show(Chat $chat)
-{
-    $this->authorize('participate', $chat);
-
-    $chat->messages()
-        ->whereNull('read_at')
-        ->where('sender_id', '!=', auth()->id())
-        ->update(['read_at' => now()]);
-
-    $chat->load(['owner', 'renter', 'listing', 'messages.sender']);
-
-    $other = $chat->otherUser();
-
-    return response()->json([
-        'chat' => [
-            'id'         => $chat->id,
-            'other_user' => [
-                'id'     => $other->id,
-                'name'   => $other->name,
-                'avatar' => $other->avatar,
-            ],
-            'listing' => [
-                'title' => $chat->listing->title,
-            ],
-        ],
-        'messages' => $chat->messages->map(fn($m) => [
+    private function formatMessage(ChatMessage $m): array
+    {
+        return [
             'id'         => $m->id,
             'body'       => $m->body,
             'sender_id'  => $m->sender_id,
             'created_at' => $m->created_at->format('H:i'),
+            'edited_at'  => $m->edited_at?->format('H:i'),
             'is_mine'    => $m->sender_id === auth()->id(),
-            'sender'     => [
+            'read_at'    => $m->read_at,
+            'listing'    => $m->listing ? [
+                'id'    => $m->listing->id,
+                'title' => $m->listing->title,
+                'slug'  => $m->listing->slug,
+            ] : null,
+            'sender' => [
                 'name'   => $m->sender->name,
                 'avatar' => $m->sender->avatar,
             ],
-        ]),
-    ]);
-}
+        ];
+    }
+
 }

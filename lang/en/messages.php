@@ -100,6 +100,33 @@ return [
 
     // listing show blade
 
+    'login-show-phone' => 'Log in to view phone number',
+    'edit-listing' => 'Edit listing',
+    'boost-availb' => 'Available in',
+    'show-phone' => 'Show phone number',
+    'login-request-book' => 'Log in to book',
+    'book-now' => 'Book now',
+    'request-book' => 'Request to book',
+    'refund' => 'The deposit will be refunded',
+    'select-date' => 'Select dates',
+    'add-date' => 'Add dates',
+    'add-from' => 'From',
+    'add-to' => 'To',
+    'date' => 'Date',
+    'total' => 'Total',
+    'login-send' => 'Log in to send a message',
+    'message-sent' => 'Send',
+    'message' => 'Your message...',
+    'scroll-text' => 'Scroll up to book',
+    'no-reviews' => 'No reviews yet',
+    'text-day' => '/ day',
+    'text-hour' => '/ hour',
+    'text-or' => 'or',
+    'per-day' => 'Per day',
+    'per-hour' => 'Per hour',
+    'message-sended' => 'Message sent',
+
+
     'document_req' => 'Document required',
     'details' => 'Details',
     'city' => 'City',

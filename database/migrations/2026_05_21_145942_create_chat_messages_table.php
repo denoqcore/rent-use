@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('chat_id')->constrained()->cascadeOnDelete();
             $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('listing_id')->nullable()->constrained()->nullOnDelete();
             $table->text('body');
             $table->timestamp('read_at')->nullable();
+            $table->timestamp('edited_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
-        });
+    });
     }
 
     /**

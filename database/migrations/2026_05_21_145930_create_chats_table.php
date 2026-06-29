@@ -12,15 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chats', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('renter_id')->constrained('users')->cascadeOnDelete();
-            $table->timestamp('last_message_at')->nullable();
-            $table->timestamps();
+        $table->id();
+        $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+        $table->foreignId('renter_id')->constrained('users')->cascadeOnDelete();
+        $table->timestamp('last_message_at')->nullable();
+        $table->timestamps();
 
-            $table->unique(['listing_id', 'renter_id']);
-        });
+        $table->unique(['owner_id', 'renter_id']);
+    });
     }
 
     /**

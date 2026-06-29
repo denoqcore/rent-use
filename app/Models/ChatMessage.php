@@ -3,12 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ChatMessage extends Model
 {
-    protected $fillable = ['chat_id', 'sender_id', 'body', 'read_at'];
+    use SoftDeletes;
 
-    protected $casts = ['read_at' => 'datetime'];
+    protected $fillable = ['chat_id', 'sender_id', 'listing_id', 'body', 'read_at', 'edited_at'];
+
+    protected $casts = [
+        'read_at'   => 'datetime',
+        'edited_at' => 'datetime',
+    ];
 
     public function sender()
     {
@@ -20,8 +26,8 @@ class ChatMessage extends Model
         return $this->belongsTo(Chat::class);
     }
 
-    public function isMine(): bool
+    public function listing()
     {
-        return $this->sender_id === auth()->id();
+        return $this->belongsTo(Listing::class);
     }
 }

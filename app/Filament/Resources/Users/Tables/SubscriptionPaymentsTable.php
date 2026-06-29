@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Subscriptions\Tables;
+namespace App\Filament\Resources\SubscriptionPayments\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -10,7 +10,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
-class SubscriptionsTable
+class SubscriptionPaymentsTable
 {
     public static function configure(Table $table): Table
     {
@@ -26,8 +26,6 @@ class SubscriptionsTable
                     ->color(fn (string $state): string => match ($state) {
                         'premium' => 'success',
                         'pro'     => 'info',
-                        'vip'     => 'warning',
-                        'starter' => 'gray',
                         default   => 'gray',
                     })
                     ->sortable(),
@@ -35,43 +33,44 @@ class SubscriptionsTable
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'active'    => 'success',
+                        'paid'      => 'success',
+                        'pending'   => 'warning',
                         'cancelled' => 'danger',
-                        'expired'   => 'gray',
                         default     => 'gray',
                     })
                     ->sortable(),
 
-                TextColumn::make('price')
-                    ->money()
+                TextColumn::make('amount')
+                    ->formatStateUsing(fn ($state, $record) => $state . ' ' . $record->currency)
                     ->sortable(),
 
-                TextColumn::make('starts_at')
-                    ->dateTime('d.m.Y')
-                    ->sortable(),
+                TextColumn::make('payment_id')
+                    ->label('Payment ID')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->copyable(),
 
-                TextColumn::make('ends_at')
-                    ->dateTime('d.m.Y')
+                TextColumn::make('paid_at')
+                    ->dateTime('d.m.Y H:i')
                     ->placeholder('—')
                     ->sortable(),
 
-                TextColumn::make('payment_provider')
-                    ->label('Provider')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('expires_at')
+                    ->dateTime('d.m.Y H:i')
+                    ->placeholder('—')
+                    ->color(fn ($state) => $state && $state->isPast() ? 'danger' : null)
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('plan')
                     ->options([
-                        'starter' => 'Starter',
-                        'vip'     => 'VIP',
                         'pro'     => 'Pro',
                         'premium' => 'Premium',
                     ]),
                 SelectFilter::make('status')
                     ->options([
-                        'active'    => 'Active',
+                        'pending'   => 'Pending',
+                        'paid'      => 'Paid',
                         'cancelled' => 'Cancelled',
-                        'expired'   => 'Expired',
                     ]),
             ])
             ->recordActions([
@@ -83,6 +82,6 @@ class SubscriptionsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('starts_at', 'desc');
+            ->defaultSort('created_at', 'desc');
     }
 }
