@@ -6,14 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    protected $fillable = ['listing_id', 'owner_id', 'renter_id', 'last_message_at'];
+    protected $fillable = ['owner_id', 'renter_id', 'last_message_at'];
 
     protected $casts = ['last_message_at' => 'datetime'];
-
-    public function listing()
-    {
-        return $this->belongsTo(Listing::class);
-    }
 
     public function owner()
     {
@@ -38,5 +33,15 @@ class Chat extends Model
     public function otherUser(): User
     {
         return auth()->id() === $this->owner_id ? $this->renter : $this->owner;
+    }
+
+    public static function findOrCreateBetween(int $userA, int $userB): self
+    {
+        $min = min($userA, $userB);
+        $max = max($userA, $userB);
+
+        return self::firstOrCreate(
+            ['owner_id' => $min, 'renter_id' => $max]
+        );
     }
 }
