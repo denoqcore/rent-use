@@ -827,7 +827,7 @@ new class extends Component {}; ?>
                 x-transition:leave="transform transition ease-in-out duration-300"
                 x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
                 @keydown.escape.window="chatsModal = false"
-                class="relative z-10 w-screen max-w-md flex flex-col h-full shadow-2xl bg-(--background-2) border-l border-(--background-3)">
+                class="relative z-10 w-screen max-w-2xl flex flex-col h-full shadow-2xl bg-(--background-2) border-l border-(--background-3)">
 
                 <div class="flex items-center justify-between px-5 py-4 shrink-0 border-b border-(--background-3)">
                     <div class="flex items-center gap-2">
@@ -932,11 +932,7 @@ new class extends Component {}; ?>
                             </textarea>
                             <button @click="sendChatMessage()"
                                 class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors cursor-pointer bg-(--button) hover:bg-(--button-h)">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    style="color: var(--button-text)">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                </svg>
+                                <x-heroicon-o-paper-airplane class="w-4 h-4 text-(--button-text)" />
                             </button>
                         </div>
                     </div>

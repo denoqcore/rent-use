@@ -99,6 +99,34 @@ return [
     'email' => 'Email',
     'password' => 'Parolă',
 
+    //listing show wblade
+
+    'login-show-phone' => 'Autentificați-vă pentru a vedea numărul de telefon',
+    'edit-listing' => 'Editează anunțul',
+    'boost-availb' => 'Disponibil în',
+    'show-phone' => 'Afișează numărul de telefon',
+    'login-request-book' => 'Autentificați-vă pentru a rezerva',
+    'book-now' => 'Rezervă acum',
+    'request-book' => 'Solicită rezervarea',
+    'refund' => 'Depozitul va fi rambursat',
+    'select-date' => 'Selectează datele',
+    'message-sent' => 'Trimite',
+    'message' => 'Mesajul dumneavoastră...',
+    'add-date' => 'Adaugă datele',
+    'add-from' => 'De la',
+    'add-to' => 'Până la',
+    'date' => 'Data',
+    'total' => 'Total',
+    'login-send' => 'Autentificați-vă pentru a trimite un mesaj',
+    'scroll-text' => 'Derulați în sus pentru a rezerva',
+    'no-reviews' => 'Încă nu există recenzii',
+    'text-day' => '/ zi',
+    'text-hour' => '/ oră',
+    'text-or' => 'sau',
+    'per-day' => 'Pe zi',
+    'per-hour' => 'Pe oră',
+    'message-sended' => 'Mesaj trimis',
+
     // benefits
 
     'benefits' => 'Beneficii',
