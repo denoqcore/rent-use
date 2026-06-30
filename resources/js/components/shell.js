@@ -21,6 +21,8 @@ export default function shellComponent() {
         activeMessages: [],
 
         chatInput: '',
+        editingMessageId: null,
+        editingBody: '',
         unreadTotal: 0,
 
         reviewModal: false,
@@ -156,7 +158,11 @@ async openChat(chatId) {
             }
         })
         .listen('MessageDeleted', (e) => {
-            this.activeMessages = this.activeMessages.filter(m => m.id !== e.id);
+            const msg = this.activeMessages.find(m => m.id === e.id);
+            if (msg) {
+                msg.is_deleted = true;
+                msg.body = null;
+            }
         });
 },
 
@@ -289,6 +295,7 @@ async sendChatMessage() {
 
     this.chatInput = '';
 
+
     const tempId = Date.now();
     this.activeMessages.push({
         id: tempId,
@@ -350,7 +357,11 @@ async deleteMessage(id) {
         method: 'DELETE',
         headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }
     });
-    this.activeMessages = this.activeMessages.filter(m => m.id !== id);
+    const msg = this.activeMessages.find(m => m.id === id);
+    if (msg) {
+        msg.is_deleted = true;
+        msg.body = null;
+    }
 },
 
 

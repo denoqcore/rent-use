@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    //MD
     // Header + home + hero
     'portfolio_disclaimer' => 'Acest website este un proiect fictiv pentru portofoliu și nu reprezintă o platformă reală de închirieri.',
     'welcome' => 'Bun venit',
@@ -42,8 +42,8 @@ return [
 
     'empty-title' => 'Încă nimic aici',
     'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
-    //favorite
 
+    //favorite
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
     'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici.',
 
@@ -64,8 +64,15 @@ return [
     'confirm'            => 'Respinge',
     'decline'            => 'Anulează',
 
-    // profile page
+    // chat
+    'message-deleted' => 'Mesaj șters',
+    'message-save' => 'Salvează',
+    'message-cancel' => 'Anulează',
+    'message-send' => 'Scrie un mesaj...',
+    'message-edited' => '· editat',
+    'message-choose-chat' => 'Selectează un chat',
 
+    // profile page
     'prof-personal-details' => 'Date personale',
     'prof-edit' => 'Editează',
     'prof-member-since'=> 'Membru din',
@@ -99,8 +106,7 @@ return [
     'email' => 'Email',
     'password' => 'Parolă',
 
-    //listing show wblade
-
+    //listing show wblad
     'login-show-phone' => 'Autentificați-vă pentru a vedea numărul de telefon',
     'edit-listing' => 'Editează anunțul',
     'boost-availb' => 'Disponibil în',
@@ -128,7 +134,6 @@ return [
     'message-sended' => 'Mesaj trimis',
 
     // benefits
-
     'benefits' => 'Beneficii',
     'benefits-title' => 'De ce rent.use?',
     'benefits-desc' => 'Economisește bani, scapă de obiectele inutile și accesează tot ce ai nevoie — de la oamenii din jurul tău.',
@@ -143,7 +148,6 @@ return [
     'benefit-3-desc' => 'Închiriază pentru o zi, o săptămână sau mai mult. Stabilește termenii care ți se potrivesc.',
 
     // how it works
-
     'how-it-works' => 'Cum funcționează',
 
     'step-1-title' => 'Găsește un obiect',
@@ -162,7 +166,6 @@ return [
     'post-listing' => 'Adaugă un anunț',
 
     // reviews
-
     'reviews-title' => 'Ce spun oamenii',
 
     'review-1' => 'Am închiriat o cameră foto pentru weekend — proces foarte simplu, stare excelentă!',
@@ -170,14 +173,12 @@ return [
     'review-3' => 'Interfață curată și platformă de încredere. O voi folosi din nou.',
 
     // footer
-
     'all-rights' => 'Toate drepturile rezervate',
     'privacy' => 'Politica de confidențialitate',
     'terms' => 'Termeni și condiții',
     'cookies' => 'Politica de cookie',
 
     // register
-
     'register-disclaimer' => "Vă rugăm să utilizați <span class='text-red-900'>date nereale</span> la înregistrare. Nu furnizați informațiile dvs. personale reale.",
     'register-create' => 'Creează cont',
     'register-login' => 'Ai deja cont?',
@@ -196,7 +197,6 @@ return [
     'register-desc' => 'Creează contul tău și descoperă oportunități de închiriere în jurul tău.',
 
     // login
-
     'login-title' => 'Autentificare',
     'login-subtitle' => 'Nu ai cont?',
     'login-subtitle-link' => 'Înregistrează-te',

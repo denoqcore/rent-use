@@ -87,6 +87,8 @@ Route::post('/chat/user/{user}', [ChatController::class, 'openOrCreate']);
 Route::post('/chat/{chat}/send', [ChatController::class, 'send'])->middleware('throttle:30,1');
 Route::patch('/chat/message/{message}', [ChatController::class, 'edit']);
 Route::delete('/chat/message/{message}', [ChatController::class, 'destroy']);
+Route::post('/chat/listing/{listing}', [ChatController::class, 'openOrCreate']);
+Route::post('/chat/user/{user}',       [ChatController::class, 'openOrCreate']);
 // Route::post('/user/{user}/message',[ChatController::class,'openOrCreateByUser'])->name('chat.user');
 
 Route::get('/api/bookings/pending-count',[BookingController::class,'pendingCount']);

@@ -93,9 +93,9 @@
                                     </div>
                                     <input type="file" name="avatar" accept="image/*" class="hidden"
                                         @change="
-                preview = URL.createObjectURL($event.target.files[0]);
-                $nextTick(() => $el.closest('form').submit());
-            ">
+                                        preview = URL.createObjectURL($event.target.files[0]);
+                                        $nextTick(() => $el.closest('form').submit());
+                                        ">
                                 </label>
                             </form>
 
@@ -136,14 +136,6 @@
                                 <span class="text-xs text-(--text-muted)">{{ __('messages.prof-phone') }}</span>
                                 <span
                                     class="text-sm text-(--text-primary)">{{ $user->phone ? formatPhone($user->phone) : '—' }}</span>
-                            </div>
-                            <div class="flex items-center justify-between py-3">
-                                <span class="text-xs text-(--text-muted)">{{ __('messages.prof-identity') }}</span>
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-xs bg-red-500/10 border border-red-500/20 text-red-400">
-                                    <x-heroicon-o-x-circle class="w-3.5 h-3.5" />
-                                    {{ __('messages.prof-noverifed') }}
-                                </span>
                             </div>
                         </div>
                         <div x-show="editInfo" x-transition>
@@ -194,19 +186,6 @@
                                     class="text-xs px-2 py-0.5 rounded-sm bg-(--background-3)/20 border border-(--background-3)/30 text-(--text-muted)">
                                     {{ __('messages.prof-current') }}
                                 </span>
-                                @if ($user->email_verified_at)
-                                    <span
-                                        class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-green-400/10 border border-green-400/20 text-xs text-green-400">
-                                        <x-heroicon-o-check-circle class="w-3.5 h-3.5" />
-                                        {{ __('messages.prof-verifed') }}
-                                    </span>
-                                @else
-                                    <span
-                                        class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-red-400/10 border border-red-400/20 text-xs text-red-400">
-                                        <x-heroicon-o-x-circle class="w-3.5 h-3.5" />
-                                        {{ __('messages.prof-noverifed') }}
-                                    </span>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -398,7 +377,7 @@
                                                         };
                                                     @endphp
                                                     <span
-                                                        class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md font-medium mr-1 {{ $statusClass }}">
+                                                        class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-sm font-medium mr-1 {{ $statusClass }}">
                                                         {{ $listing->status }}
                                                     </span>
 

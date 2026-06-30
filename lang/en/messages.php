@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    //EN
     // Header + home + hero
     'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform.',
     'welcome' => 'Welcome',
@@ -59,9 +59,15 @@ return [
     'decline'            => 'Decline',
     'cancel'             => 'Cancel',
     'delete'             => 'Delete',
+    // chat
+    'message-choose-chat' => 'Select a chat',
+    'message-deleted' => 'Message deleted',
+    'message-save' => 'Save',
+    'message-cancel' => 'Cancel',
+    'message-edited' => '· edited',
+    'message-send' => 'Type a message...',
 
     //favorite
-
     'no_favorites_title' => 'No saved listings yet',
     'no_favorites_desc'  => 'Tap the heart on any listing to save it here.',
 
@@ -99,7 +105,6 @@ return [
     'password' => 'Password',
 
     // listing show blade
-
     'login-show-phone' => 'Log in to view phone number',
     'edit-listing' => 'Edit listing',
     'boost-availb' => 'Available in',
@@ -140,7 +145,6 @@ return [
     'day' => 'day',
 
     // benefits
-
     'benefits' => 'Benefits',
     'benefits-title' => 'Why rent.use?',
     'benefits-desc' => 'Save money, reduce clutter, and access anything you need — from people around you.',
@@ -155,7 +159,6 @@ return [
     'benefit-3-desc' => 'Rent for a day, a week, or longer. Agree on terms that work for you.',
 
     // how it works
-
     'how-it-works' => 'How it works',
 
     'step-1-title' => 'Find an item',
@@ -168,14 +171,12 @@ return [
     'step-3-desc' => 'Pick it up, use it, return it. Simple as that.',
 
     // CTA
-
     'cta-title' => 'Make money from your unused items with',
     'cta-desc' => 'Turn your clutter into cash. List items in minutes and start earning today.',
     'get-started' => 'Get Started',
     'post-listing' => 'Post a listing',
 
     // reviews
-
     'reviews-title' => 'What people say',
 
     'review-1' => 'Rented a camera for the weekend — super easy process, great condition!',
@@ -183,14 +184,12 @@ return [
     'review-3' => 'Clean interface, trustworthy platform. Will definitely use again.',
 
     // footer
-
     'all-rights' => 'All rights reserved',
     'privacy' => 'Privacy Policy',
     'terms' => 'Terms of Service',
     'cookies' => 'Cookie Policy',
 
     // register
-
     'register-disclaimer' => "Please use <span class='text-red-900'>non-real</span> data when registering. Do not provide your actual personal information.",
     'register-create' => 'Create account',
     'register-login' => 'Already have one?',
@@ -209,7 +208,6 @@ return [
     'register-desc' => 'Create your account and unlock a world of rental opportunities around you.',
 
     // login
-
     'login-title' => 'Login',
     'login-subtitle' => "Don't have an account?",
     'login-subtitle-link' => 'Sign Up',
@@ -225,7 +223,6 @@ return [
     'login-desc' => 'Rent what you need, when you need it. Everything in one place.',
 
     //post listing
-
     'create_listing' => 'Post listing',
     'create_listing_sub' => 'Fill in the details to publish your rental',
     'step_category' => 'Category',
