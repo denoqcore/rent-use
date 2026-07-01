@@ -50,7 +50,7 @@ class ChatController extends Controller
 
         broadcast(new MessageSent($message));
 
-        return response()->json(['ok' => true]);
+        return response()->json(['ok' => true, 'message' => $this->formatMessage($message)]);
     }
 
     public function edit(Request $request, ChatMessage $message)
