@@ -161,11 +161,11 @@
                                     <button type="submit"
                                         class="px-4 py-2 text-sm font-semibold rounded-sm cursor-pointer transition-colors"
                                         style="background: var(--button); color: var(--button-text)">
-                                        Save
+                                        {{ __('messages.message-save') }}
                                     </button>
                                     <button type="button" @click="editInfo = false"
                                         class="px-4 py-2 text-sm rounded-sm cursor-pointer text-(--text-muted) hover:text-(--text-primary) border border-(--background-3)">
-                                        Cancel
+                                        {{ __('messages.message-save') }}
                                     </button>
                                 </div>
                             </form>
@@ -211,7 +211,8 @@
                             <form method="POST" action="{{ route('profile.password') }}" class="flex flex-col gap-4">
                                 @csrf
                                 <div class="flex flex-col gap-1">
-                                    <label class="text-xs text-(--text-muted)">Current password</label>
+                                    <label
+                                        class="text-xs text-(--text-muted)">{{ __('messages.prof-current-password') }}</label>
                                     <input type="password" name="current_password"
                                         class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                     @error('current_password')
@@ -219,7 +220,7 @@
                                     @enderror
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <label class="text-xs text-(--text-muted)">New password</label>
+                                    <label class="text-xs text-(--text-muted)">{{ __('messages.prof-new-pass') }}</label>
                                     <input type="password" name="password"
                                         class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                     @error('password')
@@ -227,7 +228,8 @@
                                     @enderror
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <label class="text-xs text-(--text-muted)">Confirm new password</label>
+                                    <label
+                                        class="text-xs text-(--text-muted)">{{ __('messages.prof-new-pass-confirm') }}</label>
                                     <input type="password" name="password_confirmation"
                                         class="bg-(--background) border border-(--background-3) text-(--text-primary) text-sm px-3 py-2 rounded-sm focus:outline-none focus:border-(--text-muted)">
                                 </div>
@@ -235,11 +237,11 @@
                                     <button type="submit"
                                         class="px-4 py-2 text-sm font-semibold rounded-sm cursor-pointer"
                                         style="background: var(--button); color: var(--button-text)">
-                                        Update password
+                                        {{ __('messages.prof-update-pass') }}
                                     </button>
                                     <button type="button" @click="editPassword = false"
                                         class="px-4 py-2 text-sm rounded-sm cursor-pointer text-(--text-muted) border border-(--background-3)">
-                                        Cancel
+                                        {{ __('messages.message-cancel') }}
                                     </button>
                                 </div>
                             </form>
@@ -349,7 +351,7 @@
                                                                     <button type="submit"
                                                                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs cursor-pointer border border-(--blackwhite) text-(--text-primary) transition-colors">
                                                                         <x-heroicon-o-chevron-double-up class="w-3 h-3" />
-                                                                        Boost
+                                                                        {{ __('messages.prof-boost') }}
                                                                     </button>
                                                                 </form>
                                                             @endif
@@ -450,19 +452,22 @@
                                         <div class="w-12 h-1 bg-(--background-3) rounded-full mx-auto mb-5 sm:hidden">
                                         </div>
 
-                                        <h3 class="text-base font-bold text-(--text-primary) mb-2">Delete this ad?</h3>
+                                        <h3 class="text-base font-bold text-(--text-primary) mb-2">
+                                            {{ __('messages.prof-delete-ad') }}
+                                        </h3>
 
                                         <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
-                                            Are you sure you want to completely delete <span
-                                                class="text-(--text-primary) font-semibold"
-                                                x-text="'«' + deleteTitle + '»'"></span>.
-                                            It will be impossible to restore it.
+                                            {{ __('messages.prof-completly-delete-ad') }}
+                                            <span class="text-(--text-primary) font-semibold"
+                                                x-text="'«' + deleteTitle + '»'">
+                                            </span>.
+                                            {{ __('messages.prof-delete-restore') }}
                                         </p>
 
                                         <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
                                             <button type="button" @click="confirmDelete = false"
                                                 class="w-full sm:w-auto order-2 sm:order-1 px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background) cursor-pointer transition-colors">
-                                                Cancel
+                                                {{ __('messages.message-cancel') }}
                                             </button>
 
                                             <form method="POST" :action="deleteUrl"
@@ -471,7 +476,7 @@
                                                 @method('DELETE')
                                                 <button type="submit"
                                                     class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
-                                                    Delete
+                                                    {{ __('messages.prof-delete-ad') }}
                                                 </button>
                                             </form>
                                         </div>

@@ -23,9 +23,7 @@ public function boost(Request $request, Listing $listing)
         $user->boosts_used_today = ($user->boosts_used_today ?? 0) + 1;
         $user->save();
 
-        return back()->with('success', 'Boosted!');
-    } catch (\Exception $e) {
-        dd($e->getMessage());
-    }
-}
+        return back()->with('success', __('messages.listing-boosted'));
+     }
+  }
 }

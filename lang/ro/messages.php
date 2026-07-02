@@ -70,6 +70,7 @@ return [
     'message-cancel' => 'Anulează',
     'message-send' => 'Scrie un mesaj...',
     'message-edited' => '· editat',
+    'message-edit' => 'Editează mesajul',
     'message-choose-chat' => 'Selectează un chat',
 
     // profile page
@@ -79,6 +80,10 @@ return [
 
     'prof-name'=> 'Nume',
     'prof-phone'=> 'Telefon',
+    'prof-current-pass' => 'Parola actuală',
+    'prof-new-pass' => 'Parolă nouă',
+    'prof-new-pass-confirm' => 'Confirmă noua parolă',
+    'prof-update-pass' => 'Actualizare parolă',
     'prof-identity' => 'Identitate',
 
     'prof-verify' => 'Neverificat',
@@ -94,9 +99,15 @@ return [
     'prof-nolisting' => 'Nu ai încă anunțuri',
     'prof-create-listing' => 'Adaugă anunț',
 
+    'prof-delete' => 'Șterge',
+    'prof-delete-ad' => 'Să ștergi acest anunț?',
+    'prof-completly-delete-ad' => 'Ești sigur că vrei să ștergi definitiv?',
+    'prof-delete-restore' => 'Va fi imposibil să o refacem',
+
     'prof-bookings' => 'Rezervările mele',
     'prof-nobookings' => 'Nu ai încă rezervări',
 
+    'prof-boost' => 'Accelerare',
     'prof-support' => 'Suport',
     'prof-notickets' => 'Nu ai încă tichete',
     'prof-create-ticket' => 'Creează tichet',
@@ -276,4 +287,62 @@ return [
     'apply'              => 'Aplică',
     'reset'              => 'Resetează',
     'no-results'         => 'Nu au fost găsite anunțuri',
+
+    // From controllers
+
+    //Listing Controller
+    'listing-published' => 'Anunț publicat',
+    'listing-updated'  => 'Anunț actualizat',
+    'listing-active'  => 'Anunț activ',
+    'listing-paused' => 'Anunț pus pe pauză',
+    'listing-archived' => 'Anunț arhivat',
+    'listing-restored' => 'Anunț restaurat',
+    'listing-deleted' => 'Anunț șters',
+    'max-active-listings' => 'Ați atins numărul maxim de anunțuri active pentru planul dvs',
+    'plan-limit-reached' => 'Ați atins limita planului. Faceți upgrade sau puneți pe pauză un alt anunț mai întâi',
+    'at-least-one-price-required' => 'AEste necesar cel puțin un preț',
+
+    // Booking Controller
+    'booking-end-time-after-start' => 'Ora de sfârșit trebuie să fie după ora de început',
+    'booking-cannot-book-own-listing' => 'Nu vă puteți rezerva propriul anunț',
+    'booking-dates-already-booked' => 'Aceste date sunt deja rezervate',
+    'booking-request-sent' => 'Cererea de rezervare a fost trimisă',
+    'booking-confirmed' => 'Rezervarea a fost confirmată',
+    'booking-cannot-confirmed' => 'Această rezervare nu poate fi anulată',
+    'booking-cancelled' => 'Rezervarea a fost anulată',
+    'booking-cannot-cancelled' => 'Această rezervare nu poate fi anulată',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Anunț promovat',
+
+    //Profile Controller
+    'profile-updated' => 'Profil actualizat',
+    'profile-avatar-updated' => 'Avatar actualizat',
+    'profile-current-password-incorrenct' => 'Parola curentă este incorectă',
+    'profile-password-updated' => 'Parola a fost actualizată',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'You cannot review yourself',
+    'review-submited' => 'Review submitted',
+    'review-deleted' => 'Review deleted',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'Nu puteți vota propria recenzie',
+
+    //Subscription Controller
+    'subscription-already-active' => 'Aveți deja un abonament activ',
+    'subscription-payment-success' => 'Plata a fost efectuată cu succes! Abonamentul va fi activat în decurs de un minut',
+    'subscription-activated' => 'Abonamentul a fost activat cu succes',
+    'subscription-not-active' => "Nu aveți un abonament activ",
+    'subscription-cancelled' => 'Abonamentul a fost anulat',
+
+    'plan-feature-12-ads' => 'Până la 12 anunțuri',
+    'plan-feature-6-photos' => 'Până la 6 fotografii per anunț',
+    'plan-feature-1-boost' => '1 promovare în top',
+    'plan-feature-priority-search' => 'Prioritate în căutare',
+
+    'plan-feature-20-ads' => 'Până la 20 de anunțuri',
+    'plan-feature-8-photos' => 'Până la 8 fotografii per anunț',
+    'plan-feature-3-boosts' => '3 promovări în top',
+    'plan-feature-highest-priority' => 'Cea mai înaltă prioritate în căutare',
 ];

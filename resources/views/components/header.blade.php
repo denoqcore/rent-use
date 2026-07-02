@@ -17,9 +17,18 @@ new class extends Component {}; ?>
                         </span>
                     </a>
                 </div>
-                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-xl">
-                    {{ __('messages.portfolio_disclaimer') }}
-                </p>
+                <div class="hidden md:flex flex-1 justify-center">
+                    <p
+                        class="flex items-center justify-center gap-3 text-[11px] leading-tight text-(--whiteblack)/45 select-none text-center">
+                        <span class="w-6 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+                        <span class="whitespace-normal">
+                            {{ __('messages.portfolio_disclaimer') }}
+                        </span>
+
+                        <span class="w-6 h-px shrink-0 bg-(--background) animate-pulse"></span>
+                    </p>
+                </div>
                 <a href="https://github.com/markwellq" target="_blank"
                     class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
                     <span class="text-[11px]">by Denis Beccev</span>
@@ -32,7 +41,6 @@ new class extends Component {}; ?>
         <div class="max-w-6xl w-full mx-auto px-3 flex items-center justify-between gap-8" style="height:72px">
             <div class="flex items-center gap-4">
                 <a href="/" class="rounded-xl border-b border-transparent text-(--text-muted) ml-2">
-                    {{-- <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-14 h-8"> --}}
                     <x-heroicon-s-stop-circle class="w-5 h-5" />
                 </a>
                 <a href="/search"
@@ -231,9 +239,11 @@ new class extends Component {}; ?>
     <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between px-4 h-14">
             <a href="/" class="flex items-center gap-1">
-                <span class="text-sm font-black tracking-wide text-(--text-primary)">rent<span
-                        class="text-(--text-muted) font-normal">.use</span></span>
+                <span class="text-sm font-black tracking-wide text-(--text-primary)">
+                    rent<span class="text-(--text-muted) font-normal">.use</span>
+                </span>
             </a>
+
             <form method="GET" action="{{ route('search') }}" class="flex-1 mx-3">
                 <div
                     class="flex items-center gap-2 h-9 px-3 rounded-lg bg-(--background-2) border border-(--background-3)">
@@ -243,6 +253,26 @@ new class extends Component {}; ?>
                     <x-heroicon-o-magnifying-glass class="w-4 h-4 text-(--text-muted) shrink-0" />
                 </div>
             </form>
+        </div>
+
+        <div class="border-t border-(--whiteblack) py-2 px-4">
+            <div
+                class="flex items-center justify-center gap-2 text-[10px] leading-relaxed text-center text-(--whiteblack)/45 select-none">
+
+                <span class="w-5 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+                <div class="flex flex-col items-center text-(--blackwhite) whitespace-normal text-xs">
+                    <span>
+                        {{ __('messages.portfolio_disclaimer') }}
+                    </span>
+                    <span>
+                        {{ __('messages.portfolio_disclaimer_continue') }}
+                    </span>
+                </div>
+
+                <span class="w-5 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+            </div>
         </div>
     </header>
 
@@ -1071,7 +1101,7 @@ new class extends Component {}; ?>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                <span class="text-xs text-(--text-muted) flex-1">('messages.message-deleted')</span>
+                                <span class="text-xs text-(--text-muted) flex-1">{{ __('messages.message-edit') }}</span>
                                 <button @click="cancelEdit()"
                                     class="text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
                                     <x-heroicon-o-x-mark class="w-4 h-4" />

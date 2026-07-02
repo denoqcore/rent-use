@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background) pt-0 md:pt-20">
+    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background) pt-10 md:pt-20">
 
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <div class="absolute top-0 -right-16 w-96 h-96 rounded-full opacity-10 bg-(--button) blur-[80px]"></div>

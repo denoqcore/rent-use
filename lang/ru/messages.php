@@ -50,7 +50,7 @@ return [
     'status_messages'    => 'Пока нет сообщений',
     'status_desc_messages' => 'Напишите владельцу объявления, чтобы начать общение',
     'messages_you'       => 'Вы',
-    'status_pending'     => 'Ожидает',
+    'status_pending'     => 'Ожидание',
     'status_confirmed'   => 'Подтверждено',
     'status_cancelled'   => 'Отменено',
     'status_completed'   => 'Завершено',
@@ -64,6 +64,7 @@ return [
     'message-save' => 'Сохранить',
     'message-cancel' => 'Отмена',
     'message-send' => 'Написать сообщение...',
+    'message-edit' => 'Редактировать сообщение',
     'message-edited' => '· изменено',
 
     //favorite
@@ -77,6 +78,10 @@ return [
 
     'prof-name'=> 'Имя',
     'prof-phone'=> 'Телефон',
+    'prof-current-password' => 'Нынешний пароль',
+    'prof-new-pass' => 'Новый пароль',
+    'prof-new-pass-conform' => 'Потвердите новый пароль',
+    'prof-update-pass' => 'Обновить пароль',
     'prof-identity' => 'Личность',
 
     'prof-verify' => 'Не подтвержден',
@@ -95,6 +100,12 @@ return [
     'prof-bookings' => 'Мои бронирования',
     'prof-nobookings' => 'Бронирований пока нет',
 
+    'prof-delete' => 'Удалить',
+    'prof-delete-ad' => 'Удалить это объявление?',
+    'prof-completly-delete-ad' => 'Вы уверены, что хотите полностью удалить?',
+    'prof-delete-restore' => 'Объявление будет невозможно восстановить',
+
+    'prof-boost' => 'Поднять',
     'prof-support' => 'Поддержка',
     'prof-notickets' => 'Тикетов пока нет',
     'prof-create-ticket' => 'Создать тикет',
@@ -273,4 +284,62 @@ return [
     'apply'              => 'Применить',
     'reset'              => 'Сбросить',
     'no-results'         => 'Объявлений не найдено',
+
+    // From controllers
+
+    //Listing Controller
+    'listing-published' => 'Объявление опубликовано',
+    'listing-updated'  => 'Объявление обновлено',
+    'listing-active'  => 'Объявление активно',
+    'listing-paused' => 'Объявление приостановлено',
+    'listing-archived' => 'Объявление архивировано',
+    'listing-restored' => 'Объявление восстановлено',
+    'listing-deleted' => 'Объявление удалено',
+    'max-active-listings' => 'Вы достигли максимального количества активных объявлений для вашего тарифа',
+    'plan-limit-reached' => 'Вы достигли лимита своего тарифа. Обновите тариф или сначала приостановите другое объявление',
+    'at-least-one-price-required' => 'Требуется указать хотя бы одну цену',
+
+    // Booking Controller
+    'booking-end-time-after-start' => 'Время окончания должно быть позже времени начала.',
+    'booking-cannot-book-own-listing' => 'Нельзя забронировать собственное объявление',
+    'booking-dates-already-booked' => 'Эти даты уже забронированы',
+    'booking-request-sent' => 'Запрос на бронирование отправлен',
+    'booking-confirmed' => 'Бронирование подтверждено',
+    'booking-cannot-confirmed' => 'Это бронирование нельзя подтвердить',
+    'booking-cancelled' => 'Бронирование отменено',
+    'booking-cannot-cancelled' => 'Это бронирование нельзя отменить',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Объявление поднято',
+
+    //Profile Controller
+    'profile-updated' => 'Профиль обновлён',
+    'profile-avatar-updated' => 'Аватар обновлён',
+    'profile-current-password-incorrenct' => 'Текущий пароль указан неверно',
+    'profile-password-updated' => 'Пароль обновлён',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'Нельзя оставить отзыв самому себе',
+    'review-submited' => 'Отзыв отправлен',
+    'review-deleted' => 'Отзыв удалён',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'Нельзя голосовать за собственный отзывw',
+
+    //Subscription Controller
+    'subscription-already-active' => 'У вас уже есть активная подписка',
+    'subscription-payment-success' => 'Оплата прошла успешно! Ваша подписка активируется в течение минуты',
+    'subscription-activated' => 'Подписка успешно активирована',
+    'subscription-not-active' => "У вас нет активной подписки",
+    'subscription-cancelled' => 'Подписка отменена',
+
+    'plan-feature-12-ads' => 'До 12 объявлений',
+    'plan-feature-6-photos' => 'До 6 фотографий на объявление',
+    'plan-feature-1-boost' => '1 поднятие в топ',
+    'plan-feature-priority-search' => 'Приоритет в поиске',
+
+    'plan-feature-20-ads' => 'До 20 объявлений',
+    'plan-feature-8-photos' => 'До 8 фотографий на объявление',
+    'plan-feature-3-boosts' => '3 поднятия в топ',
+    'plan-feature-highest-priority' => 'Наивысший приоритет в поиске',
 ];

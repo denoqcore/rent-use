@@ -363,7 +363,9 @@
                                             </div>
                                             <div class="p-3">
                                                 <label class="block text-[10px] font-bold uppercase tracking-wide mb-1"
-                                                    style="color: var(--text-primary)">To</label>
+                                                    style="color: var(--text-primary)">
+                                                    {{ __('messages.add-from') }}
+                                                </label>
                                                 <input type="text" name="end_date" x-ref="endInput" readonly
                                                     placeholder="{{ __('messages.add-date') }}"
                                                     class="w-full text-sm bg-transparent border-0 outline-none cursor-pointer p-0"

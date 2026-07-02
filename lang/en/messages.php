@@ -4,6 +4,7 @@ return [
     //EN
     // Header + home + hero
     'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform.',
+    'portfolio_disclaimer_continue' => 'Do not submit any real personal data.',
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',
@@ -65,6 +66,7 @@ return [
     'message-save' => 'Save',
     'message-cancel' => 'Cancel',
     'message-edited' => '· edited',
+    'message-edit' => 'Edit message',
     'message-send' => 'Type a message...',
 
     //favorite
@@ -78,6 +80,10 @@ return [
 
     'prof-name'=> 'Name',
     'prof-phone'=> 'Phone',
+    'prof-current-pass' => 'Current password',
+    'prof-new-pass' => 'New password',
+    'prof-new-pass-confirm' => 'Confirm new password',
+    'prof-update-pass' => 'Update password',
     'prof-identity' => 'Identity',
 
     'prof-verify' => 'Not verified',
@@ -93,9 +99,15 @@ return [
     'prof-nolisting' => 'You have no listings yet',
     'prof-create-listing' => 'Create listing',
 
+    'prof-delete' => 'Delete',
+    'prof-delete-ad' => 'Delete this ad?',
+    'prof-completly-delete-ad' => 'Are you sure you want to completely delete',
+    'prof-delete-restore' => 'It will be impossible to restore it',
+
     'prof-bookings' => 'My bookings',
     'prof-nobookings' => 'No bookings yet',
 
+    'prof-boost' => 'Boost',
     'prof-support' => 'Support',
     'prof-notickets' => 'No support tickets yet',
     'prof-create-ticket' => 'Create ticket',
@@ -285,13 +297,63 @@ return [
     'no-results'         => 'No listings found',
 
 
-    // Errors
-    'log-error' => 'Invalid email or password.',
-    'reg-error-email' => '',
-    'reg-error-username' => '',
-    'reg-error-phone' => '',
-    // 'reg-error-email' => '',
+    // From controllers
 
+    //Listing controller
+    'listing-published' => 'Listing published',
+    'listing-updated'  => 'Listing updated',
+    'listing-active'  => 'Listing is active',
+    'listing-paused' => 'Listing paused',
+    'listing-archived' => 'Listing archived',
+    'listing-restored' => 'Listing restored',
+    'listing-deleted' => 'Listing deleted',
+    'max-active-listings' => 'You have reached the maximum number of active listings for your plan',
+    'plan-limit-reached' => 'You have reached your plan limit. Upgrade or pause another listing first',
+    'at-least-one-price-required' => 'At least one price is required',
+
+    //Booking controller
+    'booking-end-time-after-start' => 'End time must be after the start time',
+    'booking-cannot-book-own-listing' => 'You cannot book your own listing',
+    'booking-dates-already-booked' => 'These dates are already booked',
+    'booking-request-sent' => 'Booking request sent',
+    'booking-confirmed' => 'Booking confirmed',
+    'booking-cannot-confirmed' => 'This booking cannot be confirmed',
+    'booking-cancelled' => 'Booking cancelled',
+    'booking-cannot-cancelled' => 'This booking cannot be cancelled',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Listing boosted',
+
+    //Profile Controller
+    'profile-updated' => 'Profile updated',
+    'profile-avatar-updated' => 'Avatar updated',
+    'profile-current-password-incorrenct' => 'Current password is incorrect',
+    'profile-password-updated' => 'Password updated',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'You cannot review yourself',
+    'review-submited' => 'Review submitted',
+    'review-deleted' => 'Review deleted',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'You cannot vote on your own review',
+
+    //Subscription Controller
+    'subscription-already-active' => 'You already have an active subscription',
+    'subscription-payment-success' => 'Payment was successful! Your subscription will activate within a minute',
+    'subscription-activated' => 'Subscription successfully activated',
+    'subscription-not-active' => "You don't have an active subscription",
+    'subscription-cancelled' => 'Subscription cancelled',
+
+    'plan-feature-12-ads' => 'Up to 12 ads',
+    'plan-feature-6-photos' => 'Up to 6 photos per ad',
+    'plan-feature-1-boost' => '1 boost',
+    'plan-feature-priority-search' => 'Priority search',
+
+    'plan-feature-20-ads' => 'Up to 20 ads',
+    'plan-feature-8-photos' => 'Up to 8 photos per ad',
+    'plan-feature-3-boosts' => '3 boosts',
+    'plan-feature-highest-priority' => 'Highest priority in search',
 ];
 
 

@@ -60,7 +60,7 @@ class ListingController extends Controller
 
         if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
             return back()->withErrors([
-                'limit' => 'You have reached the maximum number of active listings for your plan.'
+                'limit' => __('messages.max-active-listings'),
             ]);
     }
 
@@ -86,7 +86,7 @@ class ListingController extends Controller
 
         if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
 
-       return back()->withErrors(['price_per_day' => 'At least one price is required.'])->withInput();
+       return back()->withErrors(['price_per_day' =>  __('messages.at-least-one-price-required')])->withInput();
     }
 
         $listing = Listing::create([
@@ -118,7 +118,7 @@ class ListingController extends Controller
     }
 
         return redirect()->route('listings.show', $listing->slug)
-            ->with('success', 'Listing published!');
+            ->with('success',  __('messages.listing-published'));
     }
 
     public function show(string $slug)
@@ -185,7 +185,7 @@ return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
     ]);
 
     if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
-        return back()->withErrors(['price_per_day' => 'At least one price is required.'])->withInput();
+        return back()->withErrors(['price_per_day' => __('messages.at-least-one-price-required')])->withInput();
     }
 
     $listing->update([
@@ -224,7 +224,7 @@ return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
 }
 
     return redirect()->route('listings.show', $listing->slug)
-        ->with('success', 'Listing updated');
+        ->with('success', __('messages.listing-updated'));
 }
 
 
@@ -236,15 +236,15 @@ public function pause(Listing $listing)
         $user = $listing->user;
         if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
             return back()->withErrors([
-                'limit' => 'You have reached your plan limit. Upgrade or pause another listing first.'
+                'limit' => __('messages.max-active-listings')
             ])->withFragment('listings');
         }
         $listing->update(['status' => 'active', 'paused_reason' => null]);
-        return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing activated');
+        return redirect()->route('profile')->withFragment('listings')->with('success', __('messages.listing-active'));
     }
 
     $listing->update(['status' => 'paused', 'paused_reason' => 'manual']);
-    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing paused');
+    return redirect()->route('profile')->withFragment('listings')->with('success', __('messages.listing-paused'));
 }
 
 public function restore(Listing $listing)
@@ -254,12 +254,12 @@ public function restore(Listing $listing)
     $user = $listing->user;
     if ($user->listings()->where('status', 'active')->count() >= $user->maxListings()) {
         return back()->withErrors([
-            'limit' => 'You have reached your plan limit. Upgrade or pause another listing first.'
+            'limit' => __('messages.plan_limit_reached')
         ])->withFragment('listings');
     }
 
     $listing->update(['status' => 'active', 'paused_reason' => null]);
-    return redirect()->route('profile')->withFragment('listings')->with('success', 'Listing restored');
+    return redirect()->route('profile')->withFragment('listings')->with('success', __('messages.listing-restored'));
 }
 
 public function archive(Listing $listing)
@@ -273,7 +273,7 @@ public function archive(Listing $listing)
     return redirect()
         ->route('profile')
         ->withFragment('listings')
-        ->with('success', 'Listing archived');
+        ->with('success',  __('messages.listing-archived'));
 }
 
 public function destroy(Listing $listing)
@@ -288,6 +288,6 @@ public function destroy(Listing $listing)
 
     return redirect()->route('profile')
         ->withFragment('listings')
-        ->with('success', 'Listing deleted');
+        ->with('success', __('messages.listing-deleted'));
 }
 }

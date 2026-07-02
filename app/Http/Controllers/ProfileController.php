@@ -86,7 +86,7 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return back()->with('success_info', 'Profile updated');
+        return back()->with('success_info', __('messages.profile-updated'));
     }
 
     public function updateAvatar(Request $request)
@@ -104,7 +104,7 @@ class ProfileController extends Controller
         $path = $request->file('avatar')->store('avatars', 'public');
         $user->update(['avatar' => $path]);
 
-        return back()->with('success_info', 'Avatar updated');
+        return back()->with('success_info', __('messages.avatar-updated'));
     }
 
     public function updatePassword(Request $request)
@@ -117,11 +117,12 @@ class ProfileController extends Controller
     $user = Auth::user();
 
     if (!Hash::check($request->current_password, $user->password)) {
-        return back()->withErrors(['current_password' => 'Current password is incorrect']);
+        return back()->withErrors([
+       'current_password' => __('messages.current-password-incorrect')]);
     }
 
     $user->update(['password' => Hash::make($request->password)]);
 
-    return back()->with('success_password', 'Password updated');
+    return back()->with('success_password', __('messages.password-updated'));
 }
 }
