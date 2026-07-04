@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 
 class BoostController extends Controller
 {
-public function boost(Request $request, Listing $listing)
-{
-    $user = auth()->user();
+    public function boost(Request $request, Listing $listing)
+    {
+        $user = auth()->user();
 
-    if ($listing->user_id !== $user->id) {
-        abort(403);
-    }
+        if ($listing->user_id !== $user->id) {
+            abort(403);
+        }
 
-    try {
         $listing->is_boosted = true;
         $listing->boosted_until = now()->addHours(24);
         $listing->save();
@@ -23,7 +22,6 @@ public function boost(Request $request, Listing $listing)
         $user->boosts_used_today = ($user->boosts_used_today ?? 0) + 1;
         $user->save();
 
-        return back()->with('success', __('messages.listing-boosted'));
-     }
-  }
+        return back()->with('success', __('messages.boost-listing-booster'));
+    }
 }

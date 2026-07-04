@@ -5,6 +5,23 @@ use Livewire\Component;
 new class extends Component {}; ?>
 
 <div x-cloak>
+
+    @php
+        $statusLabels = [
+            'active' => __('messages.status_active'),
+            'pending' => __('messages.status_pending'),
+            'confirmed' => __('messages.status_confirmed'),
+            'cancelled' => __('messages.status_cancelled'),
+            'completed' => __('messages.status_completed'),
+            'paused' => __('messages.status_paused'),
+            'archived' => __('messages.status_archived'),
+        ];
+    @endphp
+
+    <script>
+        window.STATUS_LABELS = @json($statusLabels);
+    </script>
+
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
@@ -712,23 +729,10 @@ new class extends Component {}; ?>
                                             <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
                                                 @click.prevent>
                                                 <span
-                                                    class="px-2 py-0.5 rounded-sm text-sm md:text-xs font-medium capitalize"
-                                                    :class="{
-                                                        'bg-(--bg-status-warning) text-(--status-warning)': booking
-                                                            .status === 'pending',
-                                                        'bg-(--bg-status-ok) text-(--status-ok)': booking
-                                                            .status === 'confirmed',
-                                                        'bg-(--bg-status-danger) text-(--status-danger)': booking
-                                                            .status === 'cancelled',
-                                                        'bg-(--bg-status-muted) text-(--status-muted)': booking
-                                                            .status === 'completed',
-                                                    }"
-                                                    x-text="{
-                                                        pending: '{{ __('messages.status_pending') }}',
-                                                        confirmed: '{{ __('messages.status_confirmed') }}',
-                                                        cancelled: '{{ __('messages.status_cancelled') }}',
-                                                        completed: '{{ __('messages.status_completed') }}'
-                                                         }[booking.status] || booking.status">
+                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                        :style="`background:${statusColor(booking.status)}`"></span>
+                                                    <span x-text="statusLabel(booking.status)"></span>
                                                 </span>
                                                 <template x-if="booking.status === 'pending'">
                                                     <button @click.stop.prevent="cancelBooking(booking.id)"
@@ -789,14 +793,17 @@ new class extends Component {}; ?>
                                                     <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
                                                 </div>
                                             </div>
-                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
+                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between w-full"
                                                 @click.stop.prevent>
-                                                <template x-if="booking.status === 'pending'">
-                                                    <div class="flex items-center justify-between w-full">
-                                                        <span
-                                                            class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize bg-(--bg-status-warning) text-(--status-warning)"
-                                                            x-text="booking.status">
-                                                        </span>
+                                                <span
+                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                        :style="`background:${statusColor(booking.status)}`"></span>
+                                                    <span x-text="statusLabel(booking.status)"></span>
+                                                </span>
+
+                                                <div class="flex gap-2">
+                                                    <template x-if="booking.status === 'pending'">
                                                         <div class="flex gap-2">
                                                             <button @click="confirmBooking(booking.id)"
                                                                 class="py-0.5 px-2 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition">
@@ -807,34 +814,15 @@ new class extends Component {}; ?>
                                                                 {{ __('messages.decline') }}
                                                             </button>
                                                         </div>
-                                                    </div>
-                                                </template>
-                                                <template x-if="booking.status !== 'pending'">
-                                                    <div class="flex items-center justify-between w-full">
-                                                        <span class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize"
-                                                            :class="{
-                                                                'bg-(--bg-status-ok) text-(--status-ok)': booking
-                                                                    .status === 'confirmed',
-                                                                'bg-(--bg-status-danger) text-(--status-danger)': booking
-                                                                    .status === 'cancelled',
-                                                                'bg-(--bg-status-muted) text-(--status-muted)': booking
-                                                                    .status === 'completed',
-                                                            }"
-                                                            x-text="{
-                                                                confirmed: '{{ __('messages.status_confirmed') }}',
-                                                                cancelled: '{{ __('messages.status_cancelled') }}',
-                                                                completed: '{{ __('messages.status_completed') }}'
-                                                            }[booking.status] || booking.status">
-                                                        </span>
-                                                        <template
-                                                            x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
-                                                            <button @click.stop.prevent="deleteBooking(booking.id)"
-                                                                class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
-                                                                {{ __('messages.delete') }}
-                                                            </button>
-                                                        </template>
-                                                    </div>
-                                                </template>
+                                                    </template>
+                                                    <template
+                                                        x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
+                                                        <button @click.stop.prevent="deleteBooking(booking.id)"
+                                                            class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                            {{ __('messages.delete') }}
+                                                        </button>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

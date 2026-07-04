@@ -339,18 +339,19 @@
                                                         @if ($listing->status === 'active')
                                                             @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
                                                                 <span
-                                                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs text-(--text-primary)">
-                                                                    <x-heroicon-o-chevron-double-up class="w-3 h-3" />
-                                                                    Available in
-                                                                    {{ now()->diffForHumans($listing->boosted_until, true) }}
+                                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium bg-(--background-3) text-(--text-muted)">
+                                                                    <x-heroicon-s-chevron-double-up
+                                                                        class="w-3.5 h-3.5 text-(--button)" />
+                                                                    {{ __('messages.prof-boost-available-in', ['time' => now()->diffForHumans($listing->boosted_until, true)]) }}
                                                                 </span>
                                                             @else
                                                                 <form method="POST"
                                                                     action="{{ route('listings.boost', $listing) }}">
                                                                     @csrf
                                                                     <button type="submit"
-                                                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm font-medium text-xs cursor-pointer border border-(--blackwhite) text-(--text-primary) transition-colors">
-                                                                        <x-heroicon-o-chevron-double-up class="w-3 h-3" />
+                                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-colors cursor-pointer">
+                                                                        <x-heroicon-o-chevron-double-up
+                                                                            class="w-3.5 h-3.5" />
                                                                         {{ __('messages.prof-boost') }}
                                                                     </button>
                                                                 </form>
@@ -370,18 +371,7 @@
 
                                                 <div
                                                     class="flex items-center gap-1.5 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0 shrink-0">
-                                                    @php
-                                                        $statusClass = match ($listing->status) {
-                                                            'active' => 'bg-green-500/10 text-green-500',
-                                                            'paused' => 'bg-yellow-500/10 text-yellow-500',
-                                                            'archived' => 'bg-(--background-3) text-(--text-muted)',
-                                                            default => 'bg-(--background-3) text-(--text-muted)',
-                                                        };
-                                                    @endphp
-                                                    <span
-                                                        class="text-[10px] sm:text-[11px] px-2.5 py-1 rounded-sm font-medium mr-1 {{ $statusClass }}">
-                                                        {{ $listing->status }}
-                                                    </span>
+                                                    <x-status :status="$listing->status" class="mr-1" />
 
                                                     <a href="{{ route('listings.edit', $listing->slug) }}"
                                                         class="p-2 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) transition-colors">
@@ -476,7 +466,7 @@
                                                 @method('DELETE')
                                                 <button type="submit"
                                                     class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
-                                                    {{ __('messages.prof-delete-ad') }}
+                                                    {{ __('messages.prof-delete') }}
                                                 </button>
                                             </form>
                                         </div>
@@ -555,19 +545,7 @@
                                                 </div>
 
                                                 <div class="flex items-center gap-1.5 shrink-0">
-                                                    @php
-                                                        $statusClass = match ($booking->status) {
-                                                            'pending' => 'bg-yellow-400/10 text-yellow-500',
-                                                            'confirmed' => 'bg-green-400/10 text-green-500',
-                                                            'cancelled' => 'bg-red-400/10 text-red-400',
-                                                            'completed' => 'bg-(--background-3) text-(--text-muted)',
-                                                            default => 'bg-(--background-3) text-(--text-muted)',
-                                                        };
-                                                    @endphp
-                                                    <span
-                                                        class="text-[11px] font-medium px-2.5 py-1 rounded-full mr-1 {{ $statusClass }}">
-                                                        {{ $booking->status }}
-                                                    </span>
+                                                    <x-status :status="$booking->status" class="mr-1" />
                                                     <button type="button" {{-- @click="deleteUrl = '{{ route('bookings.destroy', $booking) }}'; confirmDelete = true" --}} title="Delete booking"
                                                         class="p-2 rounded-md text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 transition-colors cursor-pointer">
                                                         <x-heroicon-o-trash class="w-4 h-4" />
@@ -618,7 +596,8 @@
 
                 <div x-show="tab === 'subscription'" x-cloak>
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Current plan
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">
+                            {{ __('messages.prof-current-plan') }}
                         </h2>
 
                         <div class="flex items-center justify-between">
@@ -636,8 +615,9 @@
 
                                 @if ($user->plan_expires_at && $user->plan_expires_at->isFuture() && now()->diffInDays($user->plan_expires_at) <= 5)
                                     <span class="text-xs text-(--text-muted)">
-                                        Until {{ $user->plan_expires_at->format('d.m.Y') }}
-                                        <span class="text-red-400 ml-1">Is expiring</span>
+                                        {{ __('messages.prof-until-plan') }}
+                                        {{ $user->plan_expires_at->format('d.m.Y') }}
+                                        <span class="text-red-400 ml-1">{{ __('messages.prof-plan-expiring') }}</span>
                                     </span>
                                 @endif
                             </div>
@@ -645,15 +625,18 @@
                         <div class="mt-4 grid grid-cols-3 gap-3">
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">listings</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-listing') }}
+                                </p>
                             </div>
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxPhotos() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">photo</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-photo') }}
+                                </p>
                             </div>
                             <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
                                 <p class="text-lg font-black text-(--text-primary)">{{ $user->maxBoostedListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">boost</p>
+                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-boost') }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -664,13 +647,13 @@
                 'label' => 'PRO',
                 'price' => '199 MDL',
                 'color' => 'blue',
-                'features' => ['Up to 12 listings', 'Up to 8 photos', '1 boost to the top day', 'Search priority'],
+                'features' => ['plan-feature-12-listings', 'plan-feature-8-photos', 'plan-feature-1-boost', 'plan-feature-priority-search'],
             ],
             'premium' => [
                 'label' => 'PREMIUM',
                 'price' => '349 MDL',
                 'color' => 'yellow',
-                'features' => ['Up to 20 listings', 'Up to 8 photos', '3 boost to the top day', 'Search priority'],
+                'features' => ['plan-feature-20-listings', 'plan-feature-8-photos', 'plan-feature-3-boosts', 'plan-feature-priority-search'],
             ],
         ] as $key => $plan)
                             @php $isCurrent = $user->plan === $key && $user->isActivePlan(); @endphp
@@ -692,13 +675,14 @@
                                         <span
                                             class="text-[11px] px-2 py-0.5 rounded-sm
                                                {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
-                                            Active
+                                            {{ __('messages.prof-plan-active') }}
                                         </span>
                                     @endif
                                 </div>
 
                                 <p class="text-2xl font-black text-(--text-primary)">{{ $plan['price'] }}<span
-                                        class="text-sm font-normal text-(--text-muted)">/month</span></p>
+                                        class="text-sm font-normal text-(--text-muted)">{{ __('messages.prof-plan-month') }}</span>
+                                </p>
 
                                 <ul class="flex flex-col gap-2">
                                     @foreach ($plan['features'] as $feature)
@@ -712,12 +696,12 @@
                                 @if ($isCurrent)
                                     <span
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm">
-                                        Current plan
+                                        {{ __('messages.prof-current-plan') }}
                                     </span>
                                 @elseif ($user->isActivePlan() && $user->plan !== 'starter')
                                     <span
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm opacity-50 cursor-not-allowed">
-                                        Active subscription
+                                        {{ __('messages.prof-plan-active-subs') }}
                                     </span>
                                 @else
                                     <a href="{{ route('subscription.checkout', $key) }}"
@@ -725,7 +709,7 @@
                                         {{ $key === 'premium'
                                             ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
                                             : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
-                                        Choose {{ $plan['label'] }}
+                                        {{ __('messages.prof-plan-choose') }} {{ $plan['label'] }}
                                     </a>
                                 @endif
                             </div>
@@ -733,13 +717,15 @@
                     </div>
 
                     <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">Paid history
+                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">
+                            {{ __('messages.prof-plan-history') }}
                         </h2>
 
                         @php $payments = $user->subscriptionPayments()->latest()->take(10)->get(); @endphp
 
                         @if ($payments->isEmpty())
-                            <p class="text-sm text-(--text-muted) text-center py-8">No payments yet</p>
+                            <p class="text-sm text-(--text-muted) text-center py-8">
+                                {{ __('messages.prof-plan-history-none') }}</p>
                         @else
                             <div class="flex flex-col gap-2">
                                 @foreach ($payments as $payment)
