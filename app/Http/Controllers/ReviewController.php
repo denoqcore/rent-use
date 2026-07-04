@@ -12,7 +12,7 @@ class ReviewController extends Controller
     public function store(Request $request, User $user)
     {
         if (Auth::id() === $user->id) {
-            return back()->with('error', 'You cannot review yourself.');
+            return back()->with('error', __('messages.cannot-review-yourself'));
         }
 
         $validated = $request->validate([
@@ -31,13 +31,13 @@ class ReviewController extends Controller
             ]
         );
 
-        return back()->with('success', 'Review submitted!');
+        return back()->with('success', __('messages.review-submitted'));
     }
 
     public function destroy(Review $review)
     {
         abort_unless(Auth::id() === $review->reviewer_id, 403);
         $review->delete();
-        return back()->with('success', 'Review deleted.');
+        return back()->with('success', __('messages.review-deleted'));
     }
 }

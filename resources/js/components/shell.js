@@ -21,6 +21,8 @@ export default function shellComponent() {
         activeMessages: [],
 
         chatInput: '',
+        editingMessageId: null,
+        editingBody: '',
         unreadTotal: 0,
 
         reviewModal: false,
@@ -102,6 +104,18 @@ async openChats() {
     await this.loadPendingBookings();
 },
 
+async _markRead(chatId) {
+    const csrf = document.querySelector('meta[name=csrf-token]').content;
+    try {
+        await fetch(`/chats/${chatId}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' },
+        });
+    } catch (e) {
+        console.error('markRead error:', e);
+    }
+},
+
 async openChat(chatId) {
     this.activeChatId = chatId;
     this.activeMessages = [];
@@ -125,7 +139,6 @@ async openChat(chatId) {
 
     this.$nextTick(() => this._scrollChat());
 
-    // Отписываемся от предыдущего канала
     if (window._echoChat) {
         window.Echo.leave(`chat.${window._echoChat}`);
     }
@@ -138,12 +151,10 @@ async openChat(chatId) {
             if (String(e.sender_id) === String(authId)) return;
             this.activeMessages.push({ ...e, is_mine: false });
             this.$nextTick(() => this._scrollChat());
-            // Автоматически помечаем прочитанным
             this._markRead(chatId);
         })
         .listen('MessageRead', (e) => {
             if (String(e.reader_id) === String(authId)) return;
-            // Помечаем все наши сообщения как прочитанные
             this.activeMessages.forEach(m => {
                 if (m.is_mine) m.read_at = true;
             });
@@ -156,7 +167,11 @@ async openChat(chatId) {
             }
         })
         .listen('MessageDeleted', (e) => {
-            this.activeMessages = this.activeMessages.filter(m => m.id !== e.id);
+            const msg = this.activeMessages.find(m => m.id === e.id);
+            if (msg) {
+                msg.is_deleted = true;
+                msg.body = null;
+            }
         });
 },
 
@@ -242,7 +257,6 @@ async sendFirstMessage(listingId, context = 'default') {
     if (error) error.classList.add('hidden');
 
     try {
-        // Открываем/создаём чат через listing
         const chatRes  = await fetch(`/chat/listing/${listingId}`, {
             method: 'POST',
             headers: {
@@ -281,7 +295,6 @@ async sendChatMessage() {
     const body = this.editingMessageId ? this.editingBody.trim() : this.chatInput.trim();
     if (!body || !this.activeChatId) return;
 
-    // Режим редактирования
     if (this.editingMessageId) {
         await this._submitEdit(this.editingMessageId, body);
         return;
@@ -290,7 +303,7 @@ async sendChatMessage() {
     this.chatInput = '';
 
     const tempId = Date.now();
-    this.activeMessages.push({
+    const tempMsg = {
         id: tempId,
         body,
         is_mine: true,
@@ -298,19 +311,28 @@ async sendChatMessage() {
         edited_at: null,
         listing: null,
         created_at: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
-    });
+    };
+    this.activeMessages.push(tempMsg);
     this.$nextTick(() => this._scrollChat());
 
     const csrf = document.querySelector('meta[name=csrf-token]').content;
-    await fetch(`/chat/${this.activeChatId}/send`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'X-CSRF-TOKEN': csrf,
-        },
-        body: JSON.stringify({ body }),
-    });
+    try {
+        const res = await fetch(`/chat/${this.activeChatId}/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'X-CSRF-TOKEN': csrf,
+            },
+            body: JSON.stringify({ body }),
+        });
+        const data = await res.json();
+        if (data.message) {
+            tempMsg.id = data.message.id;
+        }
+    } catch (e) {
+        console.error('sendChatMessage error:', e);
+    }
 },
 
 startEdit(msg) {
@@ -350,7 +372,11 @@ async deleteMessage(id) {
         method: 'DELETE',
         headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }
     });
-    this.activeMessages = this.activeMessages.filter(m => m.id !== id);
+    const msg = this.activeMessages.find(m => m.id === id);
+    if (msg) {
+        msg.is_deleted = true;
+        msg.body = null;
+    }
 },
 
 

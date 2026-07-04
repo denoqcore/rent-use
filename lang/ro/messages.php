@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    //MD
     // Header + home + hero
     'portfolio_disclaimer' => 'Acest website este un proiect fictiv pentru portofoliu și nu reprezintă o platformă reală de închirieri.',
     'welcome' => 'Bun venit',
@@ -42,8 +42,8 @@ return [
 
     'empty-title' => 'Încă nimic aici',
     'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
-    //favorite
 
+    //favorite
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
     'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici.',
 
@@ -56,22 +56,39 @@ return [
     'no_requests_desc'   => 'Când cineva rezervă anunțul tău, îl vei vedea aici.',
     'status_messages'    => 'Nu există încă mesaje',
     'status_desc_messages' => 'Scrie proprietarului anunțului pentru a iniția o conversație',
-    'status_pending'     => 'În așteptare',
-    'status_confirmed'   => 'Confirmat',
-    'status_cancelled'   => 'Anulat',
-    'messages_you'       => 'Tu',
+
+    'status_active'    => 'Activ',
+    'status_pending'   => 'În așteptare',
+    'status_confirmed' => 'Confirmat',
+    'status_cancelled' => 'Anulat',
     'status_completed'   => 'Finalizat',
+    'status_paused'    => 'Pauzat',
+    'status_archived'  => 'Arhivat',
+
+    'messages_you'       => 'Tu',
     'confirm'            => 'Respinge',
     'decline'            => 'Anulează',
 
-    // profile page
+    // chat
+    'message-deleted' => 'Mesaj șters',
+    'message-save' => 'Salvează',
+    'message-cancel' => 'Anulează',
+    'message-send' => 'Scrie un mesaj...',
+    'message-edited' => '· editat',
+    'message-edit' => 'Editează mesajul',
+    'message-choose-chat' => 'Selectează un chat',
 
+    // profile page
     'prof-personal-details' => 'Date personale',
     'prof-edit' => 'Editează',
     'prof-member-since'=> 'Membru din',
 
     'prof-name'=> 'Nume',
     'prof-phone'=> 'Telefon',
+    'prof-current-pass' => 'Parola actuală',
+    'prof-new-pass' => 'Parolă nouă',
+    'prof-new-pass-confirm' => 'Confirmă noua parolă',
+    'prof-update-pass' => 'Actualizare parolă',
     'prof-identity' => 'Identitate',
 
     'prof-verify' => 'Neverificat',
@@ -87,9 +104,35 @@ return [
     'prof-nolisting' => 'Nu ai încă anunțuri',
     'prof-create-listing' => 'Adaugă anunț',
 
+    'prof-delete' => 'Șterge',
+    'prof-delete-ad' => 'Să ștergi acest anunț?',
+    'prof-completly-delete-ad' => 'Ești sigur că vrei să ștergi definitiv?',
+    'prof-delete-restore' => 'Va fi imposibil să o refacem',
+
     'prof-bookings' => 'Rezervările mele',
     'prof-nobookings' => 'Nu ai încă rezervări',
 
+    'prof-current-plan' => 'Plan curent',
+    'prof-until-plan' => 'Valabil până la',
+    'prof-expiring-plan' => 'expiră',
+    'prof-plan-listing' => 'anunț',
+    'prof-plan-photo' => 'fotografie',
+    'prof-plan-boost' => 'promovare în top',
+    'prof-plan-active' => 'Activ',
+    'prof-plan-active-subs' => 'Abonament activ',
+    'prof-plan-month' => '/lună',
+    'prof-plan-choose' => 'Alege planul',
+    'prof-plan-history' => 'Istoricul plăților',
+    'prof-plan-history-none' => 'Încă nu există plăți',
+
+    'plan-feature-12-listings' => 'Până la 12 anunțuri',
+    'plan-feature-20-listings' => 'Până la 20 de anunțuri',
+    'plan-feature-8-photos' => 'Până la 8 fotografii',
+    'plan-feature-1-boost' => '1 promovare în top',
+    'plan-feature-3-boosts' => '3 promovări în top',
+    'plan-feature-priority-search' => 'Prioritate în căutare',
+
+    'prof-boost' => 'Accelerare',
     'prof-support' => 'Suport',
     'prof-notickets' => 'Nu ai încă tichete',
     'prof-create-ticket' => 'Creează tichet',
@@ -99,11 +142,10 @@ return [
     'email' => 'Email',
     'password' => 'Parolă',
 
-    //listing show wblade
-
+    //listing show wblad
     'login-show-phone' => 'Autentificați-vă pentru a vedea numărul de telefon',
     'edit-listing' => 'Editează anunțul',
-    'boost-availb' => 'Disponibil în',
+    'prof-boost-available-in' => 'Disponibil în :time',
     'show-phone' => 'Afișează numărul de telefon',
     'login-request-book' => 'Autentificați-vă pentru a rezerva',
     'book-now' => 'Rezervă acum',
@@ -128,7 +170,6 @@ return [
     'message-sended' => 'Mesaj trimis',
 
     // benefits
-
     'benefits' => 'Beneficii',
     'benefits-title' => 'De ce rent.use?',
     'benefits-desc' => 'Economisește bani, scapă de obiectele inutile și accesează tot ce ai nevoie — de la oamenii din jurul tău.',
@@ -143,7 +184,6 @@ return [
     'benefit-3-desc' => 'Închiriază pentru o zi, o săptămână sau mai mult. Stabilește termenii care ți se potrivesc.',
 
     // how it works
-
     'how-it-works' => 'Cum funcționează',
 
     'step-1-title' => 'Găsește un obiect',
@@ -162,7 +202,6 @@ return [
     'post-listing' => 'Adaugă un anunț',
 
     // reviews
-
     'reviews-title' => 'Ce spun oamenii',
 
     'review-1' => 'Am închiriat o cameră foto pentru weekend — proces foarte simplu, stare excelentă!',
@@ -170,14 +209,12 @@ return [
     'review-3' => 'Interfață curată și platformă de încredere. O voi folosi din nou.',
 
     // footer
-
     'all-rights' => 'Toate drepturile rezervate',
     'privacy' => 'Politica de confidențialitate',
     'terms' => 'Termeni și condiții',
     'cookies' => 'Politica de cookie',
 
     // register
-
     'register-disclaimer' => "Vă rugăm să utilizați <span class='text-red-900'>date nereale</span> la înregistrare. Nu furnizați informațiile dvs. personale reale.",
     'register-create' => 'Creează cont',
     'register-login' => 'Ai deja cont?',
@@ -196,7 +233,6 @@ return [
     'register-desc' => 'Creează contul tău și descoperă oportunități de închiriere în jurul tău.',
 
     // login
-
     'login-title' => 'Autentificare',
     'login-subtitle' => 'Nu ai cont?',
     'login-subtitle-link' => 'Înregistrează-te',
@@ -276,4 +312,62 @@ return [
     'apply'              => 'Aplică',
     'reset'              => 'Resetează',
     'no-results'         => 'Nu au fost găsite anunțuri',
+
+    // From controllers
+
+    //Listing Controller
+    'listing-published' => 'Anunț publicat',
+    'listing-updated'  => 'Anunț actualizat',
+    'listing-active'  => 'Anunț activ',
+    'listing-paused' => 'Anunț pus pe pauză',
+    'listing-archived' => 'Anunț arhivat',
+    'listing-restored' => 'Anunț restaurat',
+    'listing-deleted' => 'Anunț șters',
+    'max-active-listings' => 'Ați atins numărul maxim de anunțuri active pentru planul dvs',
+    'plan-limit-reached' => 'Ați atins limita planului. Faceți upgrade sau puneți pe pauză un alt anunț mai întâi',
+    'at-least-one-price-required' => 'AEste necesar cel puțin un preț',
+
+    // Booking Controller
+    'booking-end-time-after-start' => 'Ora de sfârșit trebuie să fie după ora de început',
+    'booking-cannot-book-own-listing' => 'Nu vă puteți rezerva propriul anunț',
+    'booking-dates-already-booked' => 'Aceste date sunt deja rezervate',
+    'booking-request-sent' => 'Cererea de rezervare a fost trimisă',
+    'booking-confirmed' => 'Rezervarea a fost confirmată',
+    'booking-cannot-confirmed' => 'Această rezervare nu poate fi anulată',
+    'booking-cancelled' => 'Rezervarea a fost anulată',
+    'booking-cannot-cancelled' => 'Această rezervare nu poate fi anulată',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Anunț promovat',
+
+    //Profile Controller
+    'profile-updated' => 'Profil actualizat',
+    'profile-avatar-updated' => 'Avatar actualizat',
+    'profile-current-password-incorrenct' => 'Parola curentă este incorectă',
+    'profile-password-updated' => 'Parola a fost actualizată',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'You cannot review yourself',
+    'review-submited' => 'Review submitted',
+    'review-deleted' => 'Review deleted',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'Nu puteți vota propria recenzie',
+
+    //Subscription Controller
+    'subscription-already-active' => 'Aveți deja un abonament activ',
+    'subscription-payment-success' => 'Plata a fost efectuată cu succes! Abonamentul va fi activat în decurs de un minut',
+    'subscription-activated' => 'Abonamentul a fost activat cu succes',
+    'subscription-not-active' => "Nu aveți un abonament activ",
+    'subscription-cancelled' => 'Abonamentul a fost anulat',
+
+    'plan-feature-12-ads' => 'Până la 12 anunțuri',
+    'plan-feature-6-photos' => 'Până la 6 fotografii per anunț',
+    'plan-feature-1-boost' => '1 promovare în top',
+    'plan-feature-priority-search' => 'Prioritate în căutare',
+
+    'plan-feature-20-ads' => 'Până la 20 de anunțuri',
+    'plan-feature-8-photos' => 'Până la 8 fotografii per anunț',
+    'plan-feature-3-boosts' => '3 promovări în top',
+    'plan-feature-highest-priority' => 'Cea mai înaltă prioritate în căutare',
 ];

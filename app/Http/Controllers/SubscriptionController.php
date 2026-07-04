@@ -18,10 +18,10 @@ class SubscriptionController extends Controller
             'currency' => 'MDL',
             'duration' => 30,
             'features' => [
-                'Up to 12 ads',
-                'Up to 6 photos per ad',
-                '1 rise to the top',
-                'Priority search',
+                'plan-feature-12-ads',
+                'plan-feature-6-photos',
+                'plan-feature-1-boost',
+                'plan-feature-priority-search',
             ],
         ],
         'premium' => [
@@ -30,10 +30,10 @@ class SubscriptionController extends Controller
             'currency' => 'MDL',
             'duration' => 30,
             'features' => [
-                'Up to 20 ads',
-                'Up to 8 photos per ad',
-                '3 rise to the top',
-                'Highest priority in search',
+                'plan-feature-20-ads',
+                'plan-feature-8-photos',
+                'plan-feature-3-boosts',
+                'plan-feature-highest-priority',
             ],
         ],
     ];
@@ -53,7 +53,9 @@ class SubscriptionController extends Controller
      $user = auth()->user();
 
     if ($user->isActivePlan() && $user->plan !== 'starter') {
-        return redirect()->route('profile')->withFragment('subscription')->with('error', 'You already have an active subscription.');
+        return redirect()->route('profile')
+            ->withFragment('subscription')
+            ->with('error', __('messages.subscription-already-active'));
     }
 
     if (!array_key_exists($plan, $this->plans)) {
@@ -92,7 +94,7 @@ class SubscriptionController extends Controller
     {
         return redirect()->route('profile')
             ->withFragment('subscription')
-            ->with('success', 'Payment was successful! Your subscription will activate within a minute.');
+            ->with('success', __('messages.subscription-payment-success'));
     }
 
     public function mockPay(Request $request, SubscriptionPayment $payment)
@@ -127,7 +129,7 @@ class SubscriptionController extends Controller
         ])->save();
 
         return redirect()->route('subscription.index')
-            ->with('success', 'Subscription successfully activated.');
+            ->with('success', __('messages.subscription-activated'));
     }
 
 public function webhook(Request $request)
@@ -192,7 +194,7 @@ public function cancel(Request $request)
         $user = auth()->user();
 
         if ($user->plan === 'starter') {
-            return back()->with('error', "You don't have an active subscription.");
+            return back()->with('error', __('messages.subscription-not-active'));
         }
 
         $user->forceFill([
@@ -202,6 +204,6 @@ public function cancel(Request $request)
 
         return redirect()->route('profile')
             ->withFragment('subscription')
-            ->with('success', 'Subscription canceled.');
+            ->with('success', __('messages.subscription-cancelled'));
     }
 }

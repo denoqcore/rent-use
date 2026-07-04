@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    //RU
     // Header + home + hero
     'portfolio_disclaimer' => 'Сайт является вымышленным проектом для портфолио и не представляет настоящую платформу.',
     'welcome' => 'Добро пожаловать',
@@ -50,26 +50,44 @@ return [
     'status_messages'    => 'Пока нет сообщений',
     'status_desc_messages' => 'Напишите владельцу объявления, чтобы начать общение',
     'messages_you'       => 'Вы',
-    'status_pending'     => 'Ожидает',
-    'status_confirmed'   => 'Подтверждено',
-    'status_cancelled'   => 'Отменено',
-    'status_completed'   => 'Завершено',
+
+
+    'status_active'    => 'Активно',
+    'status_pending'   => 'Ожидание',
+    'status_confirmed' => 'Подтверждено',
+    'status_cancelled' => 'Отменено',
+    'status_completed' => 'Завершено',
+    'status_paused'    => 'На паузе',
+    'status_archived'  => 'В архиве',
+
     'confirm'            => 'Подтвердить',
     'decline'            => 'Отклонить',
     'cancel'             => 'Отменить',
-    //favorite
 
+    //chat
+    'message-choose-chat' => 'Выберите чат',
+    'message-deleted' => 'Сообщение удалено',
+    'message-save' => 'Сохранить',
+    'message-cancel' => 'Отмена',
+    'message-send' => 'Написать сообщение...',
+    'message-edit' => 'Редактировать сообщение',
+    'message-edited' => '· изменено',
+
+    //favorite
     'no_favorites_title' => 'Пока ничего не сохранено',
     'no_favorites_desc'  => 'Нажми на сердечко на любом объявлении, чтобы сохранить его здесь.',
 
     // profile page
-
     'prof-personal-details' => 'Личные данные',
     'prof-edit' => 'Редактировать',
     'prof-member-since'=> 'На сайте с',
 
     'prof-name'=> 'Имя',
     'prof-phone'=> 'Телефон',
+    'prof-current-password' => 'Нынешний пароль',
+    'prof-new-pass' => 'Новый пароль',
+    'prof-new-pass-conform' => 'Потвердите новый пароль',
+    'prof-update-pass' => 'Обновить пароль',
     'prof-identity' => 'Личность',
 
     'prof-verify' => 'Не подтвержден',
@@ -88,6 +106,32 @@ return [
     'prof-bookings' => 'Мои бронирования',
     'prof-nobookings' => 'Бронирований пока нет',
 
+    'prof-current-plan' => 'Текущий тариф',
+    'prof-until-plan' => 'Действует до',
+    'prof-expiring-plan' => 'истекает',
+    'prof-plan-listing' => 'объявление',
+    'prof-plan-photo' => 'фотография',
+    'prof-plan-boost' => 'поднятие в топ',
+    'prof-plan-active' => 'Активен',
+    'prof-plan-active-subs' => 'Активная подписка',
+    'prof-plan-month' => '/месяц',
+    'prof-plan-choose' => 'Выбрать тариф',
+    'prof-plan-history' => 'История платежей',
+    'prof-plan-history-none' => 'Платежей пока нет',
+
+    'plan-feature-12-listings' => 'До 12 объявлений',
+    'plan-feature-20-listings' => 'До 20 объявлений',
+    'plan-feature-8-photos' => 'До 8 фотографий',
+    'plan-feature-1-boost' => '1 поднятие в топ',
+    'plan-feature-3-boosts' => '3 поднятия в топ',
+    'plan-feature-priority-search' => 'Приоритет в поиске',
+
+    'prof-delete' => 'Удалить',
+    'prof-delete-ad' => 'Удалить это объявление?',
+    'prof-completly-delete-ad' => 'Вы уверены, что хотите полностью удалить?',
+    'prof-delete-restore' => 'Объявление будет невозможно восстановить',
+
+    'prof-boost' => 'Поднять',
     'prof-support' => 'Поддержка',
     'prof-notickets' => 'Тикетов пока нет',
     'prof-create-ticket' => 'Создать тикет',
@@ -98,10 +142,9 @@ return [
     'password' => 'Пароль',
 
     //listing show blade
-
     'login-show-phone' => 'Войдите, чтобы увидеть номер телефона',
     'edit-listing' => 'Редактировать объявление',
-    'boost-availb' => 'Доступно через',
+    'prof-boost-available-in' => 'Доступно через :time',
     'show-phone' => 'Показать номер телефона',
     'login-request-book' => 'Войдите, чтобы забронировать',
     'book-now' => 'Забронировать',
@@ -126,7 +169,6 @@ return [
     'message-sended' => 'Сообщение отправлено',
 
     // benefits
-
     'benefits' => 'Преимущества',
     'benefits-title' => 'Почему rent.use?',
     'benefits-desc' => 'Экономьте деньги, избавляйтесь от хлама и получайте доступ к вещам от людей вокруг вас.',
@@ -141,7 +183,6 @@ return [
     'benefit-3-desc' => 'Арендуйте на день, неделю или дольше. Договаривайтесь на ваших условиях.',
 
     // how it works
-
     'how-it-works' => 'Как это работает',
 
     'step-1-title' => 'Найдите вещь',
@@ -154,14 +195,12 @@ return [
     'step-3-desc' => 'Заберите вещь, используйте её и верните в срок. Все просто.',
 
     // CTA
-
     'cta-title' => 'Зарабатывайте на вещах, которыми не пользуетесь, с',
     'cta-desc' => 'Превратите хлам в деньги. Разместите объявление за минуты и начните зарабатывать.',
     'get-started' => 'Начать',
     'post-listing' => 'Подать объявление',
 
     // reviews
-
     'reviews-title' => 'Что говорят люди',
 
     'review-1' => 'Арендовал камеру на выходные — процесс очень простой, состояние отличное!',
@@ -169,14 +208,12 @@ return [
     'review-3' => 'Чистый интерфейс, надежная платформа. Обязательно воспользуюсь снова.',
 
     // footer
-
     'all-rights' => 'Все права защищены',
     'privacy' => 'Политика конфиденциальности',
     'terms' => 'Условия использования',
     'cookies' => 'Политика Cookie',
 
     // register
-
     'register-disclaimer' => "Пожалуйста, используйте <span class='text-red-900'>вымышленные</span> данные при регистрации. Не указывайте реальную личную информацию.",
     'register-create' => 'Создать аккаунт',
     'register-login' => 'Уже есть аккаунт?',
@@ -195,7 +232,6 @@ return [
     'register-desc' => 'Создайте аккаунт и откройте мир аренды вокруг вас.',
 
     // login
-
     'login-title' => 'Вход',
     'login-subtitle' => "Нет аккаунта?",
     'login-subtitle-link' => 'Регистрация',
@@ -211,7 +247,6 @@ return [
     'login-desc' => 'Арендуйте то, что нужно, когда нужно. Все в одном месте.',
 
     //post listing
-
     'create_listing' => 'Подать объявление',
     'create_listing_sub' => 'Заполните детали, чтобы опубликовать аренду',
     'step_category' => 'Категория',
@@ -275,4 +310,62 @@ return [
     'apply'              => 'Применить',
     'reset'              => 'Сбросить',
     'no-results'         => 'Объявлений не найдено',
+
+    // From controllers
+
+    //Listing Controller
+    'listing-published' => 'Объявление опубликовано',
+    'listing-updated'  => 'Объявление обновлено',
+    'listing-active'  => 'Объявление активно',
+    'listing-paused' => 'Объявление приостановлено',
+    'listing-archived' => 'Объявление архивировано',
+    'listing-restored' => 'Объявление восстановлено',
+    'listing-deleted' => 'Объявление удалено',
+    'max-active-listings' => 'Вы достигли максимального количества активных объявлений для вашего тарифа',
+    'plan-limit-reached' => 'Вы достигли лимита своего тарифа. Обновите тариф или сначала приостановите другое объявление',
+    'at-least-one-price-required' => 'Требуется указать хотя бы одну цену',
+
+    // Booking Controller
+    'booking-end-time-after-start' => 'Время окончания должно быть позже времени начала.',
+    'booking-cannot-book-own-listing' => 'Нельзя забронировать собственное объявление',
+    'booking-dates-already-booked' => 'Эти даты уже забронированы',
+    'booking-request-sent' => 'Запрос на бронирование отправлен',
+    'booking-confirmed' => 'Бронирование подтверждено',
+    'booking-cannot-confirmed' => 'Это бронирование нельзя подтвердить',
+    'booking-cancelled' => 'Бронирование отменено',
+    'booking-cannot-cancelled' => 'Это бронирование нельзя отменить',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Объявление поднято',
+
+    //Profile Controller
+    'profile-updated' => 'Профиль обновлён',
+    'profile-avatar-updated' => 'Аватар обновлён',
+    'profile-current-password-incorrenct' => 'Текущий пароль указан неверно',
+    'profile-password-updated' => 'Пароль обновлён',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'Нельзя оставить отзыв самому себе',
+    'review-submited' => 'Отзыв отправлен',
+    'review-deleted' => 'Отзыв удалён',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'Нельзя голосовать за собственный отзывw',
+
+    //Subscription Controller
+    'subscription-already-active' => 'У вас уже есть активная подписка',
+    'subscription-payment-success' => 'Оплата прошла успешно! Ваша подписка активируется в течение минуты',
+    'subscription-activated' => 'Подписка успешно активирована',
+    'subscription-not-active' => "У вас нет активной подписки",
+    'subscription-cancelled' => 'Подписка отменена',
+
+    'plan-feature-12-ads' => 'До 12 объявлений',
+    'plan-feature-6-photos' => 'До 6 фотографий на объявление',
+    'plan-feature-1-boost' => '1 поднятие в топ',
+    'plan-feature-priority-search' => 'Приоритет в поиске',
+
+    'plan-feature-20-ads' => 'До 20 объявлений',
+    'plan-feature-8-photos' => 'До 8 фотографий на объявление',
+    'plan-feature-3-boosts' => '3 поднятия в топ',
+    'plan-feature-highest-priority' => 'Наивысший приоритет в поиске',
 ];

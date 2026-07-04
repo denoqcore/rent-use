@@ -11,6 +11,7 @@ import Collapse from '@alpinejs/collapse';
 import bookingForm from './components/booking';
 import galleryComponent from './components/gallery';
 import shellComponent from './components/shell';
+import { registerStatusHelpers } from './components/status.js';
 
 // Swiper
 window.Swiper      = Swiper;
@@ -26,6 +27,9 @@ window.bookingForm      = bookingForm;
 window.shellComponent    = shellComponent;
 window.galleryComponent = galleryComponent;
 window.Alpine.plugin(Collapse)
+
+// Status
+registerStatusHelpers();
 
 
 

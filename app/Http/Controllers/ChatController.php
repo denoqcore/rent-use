@@ -50,7 +50,7 @@ class ChatController extends Controller
 
         broadcast(new MessageSent($message));
 
-        return response()->json(['ok' => true]);
+        return response()->json(['ok' => true, 'message' => $this->formatMessage($message)]);
     }
 
     public function edit(Request $request, ChatMessage $message)
@@ -77,8 +77,9 @@ class ChatController extends Controller
             abort(403);
         }
 
-        broadcast(new MessageDeleted($message));
         $message->delete();
+
+        broadcast(new MessageDeleted($message));
 
         return response()->json(['ok' => true]);
     }
@@ -109,31 +110,37 @@ class ChatController extends Controller
     }
 
     public function show(Chat $chat)
-    {
-        $this->authorize('participate', $chat);
+{
+    $this->authorize('participate', $chat);
 
-        $chat->messages()
-            ->whereNull('read_at')
-            ->where('sender_id', '!=', auth()->id())
-            ->update(['read_at' => now()]);
+    $chat->messages()
+        ->whereNull('read_at')
+        ->where('sender_id', '!=', auth()->id())
+        ->update(['read_at' => now()]);
 
-        broadcast(new MessageRead($chat->id, auth()->id()));
+    broadcast(new MessageRead($chat->id, auth()->id()));
 
-        $chat->load(['owner', 'renter', 'messages.sender', 'messages.listing']);
-        $other = $chat->otherUser();
+    $chat->load([
+        'owner',
+        'renter',
+        'messages' => fn ($q) => $q->withTrashed()->orderBy('created_at'),
+        'messages.sender',
+        'messages.listing',
+    ]);
+    $other = $chat->otherUser();
 
-        return response()->json([
-            'chat' => [
-                'id'         => $chat->id,
-                'other_user' => [
-                    'id'     => $other->id,
-                    'name'   => $other->name,
-                    'avatar' => $other->avatar,
-                ],
+    return response()->json([
+        'chat' => [
+            'id'         => $chat->id,
+            'other_user' => [
+                'id'     => $other->id,
+                'name'   => $other->name,
+                'avatar' => $other->avatar,
             ],
-            'messages' => $chat->messages->map(fn($m) => $this->formatMessage($m)),
-        ]);
-    }
+        ],
+        'messages' => $chat->messages->map(fn($m) => $this->formatMessage($m)),
+    ]);
+}
 
     private function formatChat(Chat $chat): array
     {
@@ -146,7 +153,7 @@ class ChatController extends Controller
                 'avatar' => $other->avatar,
             ],
             'last_message' => $chat->lastMessage ? [
-                'body'       => $chat->lastMessage->body,
+                'body'       => $chat->lastMessage->trashed() ? __('messages.message-deleted') : $chat->lastMessage->body,
                 'created_at' => $chat->lastMessage->created_at->format('H:i'),
                 'is_mine'    => $chat->lastMessage->sender_id === auth()->id(),
             ] : null,
@@ -158,25 +165,26 @@ class ChatController extends Controller
     }
 
     private function formatMessage(ChatMessage $m): array
-    {
-        return [
-            'id'         => $m->id,
-            'body'       => $m->body,
-            'sender_id'  => $m->sender_id,
-            'created_at' => $m->created_at->format('H:i'),
-            'edited_at'  => $m->edited_at?->format('H:i'),
-            'is_mine'    => $m->sender_id === auth()->id(),
-            'read_at'    => $m->read_at,
-            'listing'    => $m->listing ? [
-                'id'    => $m->listing->id,
-                'title' => $m->listing->title,
-                'slug'  => $m->listing->slug,
-            ] : null,
-            'sender' => [
-                'name'   => $m->sender->name,
-                'avatar' => $m->sender->avatar,
-            ],
-        ];
-    }
+{
+    return [
+        'id'         => $m->id,
+        'body'       => $m->trashed() ? null : $m->body,
+        'sender_id'  => $m->sender_id,
+        'created_at' => $m->created_at->format('H:i'),
+        'edited_at'  => $m->edited_at?->format('H:i'),
+        'is_mine'    => $m->sender_id === auth()->id(),
+        'is_deleted' => $m->trashed(),
+        'read_at'    => $m->read_at,
+        'listing'    => (!$m->trashed() && $m->listing) ? [
+            'id'    => $m->listing->id,
+            'title' => $m->listing->title,
+            'slug'  => $m->listing->slug,
+        ] : null,
+        'sender' => [
+            'name'   => $m->sender->name,
+            'avatar' => $m->sender->avatar,
+        ],
+    ];
+}
 
 }

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background) pt-0 md:pt-20">
+    <section class="relative overflow-hidden border-b border-(--background-3) bg-(--background) pt-10 md:pt-20">
 
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <div class="absolute top-0 -right-16 w-96 h-96 rounded-full opacity-10 bg-(--button) blur-[80px]"></div>
@@ -310,11 +310,12 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                @foreach ([['step' => '01', 'icon' => 'heroicon-o-magnifying-glass', 'title' => __('messages.step-1-title'), 'desc' => __('messages.step-1-desc')], ['step' => '02', 'icon' => 'heroicon-o-chat-bubble-left-ellipsis', 'title' => __('messages.step-2-title'), 'desc' => __('messages.step-2-desc')], ['step' => '03', 'icon' => 'heroicon-o-arrow-path', 'title' => __('messages.step-3-title'), 'desc' => __('messages.step-3-desc')]] as $step)
+                @foreach ([['step' => '.1', 'icon' => 'heroicon-o-magnifying-glass', 'title' => __('messages.step-1-title'), 'desc' => __('messages.step-1-desc')], ['step' => '.2', 'icon' => 'heroicon-o-chat-bubble-left-ellipsis', 'title' => __('messages.step-2-title'), 'desc' => __('messages.step-2-desc')], ['step' => '.3', 'icon' => 'heroicon-o-arrow-path', 'title' => __('messages.step-3-title'), 'desc' => __('messages.step-3-desc')]] as $step)
                     <div
                         class="relative p-6 rounded-sm bg-(--background-2) border border-(--background-3) overflow-hidden">
-                        <span class="absolute top-3 right-4 text-5xl font-black leading-none select-none"
-                            style="color:#222">{{ $step['step'] }}</span>
+                        <span
+                            class="absolute top-3 right-4 text-5xl font-medium leading-none select-none text-(--button)">{{ $step['step'] }}
+                        </span>
                         <div class="mb-6">
                             <x-dynamic-component :component="$step['icon']" class="w-5 h-5 text-(--button)" />
                         </div>

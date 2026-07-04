@@ -363,7 +363,9 @@
                                             </div>
                                             <div class="p-3">
                                                 <label class="block text-[10px] font-bold uppercase tracking-wide mb-1"
-                                                    style="color: var(--text-primary)">To</label>
+                                                    style="color: var(--text-primary)">
+                                                    {{ __('messages.add-from') }}
+                                                </label>
                                                 <input type="text" name="end_date" x-ref="endInput" readonly
                                                     placeholder="{{ __('messages.add-date') }}"
                                                     class="w-full text-sm bg-transparent border-0 outline-none cursor-pointer p-0"
@@ -582,19 +584,17 @@
                             @if (auth()->id() === $listing->user_id)
                                 @if ($listing->is_boosted && $listing->boosted_until?->isFuture())
                                     <span
-                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
-                                        style="border: 1px solid var(--background-3); color: var(--text-primary)">
-                                        <x-heroicon-o-chevron-double-up class="w-4 h-4" />
-                                        {{ __('messages.boost-availb') }}
-                                        {{ now()->diffForHumans($listing->boosted_until, true) }}
+                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium bg-(--background-3) text-(--text-muted)">
+                                        <x-heroicon-s-chevron-double-up class="w-4 h-4 text-(--button)" />
+                                        {{ __('messages.prof-boost-available-in', ['time' => now()->diffForHumans($listing->boosted_until, true)]) }}
                                     </span>
                                 @else
                                     <form method="POST" action="{{ route('listings.boost', $listing) }}">
                                         @csrf
                                         <button type="submit"
-                                            class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium transition-colors cursor-pointer"
-                                            style="border: 1px solid var(--background-3); color: var(--text-primary)">
-                                            <x-heroicon-o-chevron-double-up class="w-4 h-4" /> Boost
+                                            class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-semibold bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-colors cursor-pointer">
+                                            <x-heroicon-o-chevron-double-up class="w-4 h-4" />
+                                            {{ __('messages.prof-boost') }}
                                         </button>
                                     </form>
                                 @endif

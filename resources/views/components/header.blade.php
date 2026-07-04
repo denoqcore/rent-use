@@ -5,6 +5,23 @@ use Livewire\Component;
 new class extends Component {}; ?>
 
 <div x-cloak>
+
+    @php
+        $statusLabels = [
+            'active' => __('messages.status_active'),
+            'pending' => __('messages.status_pending'),
+            'confirmed' => __('messages.status_confirmed'),
+            'cancelled' => __('messages.status_cancelled'),
+            'completed' => __('messages.status_completed'),
+            'paused' => __('messages.status_paused'),
+            'archived' => __('messages.status_archived'),
+        ];
+    @endphp
+
+    <script>
+        window.STATUS_LABELS = @json($statusLabels);
+    </script>
+
     <header
         class="headroom hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-(--background) border-b border-(--background-3) flex-col">
 
@@ -17,9 +34,18 @@ new class extends Component {}; ?>
                         </span>
                     </a>
                 </div>
-                <p class="hidden md:block text-[11px] leading-tight text-(--whiteblack)/45 text-right max-w-xl">
-                    {{ __('messages.portfolio_disclaimer') }}
-                </p>
+                <div class="hidden md:flex flex-1 justify-center">
+                    <p
+                        class="flex items-center justify-center gap-3 text-[11px] leading-tight text-(--whiteblack)/45 select-none text-center">
+                        <span class="w-6 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+                        <span class="whitespace-normal">
+                            {{ __('messages.portfolio_disclaimer') }}
+                        </span>
+
+                        <span class="w-6 h-px shrink-0 bg-(--background) animate-pulse"></span>
+                    </p>
+                </div>
                 <a href="https://github.com/markwellq" target="_blank"
                     class="hidden sm:flex items-center gap-1.5 text-(--whiteblack)/60 hover:text-(--button) transition-colors duration-200">
                     <span class="text-[11px]">by Denis Beccev</span>
@@ -32,7 +58,6 @@ new class extends Component {}; ?>
         <div class="max-w-6xl w-full mx-auto px-3 flex items-center justify-between gap-8" style="height:72px">
             <div class="flex items-center gap-4">
                 <a href="/" class="rounded-xl border-b border-transparent text-(--text-muted) ml-2">
-                    {{-- <img src="{{ asset('storage/images/logo.svg') }}" alt="rent.use" class="w-14 h-8"> --}}
                     <x-heroicon-s-stop-circle class="w-5 h-5" />
                 </a>
                 <a href="/search"
@@ -231,9 +256,11 @@ new class extends Component {}; ?>
     <header class="lg:hidden fixed top-0 left-0 right-0 z-50 border-b border-(--background-2) bg-(--background)">
         <div class="flex items-center justify-between px-4 h-14">
             <a href="/" class="flex items-center gap-1">
-                <span class="text-sm font-black tracking-wide text-(--text-primary)">rent<span
-                        class="text-(--text-muted) font-normal">.use</span></span>
+                <span class="text-sm font-black tracking-wide text-(--text-primary)">
+                    rent<span class="text-(--text-muted) font-normal">.use</span>
+                </span>
             </a>
+
             <form method="GET" action="{{ route('search') }}" class="flex-1 mx-3">
                 <div
                     class="flex items-center gap-2 h-9 px-3 rounded-lg bg-(--background-2) border border-(--background-3)">
@@ -243,6 +270,26 @@ new class extends Component {}; ?>
                     <x-heroicon-o-magnifying-glass class="w-4 h-4 text-(--text-muted) shrink-0" />
                 </div>
             </form>
+        </div>
+
+        <div class="border-t border-(--whiteblack) py-2 px-4">
+            <div
+                class="flex items-center justify-center gap-2 text-[10px] leading-relaxed text-center text-(--whiteblack)/45 select-none">
+
+                <span class="w-5 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+                <div class="flex flex-col items-center text-(--blackwhite) whitespace-normal text-xs">
+                    <span>
+                        {{ __('messages.portfolio_disclaimer') }}
+                    </span>
+                    <span>
+                        {{ __('messages.portfolio_disclaimer_continue') }}
+                    </span>
+                </div>
+
+                <span class="w-5 h-px shrink-0 bg-(--background) animate-pulse"></span>
+
+            </div>
         </div>
     </header>
 
@@ -624,8 +671,8 @@ new class extends Component {}; ?>
 
                 <div class="overflow-y-auto flex-1 p-4">
                     <div x-show="bookingsLoading" class="flex items-center justify-center py-16">
-                        <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
-                            style="border-color: var(--button); border-top-color: transparent"></div>
+                        <div class="w-5 h-5 border-2 border-(--button) border-t-transparent rounded-full animate-spin">
+                        </div>
                     </div>
                     <div x-show="!bookingsLoading && bookingsTab === 'renter'">
                         <div x-show="myRentals.length === 0"
@@ -682,23 +729,10 @@ new class extends Component {}; ?>
                                             <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
                                                 @click.prevent>
                                                 <span
-                                                    class="px-2 py-0.5 rounded-sm text-sm md:text-xs font-medium capitalize"
-                                                    :class="{
-                                                        'bg-(--bg-status-warning) text-(--status-warning)': booking
-                                                            .status === 'pending',
-                                                        'bg-(--bg-status-ok) text-(--status-ok)': booking
-                                                            .status === 'confirmed',
-                                                        'bg-(--bg-status-danger) text-(--status-danger)': booking
-                                                            .status === 'cancelled',
-                                                        'bg-(--bg-status-muted) text-(--status-muted)': booking
-                                                            .status === 'completed',
-                                                    }"
-                                                    x-text="{
-                                                        pending: '{{ __('messages.status_pending') }}',
-                                                        confirmed: '{{ __('messages.status_confirmed') }}',
-                                                        cancelled: '{{ __('messages.status_cancelled') }}',
-                                                        completed: '{{ __('messages.status_completed') }}'
-                                                         }[booking.status] || booking.status">
+                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                        :style="`background:${statusColor(booking.status)}`"></span>
+                                                    <span x-text="statusLabel(booking.status)"></span>
                                                 </span>
                                                 <template x-if="booking.status === 'pending'">
                                                     <button @click.stop.prevent="cancelBooking(booking.id)"
@@ -759,14 +793,17 @@ new class extends Component {}; ?>
                                                     <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
                                                 </div>
                                             </div>
-                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
+                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between w-full"
                                                 @click.stop.prevent>
-                                                <template x-if="booking.status === 'pending'">
-                                                    <div class="flex items-center justify-between w-full">
-                                                        <span
-                                                            class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize bg-(--bg-status-warning) text-(--status-warning)"
-                                                            x-text="booking.status">
-                                                        </span>
+                                                <span
+                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                        :style="`background:${statusColor(booking.status)}`"></span>
+                                                    <span x-text="statusLabel(booking.status)"></span>
+                                                </span>
+
+                                                <div class="flex gap-2">
+                                                    <template x-if="booking.status === 'pending'">
                                                         <div class="flex gap-2">
                                                             <button @click="confirmBooking(booking.id)"
                                                                 class="py-0.5 px-2 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition">
@@ -777,34 +814,15 @@ new class extends Component {}; ?>
                                                                 {{ __('messages.decline') }}
                                                             </button>
                                                         </div>
-                                                    </div>
-                                                </template>
-                                                <template x-if="booking.status !== 'pending'">
-                                                    <div class="flex items-center justify-between w-full">
-                                                        <span class="px-2 py-0.5 rounded-sm text-xs font-medium capitalize"
-                                                            :class="{
-                                                                'bg-(--bg-status-ok) text-(--status-ok)': booking
-                                                                    .status === 'confirmed',
-                                                                'bg-(--bg-status-danger) text-(--status-danger)': booking
-                                                                    .status === 'cancelled',
-                                                                'bg-(--bg-status-muted) text-(--status-muted)': booking
-                                                                    .status === 'completed',
-                                                            }"
-                                                            x-text="{
-                                                                confirmed: '{{ __('messages.status_confirmed') }}',
-                                                                cancelled: '{{ __('messages.status_cancelled') }}',
-                                                                completed: '{{ __('messages.status_completed') }}'
-                                                            }[booking.status] || booking.status">
-                                                        </span>
-                                                        <template
-                                                            x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
-                                                            <button @click.stop.prevent="deleteBooking(booking.id)"
-                                                                class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
-                                                                {{ __('messages.delete') }}
-                                                            </button>
-                                                        </template>
-                                                    </div>
-                                                </template>
+                                                    </template>
+                                                    <template
+                                                        x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
+                                                        <button @click.stop.prevent="deleteBooking(booking.id)"
+                                                            class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                            {{ __('messages.delete') }}
+                                                        </button>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -817,23 +835,19 @@ new class extends Component {}; ?>
         </div>
 
         <div x-show="chatsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog" aria-modal="true">
-            {{-- Backdrop --}}
             <div x-show="chatsModal" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="chatsModal = false"
                 class="absolute inset-0 bg-black/30 transition-opacity">
             </div>
 
-            {{-- Panel --}}
             <div x-show="chatsModal" x-transition:enter="transform transition ease-in-out duration-300"
                 x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transform transition ease-in-out duration-300"
                 x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
                 @keydown.escape.window="chatsModal = false"
-                class="relative z-10 flex h-full shadow-2xl bg-(--background-2) border-l border-(--background-3)"
-                style="width: min(820px, 90vw)">
+                class="relative z-10 flex h-full shadow-2xl bg-(--background-2) border-l border-(--background-3) w-[min(820px,90vw)]">
 
-                {{-- СПИСОК (всегда виден на desktop, скрыт на мобиле если открыт чат) --}}
                 <div class="w-72 shrink-0 flex flex-col border-r border-(--background-3)"
                     :class="chatView === 'chat' ? 'hidden lg:flex' : 'flex'">
 
@@ -850,8 +864,8 @@ new class extends Component {}; ?>
 
                     <div class="flex-1 overflow-y-auto">
                         <div x-show="chatsLoading" class="flex items-center justify-center py-16">
-                            <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
-                                style="border-color: var(--button); border-top-color: transparent"></div>
+                            <div class="w-5 h-5 border-2 border-(--button) border-t-transparent rounded-full animate-spin">
+                            </div>
                         </div>
 
                         <div x-show="!chatsLoading && chats.length === 0"
@@ -867,8 +881,8 @@ new class extends Component {}; ?>
                                     class="flex items-center gap-3 p-3 rounded-sm cursor-pointer transition-colors hover:bg-(--background-3)"
                                     :class="activeChatId === chat.id ? 'bg-(--background-3)' : ''">
 
-                                    <div class="w-9 h-9 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold"
-                                        style="background: #dbeafe; color: var(--button)">
+                                    <div
+                                        class="w-9 h-9 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
                                         <template x-if="chat.other_user.avatar">
                                             <img :src="'/storage/' + chat.other_user.avatar"
                                                 class="w-full h-full object-cover">
@@ -892,8 +906,7 @@ new class extends Component {}; ?>
                                                 <span x-text="chat.last_message?.body ?? '—'"></span>
                                             </p>
                                             <span x-show="chat.unread > 0" x-text="chat.unread"
-                                                class="shrink-0 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full"
-                                                style="background: var(--button); color: var(--button-text)">
+                                                class="shrink-0 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full bg-(--button) text-(--button-text)">
                                             </span>
                                         </div>
                                     </div>
@@ -903,22 +916,19 @@ new class extends Component {}; ?>
                     </div>
                 </div>
 
-                {{-- ЧАТ --}}
-                <div class="flex-1 flex flex-col min-h-0" :class="chatView === 'list' ? 'hidden lg:flex' : 'flex'">
+                <div class="flex-1 flex flex-col min-h-0 min-w-0"
+                    :class="chatView === 'list' ? 'hidden lg:flex' : 'flex'">
 
-                    {{-- Пустое состояние (desktop — не выбран чат) --}}
                     <template x-if="!activeChatId">
                         <div class="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6">
                             <x-heroicon-o-chat-bubble-bottom-center class="w-12 h-12 text-(--text-muted) opacity-20" />
-                            <p class="text-sm text-(--text-muted)">Выберите чат</p>
+                            <p class="text-sm text-(--text-muted)">{{ __('messages.message-choose-chat') }}</p>
                         </div>
                     </template>
 
                     <template x-if="activeChatId">
-                        <div class="flex flex-col h-full">
-                            {{-- Header чата --}}
+                        <div class="flex flex-col h-full min-w-0">
                             <div class="flex items-center gap-3 px-4 py-3 border-b border-(--background-3) shrink-0">
-                                {{-- Кнопка назад (мобиль) --}}
                                 <button
                                     class="lg:hidden p-1 -ml-1 rounded-sm cursor-pointer hover:bg-(--background-3) text-(--text-muted)"
                                     @click="chatView = 'list'; activeChatId = null">
@@ -928,8 +938,8 @@ new class extends Component {}; ?>
                                     </svg>
                                 </button>
 
-                                <div class="w-8 h-8 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold"
-                                    style="background: #dbeafe; color: var(--button)">
+                                <div
+                                    class="w-8 h-8 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
                                     <template x-if="activeChatData?.other_user?.avatar">
                                         <img :src="'/storage/' + activeChatData.other_user.avatar"
                                             class="w-full h-full object-cover">
@@ -951,18 +961,15 @@ new class extends Component {}; ?>
                                 </button>
                             </div>
 
-                            {{-- Сообщения --}}
-                            <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1">
+                            <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1 min-w-0">
                                 <template x-for="msg in activeMessages" :key="msg.id">
-                                    <div :class="msg.is_mine ? 'items-end' : 'items-start'"
-                                        class="flex flex-col gap-0.5 group">
+                                    <div class="flex flex-col gap-0.5 group min-w-0 w-full"
+                                        :class="msg.is_mine ? 'items-end' : 'items-start'">
 
-                                        {{-- Ссылка на объявление --}}
-                                        <template x-if="msg.listing">
+                                        <template x-if="msg.listing && !msg.is_deleted">
                                             <a :href="'/listings/' + msg.listing.slug"
-                                                class="text-[11px] px-1 mb-0.5 flex items-center gap-1 hover:underline"
-                                                :class="msg.is_mine ? 'self-end' : 'self-start'"
-                                                style="color: var(--button)">
+                                                class="text-[11px] px-1 mb-0.5 flex items-center gap-1 hover:underline text-(--button)"
+                                                :class="msg.is_mine ? 'self-end' : 'self-start'">
                                                 <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -974,13 +981,11 @@ new class extends Component {}; ?>
                                             </a>
                                         </template>
 
-                                        <div class="flex items-end gap-1.5"
-                                            :class="msg.is_mine ? 'flex-row-reverse' : 'flex-row'">
+                                        <div class="flex max-w-full min-w-0"
+                                            :class="msg.is_mine ? 'justify-end' : 'justify-start'">
+                                            <div class="relative max-w-70 sm:max-w-90 min-w-0">
 
-                                            {{-- Сообщение --}}
-                                            <div class="relative max-w-[72%]">
-                                                {{-- Контекстное меню (только свои) --}}
-                                                <template x-if="msg.is_mine">
+                                                <template x-if="msg.is_mine && !msg.is_deleted">
                                                     <div
                                                         class="absolute -left-16 bottom-0 hidden group-hover:flex items-center gap-1">
                                                         <button @click="startEdit(msg)"
@@ -1004,45 +1009,57 @@ new class extends Component {}; ?>
                                                     </div>
                                                 </template>
 
-                                                <div class="px-3 py-2 rounded-2xl text-sm leading-relaxed break-words"
-                                                    :style="msg.is_mine ?
-                                                        'background: var(--button); color: var(--button-text); border-bottom-right-radius: 4px' :
-                                                        'background: var(--background-3); color: var(--text-primary); border-bottom-left-radius: 4px'">
+                                                <template x-if="msg.is_deleted">
+                                                    <div class="px-3 py-2 rounded-2xl text-sm italic leading-relaxed break-words [overflow-wrap:anywhere] min-w-0 bg-(--background-3) text-(--text-muted) rounded-bl-[4px]"
+                                                        :class="msg.is_mine ? 'rounded-br-[4px]' : 'rounded-bl-[4px]'">
+                                                        {{ __('messages.message-deleted') }}
+                                                    </div>
+                                                </template>
 
-                                                    {{-- Режим редактирования --}}
-                                                    <template x-if="editingMessageId === msg.id">
-                                                        <div>
-                                                            <textarea id="chatEditInput" x-model="editingBody" rows="2"
-                                                                class="w-full bg-transparent border-0 outline-none resize-none text-sm" style="color: var(--button-text)"
-                                                                @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()">
-                                                    </textarea>
-                                                            <div
-                                                                class="flex items-center gap-2 mt-1 pt-1 border-t border-white/20 text-xs">
-                                                                <button @click="sendChatMessage()"
-                                                                    class="font-medium opacity-90 hover:opacity-100 cursor-pointer">Сохранить</button>
-                                                                <button @click="cancelEdit()"
-                                                                    class="opacity-60 hover:opacity-100 cursor-pointer">Отмена</button>
+                                                <template x-if="!msg.is_deleted">
+                                                    <div class="px-3 py-2 rounded-2xl text-sm leading-relaxed break-words [overflow-wrap:anywhere] min-w-0"
+                                                        :class="msg.is_mine ?
+                                                            'bg-(--button) text-(--button-text) rounded-br-[4px]' :
+                                                            'bg-(--background-3) text-(--text-primary) rounded-bl-[4px]'">
+
+                                                        <template x-if="editingMessageId === msg.id">
+                                                            <div>
+                                                                <textarea id="chatEditInput" x-model="editingBody" rows="2"
+                                                                    class="w-full bg-transparent border-0 outline-none resize-none text-sm text-(--button-text)"
+                                                                    @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
+                                                                <div
+                                                                    class="flex items-center gap-2 mt-1 pt-1 border-t border-white/20 text-xs">
+                                                                    <button @click="sendChatMessage()"
+                                                                        class="font-medium opacity-90 hover:opacity-100 cursor-pointer">
+                                                                        {{ __('messages.message-save') }}
+                                                                    </button>
+                                                                    <button @click="cancelEdit()"
+                                                                        class="opacity-60 hover:opacity-100 cursor-pointer">
+                                                                        {{ __('messages.message-cancel') }}
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </template>
+                                                        </template>
 
-                                                    <template x-if="editingMessageId !== msg.id">
-                                                        <span x-text="msg.body"></span>
-                                                    </template>
-                                                </div>
+                                                        <template x-if="editingMessageId !== msg.id">
+                                                            <span x-text="msg.body"
+                                                                class="break-words [overflow-wrap:anywhere]"></span>
+                                                        </template>
+                                                    </div>
+                                                </template>
+
                                             </div>
                                         </div>
 
-                                        {{-- Время + edited + read --}}
                                         <div class="flex items-center gap-1.5 px-1"
                                             :class="msg.is_mine ? 'self-end' : 'self-start'">
                                             <span class="text-[10px] text-(--text-muted)" x-text="msg.created_at"></span>
-                                            <template x-if="msg.edited_at">
-                                                <span class="text-[10px] text-(--text-muted)">· изменено</span>
+                                            <template x-if="msg.edited_at && !msg.is_deleted">
+                                                <span
+                                                    class="text-[10px] text-(--text-muted)">{{ __('messages.message-edited') }}</span>
                                             </template>
-                                            <template x-if="msg.is_mine">
+                                            <template x-if="msg.is_mine && !msg.is_deleted">
                                                 <span class="text-[10px]">
-                                                    {{-- прочитано --}}
                                                     <template x-if="msg.read_at">
                                                         <svg class="w-3 h-3 text-blue-400" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -1050,7 +1067,6 @@ new class extends Component {}; ?>
                                                                 stroke-width="2.5" d="M4.5 12.75l4 4 9-9M4.5 8.25l4 4" />
                                                         </svg>
                                                     </template>
-                                                    {{-- отправлено --}}
                                                     <template x-if="!msg.read_at">
                                                         <svg class="w-3 h-3 text-(--text-muted)" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -1066,36 +1082,34 @@ new class extends Component {}; ?>
                                 </template>
                             </div>
 
-                            {{-- Плашка редактирования --}}
                             <div x-show="editingMessageId" x-cloak
-                                class="px-4 py-2 border-t border-(--background-3) flex items-center gap-2"
-                                style="background: var(--background)">
-                                <svg class="w-4 h-4 shrink-0" style="color: var(--button)" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
+                                class="px-4 py-2 border-t border-(--background-3) flex items-center gap-2 bg-(--background)">
+                                <svg class="w-4 h-4 shrink-0 text-(--button)" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                <span class="text-xs text-(--text-muted) flex-1">Редактирование сообщения</span>
+                                <span class="text-xs text-(--text-muted) flex-1">{{ __('messages.message-edit') }}</span>
                                 <button @click="cancelEdit()"
                                     class="text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
                                     <x-heroicon-o-x-mark class="w-4 h-4" />
                                 </button>
                             </div>
 
-                            {{-- Input --}}
                             <div class="px-4 py-3 shrink-0 border-t border-(--background-3)">
                                 <div class="flex items-end gap-2">
-                                    <textarea x-model="editingMessageId ? editingBody : chatInput" placeholder="Написать сообщение..." rows="1"
-                                        class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary)"
-                                        style="max-height: 120px; border: 1px solid var(--background-3)" onfocus="this.style.borderColor='var(--button)'"
-                                        onblur="this.style.borderColor='var(--background-3)'"
-                                        @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()">
-                            </textarea>
+                                    <textarea x-show="!editingMessageId" x-model="chatInput" placeholder="{{ __('messages.message-send') }}"
+                                        rows="1"
+                                        class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
+                                        @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()"></textarea>
+
+                                    <textarea x-show="editingMessageId" x-model="editingBody" placeholder="{{ __('messages.message-send') }}"
+                                        rows="1"
+                                        class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
+                                        @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
+
                                     <button @click="sendChatMessage()"
-                                        class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 cursor-pointer"
-                                        style="background: var(--button)"
-                                        onmouseover="this.style.background='var(--button-h)'"
-                                        onmouseout="this.style.background='var(--button)'">
+                                        class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 cursor-pointer bg-(--button) hover:bg-(--button-h)">
                                         <x-heroicon-o-paper-airplane class="w-4 h-4 text-(--button-text)" />
                                     </button>
                                 </div>
@@ -1105,6 +1119,7 @@ new class extends Component {}; ?>
                 </div>
             </div>
         </div>
+
 
         <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutModal = false"></div>

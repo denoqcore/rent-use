@@ -1,9 +1,10 @@
 <?php
 
 return [
-
+    //EN
     // Header + home + hero
     'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform.',
+    'portfolio_disclaimer_continue' => 'Do not submit any real personal data.',
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',
@@ -51,17 +52,30 @@ return [
     'status_messages'    => 'No messages yet',
     'status_desc_messages' => 'Write to a listing owner to start a conversation',
     'messages_you'       => 'You',
-    'status_pending'     => 'Pending',
-    'status_confirmed'   => 'Confirmed',
-    'status_cancelled'   => 'Cancelled',
-    'status_completed'   => 'Completed',
+
+
+    'status_active'    => 'Active',
+    'status_pending'   => 'Pending',
+    'status_confirmed' => 'Confirmed',
+    'status_cancelled' => 'Cancelled',
+    'status_completed' => 'Completed',
+    'status_paused'    => 'Paused',
+    'status_archived'  => 'Archived',
+
     'confirm'            => 'Confirm',
     'decline'            => 'Decline',
     'cancel'             => 'Cancel',
     'delete'             => 'Delete',
+    // chat
+    'message-choose-chat' => 'Select a chat',
+    'message-deleted' => 'Message deleted',
+    'message-save' => 'Save',
+    'message-cancel' => 'Cancel',
+    'message-edited' => '· edited',
+    'message-edit' => 'Edit message',
+    'message-send' => 'Type a message...',
 
     //favorite
-
     'no_favorites_title' => 'No saved listings yet',
     'no_favorites_desc'  => 'Tap the heart on any listing to save it here.',
 
@@ -72,6 +86,10 @@ return [
 
     'prof-name'=> 'Name',
     'prof-phone'=> 'Phone',
+    'prof-current-pass' => 'Current password',
+    'prof-new-pass' => 'New password',
+    'prof-new-pass-confirm' => 'Confirm new password',
+    'prof-update-pass' => 'Update password',
     'prof-identity' => 'Identity',
 
     'prof-verify' => 'Not verified',
@@ -87,9 +105,35 @@ return [
     'prof-nolisting' => 'You have no listings yet',
     'prof-create-listing' => 'Create listing',
 
+    'prof-delete' => 'Delete',
+    'prof-delete-ad' => 'Delete this ad?',
+    'prof-completly-delete-ad' => 'Are you sure you want to completely delete',
+    'prof-delete-restore' => 'It will be impossible to restore it',
+
     'prof-bookings' => 'My bookings',
     'prof-nobookings' => 'No bookings yet',
 
+    'prof-current-plan' => 'Current plan',
+    'prof-until-plan' => 'Until',
+    'prof-expiring-plan' => 'is expiring',
+    'prof-plan-listing'=> 'listing',
+    'prof-plan-photo' => 'photo',
+    'prof-plan-boost' => 'boost',
+    'prof-plan-active' => 'Active',
+    'prof-plan-active-subs' => 'Active subscription',
+    'prof-plan-month' => '/month',
+    'prof-plan-choose' => 'Choose plan',
+    'prof-plan-history' => 'Payment history',
+    'prof-plan-history-none' => 'No payments yet',
+
+    'plan-feature-12-listings' => 'Up to 12 listings',
+    'plan-feature-20-listings' => 'Up to 20 listings',
+    'plan-feature-8-photos' => 'Up to 8 photos',
+    'plan-feature-1-boost' => '1 boost to the top',
+    'plan-feature-3-boosts' => '3 boosts to the top',
+    'plan-feature-priority-search' => 'Search priority',
+
+    'prof-boost' => 'Boost',
     'prof-support' => 'Support',
     'prof-notickets' => 'No support tickets yet',
     'prof-create-ticket' => 'Create ticket',
@@ -99,10 +143,9 @@ return [
     'password' => 'Password',
 
     // listing show blade
-
     'login-show-phone' => 'Log in to view phone number',
     'edit-listing' => 'Edit listing',
-    'boost-availb' => 'Available in',
+    'prof-boost-available-in' => 'Available in :time',
     'show-phone' => 'Show phone number',
     'login-request-book' => 'Log in to book',
     'book-now' => 'Book now',
@@ -140,7 +183,6 @@ return [
     'day' => 'day',
 
     // benefits
-
     'benefits' => 'Benefits',
     'benefits-title' => 'Why rent.use?',
     'benefits-desc' => 'Save money, reduce clutter, and access anything you need — from people around you.',
@@ -155,7 +197,6 @@ return [
     'benefit-3-desc' => 'Rent for a day, a week, or longer. Agree on terms that work for you.',
 
     // how it works
-
     'how-it-works' => 'How it works',
 
     'step-1-title' => 'Find an item',
@@ -168,14 +209,12 @@ return [
     'step-3-desc' => 'Pick it up, use it, return it. Simple as that.',
 
     // CTA
-
     'cta-title' => 'Make money from your unused items with',
     'cta-desc' => 'Turn your clutter into cash. List items in minutes and start earning today.',
     'get-started' => 'Get Started',
     'post-listing' => 'Post a listing',
 
     // reviews
-
     'reviews-title' => 'What people say',
 
     'review-1' => 'Rented a camera for the weekend — super easy process, great condition!',
@@ -183,14 +222,12 @@ return [
     'review-3' => 'Clean interface, trustworthy platform. Will definitely use again.',
 
     // footer
-
     'all-rights' => 'All rights reserved',
     'privacy' => 'Privacy Policy',
     'terms' => 'Terms of Service',
     'cookies' => 'Cookie Policy',
 
     // register
-
     'register-disclaimer' => "Please use <span class='text-red-900'>non-real</span> data when registering. Do not provide your actual personal information.",
     'register-create' => 'Create account',
     'register-login' => 'Already have one?',
@@ -209,7 +246,6 @@ return [
     'register-desc' => 'Create your account and unlock a world of rental opportunities around you.',
 
     // login
-
     'login-title' => 'Login',
     'login-subtitle' => "Don't have an account?",
     'login-subtitle-link' => 'Sign Up',
@@ -225,7 +261,6 @@ return [
     'login-desc' => 'Rent what you need, when you need it. Everything in one place.',
 
     //post listing
-
     'create_listing' => 'Post listing',
     'create_listing_sub' => 'Fill in the details to publish your rental',
     'step_category' => 'Category',
@@ -288,13 +323,63 @@ return [
     'no-results'         => 'No listings found',
 
 
-    // Errors
-    'log-error' => 'Invalid email or password.',
-    'reg-error-email' => '',
-    'reg-error-username' => '',
-    'reg-error-phone' => '',
-    // 'reg-error-email' => '',
+    // From controllers
 
+    //Listing controller
+    'listing-published' => 'Listing published',
+    'listing-updated'  => 'Listing updated',
+    'listing-active'  => 'Listing is active',
+    'listing-paused' => 'Listing paused',
+    'listing-archived' => 'Listing archived',
+    'listing-restored' => 'Listing restored',
+    'listing-deleted' => 'Listing deleted',
+    'max-active-listings' => 'You have reached the maximum number of active listings for your plan',
+    'plan-limit-reached' => 'You have reached your plan limit. Upgrade or pause another listing first',
+    'at-least-one-price-required' => 'At least one price is required',
+
+    //Booking controller
+    'booking-end-time-after-start' => 'End time must be after the start time',
+    'booking-cannot-book-own-listing' => 'You cannot book your own listing',
+    'booking-dates-already-booked' => 'These dates are already booked',
+    'booking-request-sent' => 'Booking request sent',
+    'booking-confirmed' => 'Booking confirmed',
+    'booking-cannot-confirmed' => 'This booking cannot be confirmed',
+    'booking-cancelled' => 'Booking cancelled',
+    'booking-cannot-cancelled' => 'This booking cannot be cancelled',
+
+    //Boost Controller
+    'boost-listing-booster' => 'Listing boosted',
+
+    //Profile Controller
+    'profile-updated' => 'Profile updated',
+    'profile-avatar-updated' => 'Avatar updated',
+    'profile-current-password-incorrenct' => 'Current password is incorrect',
+    'profile-password-updated' => 'Password updated',
+
+    //Review Controller
+    'review-cannot-review-yourself' => 'You cannot review yourself',
+    'review-submited' => 'Review submitted',
+    'review-deleted' => 'Review deleted',
+
+    //ReviewVote Controller
+    'review-vote-cannot-own-review' => 'You cannot vote on your own review',
+
+    //Subscription Controller
+    'subscription-already-active' => 'You already have an active subscription',
+    'subscription-payment-success' => 'Payment was successful! Your subscription will activate within a minute',
+    'subscription-activated' => 'Subscription successfully activated',
+    'subscription-not-active' => "You don't have an active subscription",
+    'subscription-cancelled' => 'Subscription cancelled',
+
+    'plan-feature-12-ads' => 'Up to 12 ads',
+    'plan-feature-6-photos' => 'Up to 6 photos per ad',
+    'plan-feature-1-boost' => '1 boost',
+    'plan-feature-priority-search' => 'Priority search',
+
+    'plan-feature-20-ads' => 'Up to 20 ads',
+    'plan-feature-8-photos' => 'Up to 8 photos per ad',
+    'plan-feature-3-boosts' => '3 boosts',
+    'plan-feature-highest-priority' => 'Highest priority in search',
 ];
 
 

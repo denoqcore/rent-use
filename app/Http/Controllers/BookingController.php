@@ -42,7 +42,7 @@ class BookingController extends Controller
             $end   = Carbon::parse($request->booking_date . ' ' . $request->end_hour);
 
             if ($end->lte($start)) {
-                return back()->withErrors(['end_hour' => 'End time must be after start time.'])->withInput();
+                return back()->withErrors(['end_hour' => __('messages.booking-end-time-after-start')])->withInput();
             }
 
             $hours      = $start->diffInHours($end);
@@ -50,7 +50,7 @@ class BookingController extends Controller
         }
 
         if (auth()->id() === $listing->user_id) {
-            return back()->withErrors(['start_date' => 'You cannot book your own listing.']);
+            return back()->withErrors(['start_date' => __('messages.booking-cannot-book-own-listing')]);
         }
 
         if ($pricingMode === 'day') {
@@ -78,7 +78,7 @@ class BookingController extends Controller
         }
 
         if ($conflict) {
-            return back()->withErrors(['start_date' => 'These dates are already booked.'])->withInput();
+            return back()->withErrors(['start_date' => __('messages.booking-dates-already-booked')])->withInput();
         }
 
         $booking = Booking::create([
@@ -97,7 +97,7 @@ class BookingController extends Controller
         ]);
 
         event(new BookingCreated($booking));
-        return back()->with('success', 'Booking request sent!');
+        return back()->with('success', __('messages.booking-request-sent'));
     }
 
 
@@ -107,12 +107,13 @@ class BookingController extends Controller
         abort_if(auth()->id() !== $booking->owner_id, 403);
 
         if (!$booking->isPending()) {
-            return back()->withErrors(['booking' => 'This booking cannot be confirmed.']);
+        return back()->withErrors(['booking' => __('messages.booking-cannot-confirmed')]);
+
         }
 
         $booking->update(['status' => 'confirmed']);
 
-        return back()->with('success', 'Booking confirmed!');
+       return back()->with('success', __('messages.booking-confirmed'));
     }
 
     public function cancel(Booking $booking)
@@ -123,7 +124,7 @@ class BookingController extends Controller
         );
 
         if ($booking->isCancelled() || $booking->isCompleted()) {
-            return back()->withErrors(['booking' => 'This booking cannot be cancelled.']);
+           return back()->withErrors(['booking' => __('messages.booking-cannot-cancelled')]);
         }
 
         $booking->update([
@@ -131,7 +132,7 @@ class BookingController extends Controller
             'cancelled_by' => auth()->id() === $booking->renter_id ? 'renter' : 'owner',
         ]);
 
-        return back()->with('success', 'Booking cancelled.');
+        return back()->with('success', __('messages.booking-cancelled'));
     }
 
     public function apiIndex()

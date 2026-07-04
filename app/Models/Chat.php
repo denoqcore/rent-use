@@ -27,7 +27,7 @@ class Chat extends Model
 
     public function lastMessage()
     {
-        return $this->hasOne(ChatMessage::class)->latestOfMany();
+        return $this->hasOne(ChatMessage::class)->withTrashed()->latestOfMany();
     }
 
     public function otherUser(): User
