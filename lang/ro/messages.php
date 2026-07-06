@@ -131,6 +131,11 @@ return [
     'plan-feature-1-boost' => '1 promovare în top',
     'plan-feature-3-boosts' => '3 promovări în top',
     'plan-feature-priority-search' => 'Prioritate în căutare',
+    'plan-feature-12-ads' => 'Până la 12 anunțuri',
+    'plan-feature-6-photos' => 'Până la 6 fotografii per anunț',
+
+    'plan-feature-20-ads' => 'Până la 20 de anunțuri',
+    'plan-feature-highest-priority' => 'Cea mai înaltă prioritate în căutare',
 
     'prof-boost' => 'Accelerare',
     'prof-support' => 'Suport',
@@ -313,7 +318,15 @@ return [
     'reset'              => 'Resetează',
     'no-results'         => 'Nu au fost găsite anunțuri',
 
+    // ro
+    '404-title' => 'Pagina nu a fost găsită',
+    '404-description' => 'Pagina pe care o cauți nu există sau a fost mutată.',
+    '404-home' => 'Înapoi acasă',
+    '404-browse' => 'Vezi anunțuri',
+
     // From controllers
+    'success' => 'Succes',
+    'error' => 'Eroare',
 
     //Listing Controller
     'listing-published' => 'Anunț publicat',
@@ -360,14 +373,4 @@ return [
     'subscription-activated' => 'Abonamentul a fost activat cu succes',
     'subscription-not-active' => "Nu aveți un abonament activ",
     'subscription-cancelled' => 'Abonamentul a fost anulat',
-
-    'plan-feature-12-ads' => 'Până la 12 anunțuri',
-    'plan-feature-6-photos' => 'Până la 6 fotografii per anunț',
-    'plan-feature-1-boost' => '1 promovare în top',
-    'plan-feature-priority-search' => 'Prioritate în căutare',
-
-    'plan-feature-20-ads' => 'Până la 20 de anunțuri',
-    'plan-feature-8-photos' => 'Până la 8 fotografii per anunț',
-    'plan-feature-3-boosts' => '3 promovări în top',
-    'plan-feature-highest-priority' => 'Cea mai înaltă prioritate în căutare',
 ];

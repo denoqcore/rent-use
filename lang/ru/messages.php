@@ -125,6 +125,11 @@ return [
     'plan-feature-1-boost' => '1 поднятие в топ',
     'plan-feature-3-boosts' => '3 поднятия в топ',
     'plan-feature-priority-search' => 'Приоритет в поиске',
+    'plan-feature-12-ads' => 'До 12 объявлений',
+    'plan-feature-6-photos' => 'До 6 фотографий на объявление',
+
+    'plan-feature-20-ads' => 'До 20 объявлений',
+    'plan-feature-highest-priority' => 'Наивысший приоритет в поиске',
 
     'prof-delete' => 'Удалить',
     'prof-delete-ad' => 'Удалить это объявление?',
@@ -311,7 +316,15 @@ return [
     'reset'              => 'Сбросить',
     'no-results'         => 'Объявлений не найдено',
 
+    // 404
+    '404-title' => 'Страница не найдена',
+    '404-description' => 'Страница, которую вы ищете, не существует или была перемещена.',
+    '404-home' => 'На главную',
+    '404-browse' => 'Смотреть объявления',
+
     // From controllers
+    'success' => 'Успех',
+    'error' => 'Ошибка',
 
     //Listing Controller
     'listing-published' => 'Объявление опубликовано',
@@ -358,14 +371,4 @@ return [
     'subscription-activated' => 'Подписка успешно активирована',
     'subscription-not-active' => "У вас нет активной подписки",
     'subscription-cancelled' => 'Подписка отменена',
-
-    'plan-feature-12-ads' => 'До 12 объявлений',
-    'plan-feature-6-photos' => 'До 6 фотографий на объявление',
-    'plan-feature-1-boost' => '1 поднятие в топ',
-    'plan-feature-priority-search' => 'Приоритет в поиске',
-
-    'plan-feature-20-ads' => 'До 20 объявлений',
-    'plan-feature-8-photos' => 'До 8 фотографий на объявление',
-    'plan-feature-3-boosts' => '3 поднятия в топ',
-    'plan-feature-highest-priority' => 'Наивысший приоритет в поиске',
 ];

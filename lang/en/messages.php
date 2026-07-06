@@ -133,6 +133,11 @@ return [
     'plan-feature-3-boosts' => '3 boosts to the top',
     'plan-feature-priority-search' => 'Search priority',
 
+    'plan-feature-12-ads' => 'Up to 12 ads',
+    'plan-feature-6-photos' => 'Up to 6 photos per ad',
+    'plan-feature-20-ads' => 'Up to 20 ads',
+    'plan-feature-highest-priority' => 'Highest priority in search',
+
     'prof-boost' => 'Boost',
     'prof-support' => 'Support',
     'prof-notickets' => 'No support tickets yet',
@@ -321,9 +326,16 @@ return [
     'apply'              => 'Apply',
     'reset'              => 'Reset',
     'no-results'         => 'No listings found',
+    //404
+    '404-title' => 'Page not found',
+    '404-description' => 'The page you\'re looking for doesn\'t exist or may have been moved.',
+    '404-home' => 'Back to home',
+    '404-browse' => 'Browse listings',
 
 
     // From controllers
+    'success' => 'Success',
+    'error' => 'Error',
 
     //Listing controller
     'listing-published' => 'Listing published',
@@ -370,16 +382,6 @@ return [
     'subscription-activated' => 'Subscription successfully activated',
     'subscription-not-active' => "You don't have an active subscription",
     'subscription-cancelled' => 'Subscription cancelled',
-
-    'plan-feature-12-ads' => 'Up to 12 ads',
-    'plan-feature-6-photos' => 'Up to 6 photos per ad',
-    'plan-feature-1-boost' => '1 boost',
-    'plan-feature-priority-search' => 'Priority search',
-
-    'plan-feature-20-ads' => 'Up to 20 ads',
-    'plan-feature-8-photos' => 'Up to 8 photos per ad',
-    'plan-feature-3-boosts' => '3 boosts',
-    'plan-feature-highest-priority' => 'Highest priority in search',
 ];
 
 

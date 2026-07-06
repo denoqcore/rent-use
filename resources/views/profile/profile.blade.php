@@ -13,7 +13,7 @@
         editInfo: false,
         editPassword: false
     }">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start py-14 lg:py-0">
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
                 <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) mb-2 flex items-center gap-3">
                     <div
