@@ -160,31 +160,23 @@ class User extends Authenticatable implements FilamentUser
 
     public function maxListings(): int
     {
-        if (!$this->isActivePlan()) return 4;
-        return match($this->plan) {
-            'pro'     => 12,
-            'premium' => 20,
-            default   => 4,
-        };
+        if (!$this->isActivePlan()) return config('plans.starter.listings', 4);
+        return config("plans.{$this->plan}.listings", config('plans.starter.listings', 4));
     }
 
     public function maxPhotos(): int
     {
-        if (!$this->isActivePlan()) return 3;
-        return match($this->plan) {
-            'pro'     => 6,
-            'premium' => 8,
-            default   => 3,
-        };
+        if (!$this->isActivePlan()) return config('plans.starter.photos', 3);
+        return config("plans.{$this->plan}.photos", config('plans.starter.photos', 3));
     }
 
     public function maxBoostedListings(): int
     {
         if (!$this->isActivePlan()) return 0;
         return match($this->plan) {
-            'pro'     => 1,
-            'premium' => 3,
-            default   => 0,
+            'pro'     => 2,
+            'premium' => 4,
+            default   => 1,
         };
     }
 
@@ -193,13 +185,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(SubscriptionPayment::class);
     }
 
-        public function boostLimitPerDay(): int
+     public function boostLimitPerDay(): int
     {
-        return match ($this->plan) {
-            'premium' => 3,
-            'pro'     => 2,
-            default   => 1,
-        };
+        $this->isActivePlan();
+
+        return config("plans.{$this->plan}.boosts", config('plans.starter.boosts', 1));
     }
 
  public function canBoost(): bool

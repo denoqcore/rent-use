@@ -8,7 +8,9 @@
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2"
         x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2"
-        class="fixed top-28 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] rounded-lg border border-(--background-3) bg-(--background-2) shadow-lg">
+        class="fixed z-50 rounded-lg border border-(--background-3) bg-(--background-2) shadow-lg
+       bottom-18.5 left-4 right-4
+       sm:bottom-auto sm:top-28 sm:left-auto sm:right-6 sm:w-95 sm:max-w-[calc(100vw-2rem)]">
 
         <div class="relative flex gap-3 p-4 pr-8">
 

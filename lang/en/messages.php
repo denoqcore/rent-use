@@ -125,12 +125,13 @@ return [
     'prof-plan-choose' => 'Choose plan',
     'prof-plan-history' => 'Payment history',
     'prof-plan-history-none' => 'No payments yet',
+    'prof-plan-expiring' => 'Expiring soon',
 
     'plan-feature-12-listings' => 'Up to 12 listings',
     'plan-feature-20-listings' => 'Up to 20 listings',
     'plan-feature-8-photos' => 'Up to 8 photos',
-    'plan-feature-1-boost' => '1 boost to the top',
-    'plan-feature-3-boosts' => '3 boosts to the top',
+    'plan-feature-2-boost' => '2 boost to the top',
+    'plan-feature-4-boosts' => '4 boosts to the top',
     'plan-feature-priority-search' => 'Search priority',
 
     'plan-feature-12-ads' => 'Up to 12 ads',
@@ -360,7 +361,11 @@ return [
     'booking-cannot-cancelled' => 'This booking cannot be cancelled',
 
     //Boost Controller
-    'boost-listing-booster' => 'Listing boosted',
+    'boost-not-available-on-plan' => 'Boosting listings is not available on your current plan.',
+    'boost-limit-reached' => 'You have reached your daily boost limit.',
+    'boost-listing-booster' => 'Your listing has been boosted successfully.',
+    //expire commands
+    'boost-daily-counter-reset' => 'Daily boost counters have been reset.',
 
     //Profile Controller
     'profile-updated' => 'Profile updated',

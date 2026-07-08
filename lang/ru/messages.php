@@ -118,6 +118,7 @@ return [
     'prof-plan-choose' => 'Выбрать тариф',
     'prof-plan-history' => 'История платежей',
     'prof-plan-history-none' => 'Платежей пока нет',
+    'prof-plan-expiring' => 'Скоро истекает',
 
     'plan-feature-12-listings' => 'До 12 объявлений',
     'plan-feature-20-listings' => 'До 20 объявлений',
@@ -350,6 +351,11 @@ return [
 
     //Boost Controller
     'boost-listing-booster' => 'Объявление поднято',
+    'boost-not-available-on-plan' => 'Продвижение объявлений недоступно на вашем текущем тарифе.',
+    'boost-limit-reached' => 'Вы достигли дневного лимита продвижений.',
+    //expire commands
+    'boost-daily-counter-reset' => 'Ежедневные счетчики продвижений были сброшены.',
+
 
     //Profile Controller
     'profile-updated' => 'Профиль обновлён',

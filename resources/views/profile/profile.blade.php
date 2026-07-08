@@ -13,7 +13,7 @@
         editInfo: false,
         editPassword: false
     }">
-        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start py-14 lg:py-0">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-start">
             <aside class="w-full md:w-56 shrink-0 flex flex-col gap-1 md:sticky md:top-24 z-10">
                 <div class="p-4 rounded-sm bg-(--background-2) border border-(--background-3) mb-2 flex items-center gap-3">
                     <div
@@ -276,12 +276,6 @@
                                 <span class="text-sm font-medium text-(--text-primary) tabular-nums">
                                     {{ $listingsCount }} <span class="text-(--text-muted)">/ {{ $listingsLimit }}</span>
                                 </span>
-                                @if ($listingsCount >= $listingsLimit)
-                                    <a href="{{ route('subscription.index') }}"
-                                        class="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-md border border-(--background-3) bg-(--background) text-(--text-primary) hover:bg-(--background-3) transition-colors">
-                                        {{ __('messages.prof-upgrade') }}
-                                    </a>
-                                @endif
                             </div>
                         </div>
 

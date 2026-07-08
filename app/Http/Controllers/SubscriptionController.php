@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
             'features' => [
                 'plan-feature-12-ads',
                 'plan-feature-6-photos',
-                'plan-feature-1-boost',
+                'plan-feature-2-boost',
                 'plan-feature-priority-search',
             ],
         ],
@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
             'features' => [
                 'plan-feature-20-ads',
                 'plan-feature-8-photos',
-                'plan-feature-3-boosts',
+                'plan-feature-4-boosts',
                 'plan-feature-highest-priority',
             ],
         ],
@@ -41,6 +41,8 @@ class SubscriptionController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $user?->isActivePlan();
+
         return view('subscription.index', [
             'plans'       => $this->plans,
             'currentPlan' => $user?->plan,
@@ -97,6 +99,10 @@ class SubscriptionController extends Controller
             ->with('success', __('messages.subscription-payment-success'));
     }
 
+    // DEMO ONLY:
+    // DEMO ONLY:
+    // DEMO ONLY:
+    // DEMO ONLY:
     public function mockPay(Request $request, SubscriptionPayment $payment)
     {
         if ($payment->user_id !== auth()->id()) {

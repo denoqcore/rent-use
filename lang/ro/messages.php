@@ -124,6 +124,7 @@ return [
     'prof-plan-choose' => 'Alege planul',
     'prof-plan-history' => 'Istoricul plăților',
     'prof-plan-history-none' => 'Încă nu există plăți',
+    'prof-plan-expiring' => 'Expiră în curând',
 
     'plan-feature-12-listings' => 'Până la 12 anunțuri',
     'plan-feature-20-listings' => 'Până la 20 de anunțuri',
@@ -352,6 +353,10 @@ return [
 
     //Boost Controller
     'boost-listing-booster' => 'Anunț promovat',
+    'boost-not-available-on-plan' => 'Promovarea anunțurilor nu este disponibilă în planul tău curent.',
+    'boost-limit-reached' => 'Ai atins limita zilnică de promovări.',
+    //expire commands
+    'boost-daily-counter-reset' => 'Contoarele zilnice de promovare au fost resetate.',
 
     //Profile Controller
     'profile-updated' => 'Profil actualizat',
