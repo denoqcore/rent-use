@@ -604,7 +604,7 @@
                                         <x-heroicon-s-chevron-double-up class="w-4 h-4 text-(--button)" />
                                         {{ __('messages.prof-boost-available-in', ['time' => now()->diffForHumans($listing->boosted_until, true)]) }}
                                     </span>
-                                @else
+                                @elseif (auth()->user()->boostsRemainingToday() > 0)
                                     <form method="POST" action="{{ route('listings.boost', $listing) }}">
                                         @csrf
                                         <button type="submit"
@@ -613,6 +613,12 @@
                                             {{ __('messages.prof-boost') }}
                                         </button>
                                     </form>
+                                @else
+                                    <span
+                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium bg-(--background-3) text-(--text-muted) opacity-60 cursor-not-allowed">
+                                        <x-heroicon-o-chevron-double-up class="w-4 h-4" />
+                                        {{ __('messages.boost-limit-reached') }}
+                                    </span>
                                 @endif
                             @endif
                         @else

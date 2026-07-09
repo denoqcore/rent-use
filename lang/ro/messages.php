@@ -3,7 +3,7 @@
 return [
     //MD
     // Header + home + hero
-    'portfolio_disclaimer' => 'Acest website este un proiect fictiv pentru portofoliu și nu reprezintă o platformă reală de închirieri.',
+    'portfolio_disclaimer' => 'Acest website este un proiect fictiv pentru portofoliu și nu reprezintă o platformă reală de închirieri',
     'welcome' => 'Bun venit',
     'home' => 'Acasă',
     'browse' => 'Explorează',
@@ -28,7 +28,7 @@ return [
 
     'rent-hero' => 'Închiriază ceea ce ai nevoie',
     'rent-hero-2' => 'Atunci când ai nevoie',
-    'hero-sub' => 'Nu cumpăra. Închiriază.',
+    'hero-sub' => 'Nu cumpăra. Închiriază',
     'hero-sub-2' => 'Rent Moldova',
 
     'hero-down-sub' => 'Navigare gratuită',
@@ -45,15 +45,15 @@ return [
 
     //favorite
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
-    'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici.',
+    'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici',
 
     //header modals
     'my_rentals'         => 'Închirierile mele',
     'incoming_requests'  => 'Cereri',
     'no_rentals_title'   => 'Încă nu există închirieri',
-    'no_rentals_desc'    => 'Rezervă ceva și va apărea aici.',
+    'no_rentals_desc'    => 'Rezervă ceva și va apărea aici',
     'no_requests_title'  => 'Încă nu există cereri',
-    'no_requests_desc'   => 'Când cineva rezervă anunțul tău, îl vei vedea aici.',
+    'no_requests_desc'   => 'Când cineva rezervă anunțul tău, îl vei vedea aici',
     'status_messages'    => 'Nu există încă mesaje',
     'status_desc_messages' => 'Scrie proprietarului anunțului pentru a iniția o conversație',
 
@@ -178,32 +178,32 @@ return [
     // benefits
     'benefits' => 'Beneficii',
     'benefits-title' => 'De ce rent.use?',
-    'benefits-desc' => 'Economisește bani, scapă de obiectele inutile și accesează tot ce ai nevoie — de la oamenii din jurul tău.',
+    'benefits-desc' => 'Economisește bani, scapă de obiectele inutile și accesează tot ce ai nevoie — de la oamenii din jurul tău',
 
     'benefit-1-title' => 'Accesează orice',
-    'benefit-1-desc' => 'De la camere foto până la mașini — găsește aproape orice disponibil pentru închiriere în apropiere.',
+    'benefit-1-desc' => 'De la camere foto până la mașini — găsește aproape orice disponibil pentru închiriere în apropiere',
 
     'benefit-2-title' => 'Sigur și de încredere',
-    'benefit-2-desc' => 'Anunțuri verificate și comunicare directă cu proprietari în care poți avea încredere.',
+    'benefit-2-desc' => 'Anunțuri verificate și comunicare directă cu proprietari în care poți avea încredere',
 
     'benefit-3-title' => 'Durată flexibilă',
-    'benefit-3-desc' => 'Închiriază pentru o zi, o săptămână sau mai mult. Stabilește termenii care ți se potrivesc.',
+    'benefit-3-desc' => 'Închiriază pentru o zi, o săptămână sau mai mult. Stabilește termenii care ți se potrivesc',
 
     // how it works
     'how-it-works' => 'Cum funcționează',
 
     'step-1-title' => 'Găsește un obiect',
-    'step-1-desc' => 'Caută după categorie sau cuvinte cheie pentru a găsi ceea ce ai nevoie în apropiere.',
+    'step-1-desc' => 'Caută după categorie sau cuvinte cheie pentru a găsi ceea ce ai nevoie în apropiere',
 
     'step-2-title' => 'Contactează proprietarul',
-    'step-2-desc' => 'Trimite un mesaj direct proprietarului și stabilește datele și prețul.',
+    'step-2-desc' => 'Trimite un mesaj direct proprietarului și stabilește datele și prețul',
 
     'step-3-title' => 'Închiriază și returnează',
-    'step-3-desc' => 'Ridică obiectul, folosește-l și returnează-l. Simplu.',
+    'step-3-desc' => 'Ridică obiectul, folosește-l și returnează-l. Simplu',
 
     // CTA
     'cta-title' => 'Câștigă bani din obiectele pe care nu le folosești cu',
-    'cta-desc' => 'Transformă lucrurile nefolosite în bani. Adaugă anunțuri în câteva minute și începe să câștigi astăzi.',
+    'cta-desc' => 'Transformă lucrurile nefolosite în bani. Adaugă anunțuri în câteva minute și începe să câștigi astăzi',
     'get-started' => 'Începe acum',
     'post-listing' => 'Adaugă un anunț',
 
@@ -211,7 +211,7 @@ return [
     'reviews-title' => 'Ce spun oamenii',
 
     'review-1' => 'Am închiriat o cameră foto pentru weekend — proces foarte simplu, stare excelentă!',
-    'review-2' => 'Am pus la închiriat bormașina mea veche și am făcut 40€ în două săptămâni.',
+    'review-2' => 'Am pus la închiriat bormașina mea veche și am făcut 40€ în două săptămâni',
     'review-3' => 'Interfață curată și platformă de încredere. O voi folosi din nou.',
 
     // footer
@@ -221,7 +221,7 @@ return [
     'cookies' => 'Politica de cookie',
 
     // register
-    'register-disclaimer' => "Vă rugăm să utilizați <span class='text-red-900'>date nereale</span> la înregistrare. Nu furnizați informațiile dvs. personale reale.",
+    'register-disclaimer' => "Vă rugăm să utilizați <span class='text-red-900'>date nereale</span> la înregistrare. Nu furnizați informațiile dvs. personale reale",
     'register-create' => 'Creează cont',
     'register-login' => 'Ai deja cont?',
     'register-login-link' => 'Autentifică-te',
@@ -236,7 +236,7 @@ return [
     'register-repeat-pass' => 'Repetă parola',
 
     'register-board' => 'Bine ai venit',
-    'register-desc' => 'Creează contul tău și descoperă oportunități de închiriere în jurul tău.',
+    'register-desc' => 'Creează contul tău și descoperă oportunități de închiriere în jurul tău',
 
     // login
     'login-title' => 'Autentificare',
@@ -251,7 +251,7 @@ return [
     'login-submit' => 'Conectează-te',
 
     'login-board' => 'Bine ai revenit',
-    'login-desc' => 'Închiriază ce ai nevoie, când ai nevoie. Totul într-un singur loc.',
+    'login-desc' => 'Închiriază ce ai nevoie, când ai nevoie. Totul într-un singur loc',
 
     //post listing
     'create_listing' => 'Creează anunț',
@@ -292,7 +292,7 @@ return [
     'back' => 'Înapoi',
 
     'upload_photos' => 'Încarcă fotografii',
-    'upload_photos_sub' => 'Adăugați fotografii. Prima fotografie va fi imaginea de copertă.',
+    'upload_photos_sub' => 'Adăugați fotografii. Prima fotografie va fi imaginea de copertă',
     'main' => 'principal',
     'click_to_upload' => 'Apasă pentru a încărca',
     'photos_selected' => 'fotografie(i) selectată(e)',
@@ -321,7 +321,7 @@ return [
 
     // ro
     '404-title' => 'Pagina nu a fost găsită',
-    '404-description' => 'Pagina pe care o cauți nu există sau a fost mutată.',
+    '404-description' => 'Pagina pe care o cauți nu există sau a fost mutată',
     '404-home' => 'Înapoi acasă',
     '404-browse' => 'Vezi anunțuri',
 
@@ -353,10 +353,10 @@ return [
 
     //Boost Controller
     'boost-listing-booster' => 'Anunț promovat',
-    'boost-not-available-on-plan' => 'Promovarea anunțurilor nu este disponibilă în planul tău curent.',
-    'boost-limit-reached' => 'Ai atins limita zilnică de promovări.',
+    'boost-not-available-on-plan' => 'Promovarea anunțurilor nu este disponibilă în planul tău curent',
+    'boost-limit-reached' => 'Limită zilnică de boost',
     //expire commands
-    'boost-daily-counter-reset' => 'Contoarele zilnice de promovare au fost resetate.',
+    'boost-daily-counter-reset' => 'Contoarele zilnice de promovare au fost resetate',
 
     //Profile Controller
     'profile-updated' => 'Profil actualizat',

@@ -211,15 +211,24 @@ class User extends Authenticatable implements FilamentUser
         return config("plans.{$this->plan}.boosts", config('plans.starter.boosts', 1));
     }
 
- public function canBoost(): bool
-{
-    if ($this->boosts_reset_date !== now()->toDateString()) {
-        $this->forceFill([
-            'boosts_used_today' => 0,
-            'boosts_reset_date' => now()->toDateString(),
-        ])->save();
+    public function canBoost(): bool
+    {
+        if (!$this->boosts_reset_date || !$this->boosts_reset_date->isToday()) {
+            $this->forceFill([
+                'boosts_used_today' => 0,
+                'boosts_reset_date' => now()->toDateString(),
+            ])->save();
+        }
+
+        return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
     }
 
-    return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
-}
+    public function boostsRemainingToday(): int
+    {
+        if (!$this->boosts_reset_date || !$this->boosts_reset_date->isToday()) {
+            return $this->boostLimitPerDay();
+        }
+
+        return max(0, $this->boostLimitPerDay() - $this->boosts_used_today);
+    }
 }
