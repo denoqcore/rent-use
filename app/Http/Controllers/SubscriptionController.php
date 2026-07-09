@@ -50,18 +50,52 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function checkout(Request $request, string $plan)
-{
-     $user = auth()->user();
+    // SubscriptionController.php
+    public function demoCheckout(Request $request, string $plan)
+    {
+        if (!app()->environment('local') && !config('app.demo_mode')) {
+            abort(404);
+        }
 
-    if ($user->isActivePlan() && $user->plan !== 'starter') {
-        return redirect()->route('profile')
-            ->withFragment('subscription')
-            ->with('error', __('messages.subscription-already-active'));
+        if (!array_key_exists($plan, $this->plans)) {
+            abort(404);
+        }
+
+        $user = auth()->user();
+        $expiresAt = now()->addDays(30);
+
+        SubscriptionPayment::create([
+            'user_id'    => $user->id,
+            'plan'       => $plan,
+            'amount'     => 0,
+            'currency'   => $this->plans[$plan]['currency'],
+            'status'     => 'paid',
+            'payment_id' => 'demo_' . strtoupper(\Str::random(12)),
+            'paid_at'    => now(),
+            'expires_at' => $expiresAt,
+        ]);
+
+        $user->forceFill([
+            'plan'            => $plan,
+            'plan_expires_at' => $expiresAt,
+        ])->save();
+
+        return redirect()->route('subscription.index')
+            ->with('success', __('messages.subscription-activated-demo'));
     }
 
-    if (!array_key_exists($plan, $this->plans)) {
-        abort(404);
+    public function checkout(Request $request, string $plan)
+    {
+         $user = auth()->user();
+
+        if ($user->isActivePlan() && $user->plan !== 'starter') {
+            return redirect()->route('profile')
+                ->withFragment('subscription')
+                ->with('error', __('messages.subscription-already-active'));
+        }
+
+        if (!array_key_exists($plan, $this->plans)) {
+            abort(404);
     }
 
     $planData = $this->plans[$plan];
@@ -196,20 +230,22 @@ public function webhook(Request $request)
 }
 
 public function cancel(Request $request)
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        if ($user->plan === 'starter') {
-            return back()->with('error', __('messages.subscription-not-active'));
-        }
-
-        $user->forceFill([
-            'plan'            => 'starter',
-            'plan_expires_at' => null,
-        ])->save();
-
-        return redirect()->route('profile')
-            ->withFragment('subscription')
-            ->with('success', __('messages.subscription-cancelled'));
+    if ($user->plan === 'starter') {
+        return back()->with('error', __('messages.subscription-not-active'));
     }
+
+    $user->forceFill([
+        'plan'            => 'starter',
+        'plan_expires_at' => null,
+    ])->save();
+
+    $user->enforceListingLimit();
+
+    return redirect()->route('profile')
+        ->withFragment('subscription')
+        ->with('success', __('messages.subscription-cancelled'));
+}
 }

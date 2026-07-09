@@ -131,18 +131,37 @@ class User extends Authenticatable implements FilamentUser
 
     // plans
 
+
     public function isActivePlan(): bool
-{
-    if ($this->plan === 'starter') return true;
+    {
+        if ($this->plan === 'starter') return true;
 
-    $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
+        $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
 
-    if (!$active && $this->plan !== 'starter') {
-        $this->forceFill(['plan' => 'starter', 'plan_expires_at' => null])->save();
+        if (!$active && $this->plan !== 'starter') {
+            $this->forceFill(['plan' => 'starter', 'plan_expires_at' => null])->save();
+            $this->enforceListingLimit();
+        }
+
+        return $active;
     }
 
-    return $active;
-}
+
+    public function enforceListingLimit(): void
+    {
+        $limit = $this->maxListings();
+
+        $this->listings()
+            ->where('status', 'active')
+            ->orderBy('created_at')
+            ->skip($limit)
+            ->take(PHP_INT_MAX)
+            ->get()
+            ->each(fn ($listing) => $listing->update([
+                'status'        => 'paused',
+                'paused_reason' => 'plan_limit',
+            ]));
+    }
 
 
     public function planLabel(): string

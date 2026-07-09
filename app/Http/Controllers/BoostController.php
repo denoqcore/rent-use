@@ -11,9 +11,9 @@ class BoostController extends Controller
 {
     $user = auth()->user();
 
-    if ($listing->user_id !== $user->id) {
-        abort(403);
-    }
+    if ($listing->status !== 'active') {
+    abort(404);
+}
 
     if (!$user->canBoost()) {
         return back()->withErrors(['boost' => __('messages.boost-limit-reached')]);
