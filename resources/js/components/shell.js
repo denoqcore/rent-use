@@ -120,7 +120,7 @@ async openChat(chatId) {
     this.activeChatId = chatId;
     this.activeMessages = [];
     this.editingMessageId = null;
-    this.chatView = 'chat'; // мобиль
+    this.chatView = 'chat';
 
     const chat = this.chats.find(c => c.id === chatId);
     if (chat) {

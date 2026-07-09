@@ -13,16 +13,15 @@ use Illuminate\Support\Str;
 class ListingController extends Controller
 {
     use AuthorizesRequests;
-    public function create()
+  public function create()
+    {
+        $cities = Cities::orderBy('order')->get();
+        $categories = Category::whereNull('parent_id')->with('children')->get();
+        $selectedCity = old('city_id') ? Cities::find(old('city_id')) : null;
+        $maxPhotos = auth()->user()->maxPhotos();
 
-{
-    $cities = Cities::orderBy('order')->get();
-    $categories = Category::whereNull('parent_id')->with('children')->get();
-    $selectedCity = old('city_id')
-    ? Cities::find(old('city_id'))
-    : null;
-    return view('listings.create', compact('categories', 'cities', 'selectedCity'));
-}
+        return view('listings.create', compact('categories', 'cities', 'selectedCity', 'maxPhotos'));
+    }
     public function index()
     {
         $listings = Listing::query()
@@ -63,7 +62,7 @@ class ListingController extends Controller
                 'limit' => __('messages.max-active-listings'),
             ]);
     }
-
+        $maxPhotos = $user->maxPhotos();
 
         $validated = $request->validate([
         'category_id'        => 'required|exists:categories,id',
@@ -77,13 +76,11 @@ class ListingController extends Controller
         'delivery_price'     => 'nullable|numeric|min:0|max:99999',
         'delivery_available' => 'nullable|boolean',
         'requires_document'  => 'nullable|boolean',
-        'images'             => 'nullable|array|max:8',
-        'images.*'           => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+        'images'   => "nullable|array|max:{$maxPhotos}",
+        'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
     ]);
 
-        $maxPhotos = $user->maxPhotos();
-        $photos = array_slice($request->file('images', []), 0, $maxPhotos);
-
+          $photos = $request->file('images', []);
         if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
 
        return back()->withErrors(['price_per_day' =>  __('messages.at-least-one-price-required')])->withInput();
@@ -151,20 +148,28 @@ class ListingController extends Controller
 
     $initialMode = $listing->price_per_day ? 'day' : 'hour';
 
-return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
+    return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
 }
 
     public function edit(Listing $listing)
-    {
-        $this->authorize('update', $listing);
-        $categories = Category::whereNull('parent_id')->with('children')->get();
-        $cities = Cities::orderBy('order')->get();
-        return view('listings.edit', compact('listing', 'categories', 'cities'));
-    }
+{
+    $this->authorize('update', $listing);
+    $categories = Category::whereNull('parent_id')->with('children')->get();
+    $cities = Cities::orderBy('order')->get();
+    $maxPhotos = $listing->user->maxPhotos();
+    $currentPhotos = $listing->images()->count();
+
+    return view('listings.edit', compact('listing', 'categories', 'cities', 'maxPhotos', 'currentPhotos'));
+}
 
     public function update(Request $request, Listing $listing)
-    {
+{
     $this->authorize('update', $listing);
+
+    $maxPhotos = $listing->user->maxPhotos();
+    $deleteCount = count($request->input('delete_images', []));
+    $currentCount = $listing->images()->count() - $deleteCount;
+    $allowedNewPhotos = max(0, $maxPhotos - $currentCount);
 
     $validated = $request->validate([
         'category_id'        => 'required|exists:categories,id',
@@ -178,11 +183,13 @@ return view('listings.show', compact('listing', 'bookedDates', 'initialMode'));
         'delivery_available' => 'nullable|boolean',
         'delivery_price'     => 'nullable|numeric|min:0|max:99999',
         'requires_document'  => 'nullable|boolean',
-        'images'             => 'nullable|array|max:8',
+        'images'             => "nullable|array|max:{$allowedNewPhotos}",
         'images.*'           => 'image|mimes:jpg,jpeg,png,webp|max:5120',
         'delete_images'      => 'nullable|array',
         'delete_images.*'    => 'exists:listing_images,id',
     ]);
+
+    // ... остальное без изменений
 
     if (empty($validated['price_per_day']) && empty($validated['price_per_hour'])) {
         return back()->withErrors(['price_per_day' => __('messages.at-least-one-price-required')])->withInput();

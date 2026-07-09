@@ -36,6 +36,7 @@ Route::middleware('guest')->group(function(){
 
 
 Route::middleware('auth')->prefix('subscription')->group(function () {
+    Route::post('/demo-checkout/{plan}', [SubscriptionController::class, 'demoCheckout'])->name('subscription.demo-checkout');
     Route::get('/checkout/{plan}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
     Route::post('/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 });

@@ -20,13 +20,8 @@ class ProfileController extends Controller
         $reviewCount  = $user->reviewCount();
         $distribution = $user->ratingDistribution();
 
-        $planLimits = [
-        'starter' => 4,
-        'pro'     => 12,
-        'premium' => 20,
-        ];
-        $listingsCount = $listings->count();
-        $listingsLimit = $planLimits[$user->plan] ?? 4;
+        $listingsCount = $listings->where('status', 'active')->count();
+        $listingsLimit = $user->maxListings();
 
         return view('profile.profile', compact(
             'user',

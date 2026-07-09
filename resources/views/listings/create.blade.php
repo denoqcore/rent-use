@@ -3,7 +3,7 @@
 @section('title', 'rent.use | ' . __('messages.create_listing'))
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] mt-20 sm:mt-30 w-full py-12 bg-(--background)">
+    <section class="min-h-[calc(100vh-72px)] mt-25 sm:mt-30 w-full py-12 bg-(--background)">
         <div class="max-w-xl mx-auto px-6 flex flex-col gap-8" x-data="{
             step: {{ $errors->any() ? 2 : 1 }},
             parent: '{{ old('parent_category') }}',
@@ -36,8 +36,9 @@
             title: '{{ old('title') }}',
             description: '{{ old('description') }}',
             isSubmitting: false,
+            maxPhotos: {{ $maxPhotos }},
             images: [],
-        
+
             init() {
                 @if(!$errors->any())
                 if (sessionStorage.getItem('listing_draft')) {
@@ -58,7 +59,7 @@
             handleFiles(event) {
                 const files = Array.from(event.target.files);
                 files.forEach(file => {
-                    if (this.images.length >= 8) return;
+                    if (this.images.length >= this.maxPhotos) return;
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         this.images.push({ src: e.target.result, file: file });
@@ -457,7 +458,7 @@
                             </div>
                         </template>
 
-                        <label x-show="images.length < 8"
+                        <label x-show="images.length < maxPhotos"
                             class="aspect-square rounded-sm border border-dashed border-(--background-3) bg-(--background-2) flex items-center justify-center cursor-pointer hover:border-(--text-muted) transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-(--text-muted)" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -469,7 +470,8 @@
                     </div>
 
                     <p class="text-[10px] text-(--text-muted)" x-show="images.length > 0">
-                        <span x-text="images.length"></span>/8 {{ __('messages.photos_selected') }}
+                        <span x-text="images.length"></span>/<span x-text="maxPhotos"></span>
+                        {{ __('messages.photos_selected') }}
                     </p>
 
                     <input type="file" name="images[]" multiple accept="image/*" class="hidden" x-ref="fileInput">

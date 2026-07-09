@@ -8,20 +8,24 @@ use Illuminate\Http\Request;
 class BoostController extends Controller
 {
     public function boost(Request $request, Listing $listing)
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        if ($listing->user_id !== $user->id) {
-            abort(403);
-        }
+    if ($listing->status !== 'active') {
+    abort(404);
+}
 
-        $listing->is_boosted = true;
-        $listing->boosted_until = now()->addHours(24);
-        $listing->save();
-
-        $user->boosts_used_today = ($user->boosts_used_today ?? 0) + 1;
-        $user->save();
-
-        return back()->with('success', __('messages.boost-listing-booster'));
+    if (!$user->canBoost()) {
+        return back()->withErrors(['boost' => __('messages.boost-limit-reached')]);
     }
+
+    $listing->update([
+        'is_boosted'    => true,
+        'boosted_until' => now()->addHours(24),
+    ]);
+
+    $user->increment('boosts_used_today');
+
+    return back()->with('success', __('messages.boost-listing-booster'));
+}
 }

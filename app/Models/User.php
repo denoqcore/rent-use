@@ -131,18 +131,37 @@ class User extends Authenticatable implements FilamentUser
 
     // plans
 
+
     public function isActivePlan(): bool
-{
-    if ($this->plan === 'starter') return true;
+    {
+        if ($this->plan === 'starter') return true;
 
-    $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
+        $active = $this->plan_expires_at && $this->plan_expires_at->isFuture();
 
-    if (!$active && $this->plan !== 'starter') {
-        $this->forceFill(['plan' => 'starter', 'plan_expires_at' => null])->save();
+        if (!$active && $this->plan !== 'starter') {
+            $this->forceFill(['plan' => 'starter', 'plan_expires_at' => null])->save();
+            $this->enforceListingLimit();
+        }
+
+        return $active;
     }
 
-    return $active;
-}
+
+    public function enforceListingLimit(): void
+    {
+        $limit = $this->maxListings();
+
+        $this->listings()
+            ->where('status', 'active')
+            ->orderBy('created_at')
+            ->skip($limit)
+            ->take(PHP_INT_MAX)
+            ->get()
+            ->each(fn ($listing) => $listing->update([
+                'status'        => 'paused',
+                'paused_reason' => 'plan_limit',
+            ]));
+    }
 
 
     public function planLabel(): string
@@ -160,31 +179,23 @@ class User extends Authenticatable implements FilamentUser
 
     public function maxListings(): int
     {
-        if (!$this->isActivePlan()) return 4;
-        return match($this->plan) {
-            'pro'     => 12,
-            'premium' => 20,
-            default   => 4,
-        };
+        if (!$this->isActivePlan()) return config('plans.starter.listings', 4);
+        return config("plans.{$this->plan}.listings", config('plans.starter.listings', 4));
     }
 
     public function maxPhotos(): int
     {
-        if (!$this->isActivePlan()) return 3;
-        return match($this->plan) {
-            'pro'     => 6,
-            'premium' => 8,
-            default   => 3,
-        };
+        if (!$this->isActivePlan()) return config('plans.starter.photos', 3);
+        return config("plans.{$this->plan}.photos", config('plans.starter.photos', 3));
     }
 
     public function maxBoostedListings(): int
     {
         if (!$this->isActivePlan()) return 0;
         return match($this->plan) {
-            'pro'     => 1,
-            'premium' => 3,
-            default   => 0,
+            'pro'     => 2,
+            'premium' => 4,
+            default   => 1,
         };
     }
 
@@ -193,24 +204,31 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(SubscriptionPayment::class);
     }
 
-        public function boostLimitPerDay(): int
+     public function boostLimitPerDay(): int
     {
-        return match ($this->plan) {
-            'premium' => 3,
-            'pro'     => 2,
-            default   => 1,
-        };
+        $this->isActivePlan();
+
+        return config("plans.{$this->plan}.boosts", config('plans.starter.boosts', 1));
     }
 
- public function canBoost(): bool
-{
-    if ($this->boosts_reset_date !== now()->toDateString()) {
-        $this->forceFill([
-            'boosts_used_today' => 0,
-            'boosts_reset_date' => now()->toDateString(),
-        ])->save();
+    public function canBoost(): bool
+    {
+        if (!$this->boosts_reset_date || !$this->boosts_reset_date->isToday()) {
+            $this->forceFill([
+                'boosts_used_today' => 0,
+                'boosts_reset_date' => now()->toDateString(),
+            ])->save();
+        }
+
+        return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
     }
 
-    return $this->fresh()->boosts_used_today < $this->boostLimitPerDay();
-}
+    public function boostsRemainingToday(): int
+    {
+        if (!$this->boosts_reset_date || !$this->boosts_reset_date->isToday()) {
+            return $this->boostLimitPerDay();
+        }
+
+        return max(0, $this->boostLimitPerDay() - $this->boosts_used_today);
+    }
 }

@@ -2,8 +2,7 @@
 @section('title', 'rent.use | Browse')
 @section('content')
 
-    <div class="max-w-6xl pt-25 mx-auto px-6 py-10 sm:mt-10" x-data="{ filtersOpen: false }">
-
+    <div class="max-w-6xl pt-35 lg:pt-25 mx-auto px-6 py-10 sm:mt-10" x-data="{ filtersOpen: false }">
 
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-black text-(--text-primary)">{{ __('messages.browse') }}</h1>

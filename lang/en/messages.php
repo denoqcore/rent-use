@@ -3,8 +3,8 @@
 return [
     //EN
     // Header + home + hero
-    'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform.',
-    'portfolio_disclaimer_continue' => 'Do not submit any real personal data.',
+    'portfolio_disclaimer' => 'This website is a fictional portfolio project and does not represent a real rental platform',
+    'portfolio_disclaimer_continue' => 'Do not submit any real personal data',
     'welcome' => 'Welcome',
     'home' => 'Home',
     'browse' => 'Browse',
@@ -26,7 +26,7 @@ return [
 
     'rent-hero' => 'Rent What You Need',
     'rent-hero-2' => 'When You Need It',
-    'hero-sub' => 'Don’t Buy. Just Rent.',
+    'hero-sub' => 'Don’t Buy. Just Rent',
     'hero-sub-2' => 'Rent Moldova',
 
     'hero-down-sub' => 'Free to browse',
@@ -48,7 +48,7 @@ return [
     'no_rentals_title'   => 'No rentals yet',
     'no_rentals_desc'    => 'Book something and it will appear here.',
     'no_requests_title'  => 'No requests yet',
-    'no_requests_desc'   => 'When someone books your listing, you will see it here.',
+    'no_requests_desc'   => 'When someone books your listing, you will see it here',
     'status_messages'    => 'No messages yet',
     'status_desc_messages' => 'Write to a listing owner to start a conversation',
     'messages_you'       => 'You',
@@ -77,7 +77,7 @@ return [
 
     //favorite
     'no_favorites_title' => 'No saved listings yet',
-    'no_favorites_desc'  => 'Tap the heart on any listing to save it here.',
+    'no_favorites_desc'  => 'Tap the heart on any listing to save it here',
 
     // profile page
     'prof-personal-details' => 'Personal details',
@@ -125,13 +125,19 @@ return [
     'prof-plan-choose' => 'Choose plan',
     'prof-plan-history' => 'Payment history',
     'prof-plan-history-none' => 'No payments yet',
+    'prof-plan-expiring' => 'Expiring soon',
 
     'plan-feature-12-listings' => 'Up to 12 listings',
     'plan-feature-20-listings' => 'Up to 20 listings',
     'plan-feature-8-photos' => 'Up to 8 photos',
-    'plan-feature-1-boost' => '1 boost to the top',
-    'plan-feature-3-boosts' => '3 boosts to the top',
+    'plan-feature-2-boost' => '2 boost to the top',
+    'plan-feature-4-boosts' => '4 boosts to the top',
     'plan-feature-priority-search' => 'Search priority',
+
+    'plan-feature-12-ads' => 'Up to 12 ads',
+    'plan-feature-6-photos' => 'Up to 6 photos per ad',
+    'plan-feature-20-ads' => 'Up to 20 ads',
+    'plan-feature-highest-priority' => 'Highest priority in search',
 
     'prof-boost' => 'Boost',
     'prof-support' => 'Support',
@@ -185,32 +191,32 @@ return [
     // benefits
     'benefits' => 'Benefits',
     'benefits-title' => 'Why rent.use?',
-    'benefits-desc' => 'Save money, reduce clutter, and access anything you need — from people around you.',
+    'benefits-desc' => 'Save money, reduce clutter, and access anything you need — from people around you',
 
     'benefit-1-title' => 'Access Anything',
-    'benefit-1-desc' => 'From cameras to cars — find almost anything available for rent nearby.',
+    'benefit-1-desc' => 'From cameras to cars — find almost anything available for rent nearby',
 
     'benefit-2-title' => 'Secure & Reliable',
-    'benefit-2-desc' => 'Verified listings and direct communication with owners you can trust.',
+    'benefit-2-desc' => 'Verified listings and direct communication with owners you can trust',
 
     'benefit-3-title' => 'Flexible Duration',
-    'benefit-3-desc' => 'Rent for a day, a week, or longer. Agree on terms that work for you.',
+    'benefit-3-desc' => 'Rent for a day, a week, or longer. Agree on terms that work for you',
 
     // how it works
     'how-it-works' => 'How it works',
 
     'step-1-title' => 'Find an item',
-    'step-1-desc' => 'Search by category or keyword to find what you need nearby.',
+    'step-1-desc' => 'Search by category or keyword to find what you need nearby',
 
     'step-2-title' => 'Contact owner',
-    'step-2-desc' => 'Message the owner directly and agree on dates and price.',
+    'step-2-desc' => 'Message the owner directly and agree on dates and price',
 
     'step-3-title' => 'Rent & return',
-    'step-3-desc' => 'Pick it up, use it, return it. Simple as that.',
+    'step-3-desc' => 'Pick it up, use it, return it. Simple as that',
 
     // CTA
     'cta-title' => 'Make money from your unused items with',
-    'cta-desc' => 'Turn your clutter into cash. List items in minutes and start earning today.',
+    'cta-desc' => 'Turn your clutter into cash. List items in minutes and start earning today',
     'get-started' => 'Get Started',
     'post-listing' => 'Post a listing',
 
@@ -218,8 +224,8 @@ return [
     'reviews-title' => 'What people say',
 
     'review-1' => 'Rented a camera for the weekend — super easy process, great condition!',
-    'review-2' => 'Listed my old drill and made €40 in two weeks. Didn\'t expect it to be this simple.',
-    'review-3' => 'Clean interface, trustworthy platform. Will definitely use again.',
+    'review-2' => 'Listed my old drill and made €40 in two weeks. Didn\'t expect it to be this simple',
+    'review-3' => 'Clean interface, trustworthy platform. Will definitely use again',
 
     // footer
     'all-rights' => 'All rights reserved',
@@ -228,7 +234,7 @@ return [
     'cookies' => 'Cookie Policy',
 
     // register
-    'register-disclaimer' => "Please use <span class='text-red-900'>non-real</span> data when registering. Do not provide your actual personal information.",
+    'register-disclaimer' => "Please use <span class='text-red-900'>non-real</span> data when registering. Do not provide your actual personal information",
     'register-create' => 'Create account',
     'register-login' => 'Already have one?',
     'register-login-link' => 'Sign in',
@@ -243,7 +249,7 @@ return [
     'register-repeat-pass' => 'Repeat password',
 
     'register-board' => 'Welcome aboard',
-    'register-desc' => 'Create your account and unlock a world of rental opportunities around you.',
+    'register-desc' => 'Create your account and unlock a world of rental opportunities around you',
 
     // login
     'login-title' => 'Login',
@@ -258,7 +264,7 @@ return [
     'login-submit' => 'Sign in',
 
     'login-board' => 'Welcome back',
-    'login-desc' => 'Rent what you need, when you need it. Everything in one place.',
+    'login-desc' => 'Rent what you need, when you need it. Everything in one place',
 
     //post listing
     'create_listing' => 'Post listing',
@@ -296,7 +302,7 @@ return [
     'back' => 'Back',
 
     'upload_photos' => 'Upload photos',
-    'upload_photos_sub' => 'Up to 8 photos. First photo will be the cover.',
+    'upload_photos_sub' => 'Add photos. First photo will be the cover',
     'main' => 'main',
     'click_to_upload' => 'Click to upload',
     'photos_selected' => 'photo(s) selected',
@@ -321,9 +327,16 @@ return [
     'apply'              => 'Apply',
     'reset'              => 'Reset',
     'no-results'         => 'No listings found',
+    //404
+    '404-title' => 'Page not found',
+    '404-description' => 'The page you\'re looking for doesn\'t exist or may have been moved',
+    '404-home' => 'Back to home',
+    '404-browse' => 'Browse listings',
 
 
     // From controllers
+    'success' => 'Success',
+    'error' => 'Error',
 
     //Listing controller
     'listing-published' => 'Listing published',
@@ -348,7 +361,11 @@ return [
     'booking-cannot-cancelled' => 'This booking cannot be cancelled',
 
     //Boost Controller
-    'boost-listing-booster' => 'Listing boosted',
+    'boost-not-available-on-plan' => 'Boosting listings is not available on your current plan',
+    'boost-limit-reached' => 'Daily boost limit reached',
+    'boost-listing-booster' => 'Your listing has been boosted successfully',
+    //expire commands
+    'boost-daily-counter-reset' => 'Daily boost counters have been reset',
 
     //Profile Controller
     'profile-updated' => 'Profile updated',
@@ -370,16 +387,6 @@ return [
     'subscription-activated' => 'Subscription successfully activated',
     'subscription-not-active' => "You don't have an active subscription",
     'subscription-cancelled' => 'Subscription cancelled',
-
-    'plan-feature-12-ads' => 'Up to 12 ads',
-    'plan-feature-6-photos' => 'Up to 6 photos per ad',
-    'plan-feature-1-boost' => '1 boost',
-    'plan-feature-priority-search' => 'Priority search',
-
-    'plan-feature-20-ads' => 'Up to 20 ads',
-    'plan-feature-8-photos' => 'Up to 8 photos per ad',
-    'plan-feature-3-boosts' => '3 boosts',
-    'plan-feature-highest-priority' => 'Highest priority in search',
 ];
 
 

@@ -8,15 +8,31 @@
         window.galleryImages = @json($listing->images->pluck('path')->values());
     </script>
 
-    <div class="max-w-6xl pt-25 mx-auto px-4 pb-2 mt-4 lg:mt-15">
-        <nav class="flex items-center gap-1.5 text-xs" style="color: var(--text-muted)">
-            <a href="/" class="hover:opacity-70 transition-opacity" style="color: var(--text-muted)">Home</a>
-            <span>›</span>
-            <span>{{ $listing->category->parent->name ?? '' }}</span>
+    <div class="max-w-6xl pt-35 lg:pt-25 mx-auto px-4 pb-2 mt-4 lg:mt-15 ">
+        <nav class="flex items-center p-2 gap-1.5 text-sm md:text-xs text-(--text-muted) overflow-x-auto whitespace-nowrap">
+
+            <a href="{{ route('search') }}" class="hover:text-(--text-primary) transition-opacity shrink-0">
+                {{ __('messages.all') }}
+            </a>
+
             @if ($listing->category->parent)
-                <span>›</span>
+                <x-heroicon-o-chevron-right class="w-3 h-3 shrink-0 opacity-50" />
+                <a href="{{ route('search', ['category' => $listing->category->parent->slug]) }}"
+                    class="hover:text-(--text-primary) transition-opacity shrink-0">
+                    {{ $listing->category->parent->name }}
+                </a>
             @endif
-            <span>{{ $listing->category->name }}</span>
+
+            <x-heroicon-o-chevron-right class="w-3 h-3 shrink-0 opacity-50" />
+            <a href="{{ route('search', ['category' => $listing->category->slug]) }}"
+                class="hover:text-(--text-primary) transition-opacity shrink-0">
+                {{ $listing->category->name }}
+            </a>
+
+            <x-heroicon-o-chevron-right class="w-3 h-3 shrink-0 opacity-50" />
+            <span class="text-(--text-primary) font-medium truncate max-w-[200px]">
+                {{ $listing->title }}
+            </span>
         </nav>
     </div>
 
@@ -464,7 +480,7 @@
                                                     {{ $listing->currency }}
                                                 </span>
                                             </div>
-                                            <div class="flex gap-2 text-(--text-muted)"">
+                                            <div class="flex gap-2 text-(--text-muted)">
                                                 <span>
                                                     <x-heroicon-o-arrow-path class="w-4 h-4" />
                                                 </span>
@@ -588,7 +604,7 @@
                                         <x-heroicon-s-chevron-double-up class="w-4 h-4 text-(--button)" />
                                         {{ __('messages.prof-boost-available-in', ['time' => now()->diffForHumans($listing->boosted_until, true)]) }}
                                     </span>
-                                @else
+                                @elseif (auth()->user()->boostsRemainingToday() > 0)
                                     <form method="POST" action="{{ route('listings.boost', $listing) }}">
                                         @csrf
                                         <button type="submit"
@@ -597,6 +613,12 @@
                                             {{ __('messages.prof-boost') }}
                                         </button>
                                     </form>
+                                @else
+                                    <span
+                                        class="flex items-center justify-center gap-2 mt-4 text-center w-full rounded-xl py-3 text-sm font-medium bg-(--background-3) text-(--text-muted) opacity-60 cursor-not-allowed">
+                                        <x-heroicon-o-chevron-double-up class="w-4 h-4" />
+                                        {{ __('messages.boost-limit-reached') }}
+                                    </span>
                                 @endif
                             @endif
                         @else
@@ -865,7 +887,7 @@
         @else
             <a href="{{ route('login') }}" class="flex-1 text-center text-sm font-semibold rounded-xl py-3 cursor-pointer"
                 style="background: var(--button); color: var(--button-text)">
-                {{ __('messages.book-now') }}w
+                {{ __('messages.book-now') }}
             </a>
         @endauth
 

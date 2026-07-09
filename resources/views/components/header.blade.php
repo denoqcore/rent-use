@@ -282,7 +282,7 @@ new class extends Component {}; ?>
                     <span>
                         {{ __('messages.portfolio_disclaimer') }}
                     </span>
-                    <span>
+                    <span class="font-bold">
                         {{ __('messages.portfolio_disclaimer_continue') }}
                     </span>
                 </div>
@@ -383,7 +383,7 @@ new class extends Component {}; ?>
                     </button>
 
                     <div x-show="userMenu" x-cloak @click.away="userMenu = false"
-                        class="absolute bottom-full right-0 mb-2 w-52 rounded-xl border border-(--background-3) bg-(--background-2) shadow-2xl z-50 overflow-hidden">
+                        class="absolute bottom-full right-0 mb-2 w-52 rounded-xl border border-(--background-3) bg-(--background-2) shadow-2xl z-50 overflow-visible">
                         <div class="p-3 border-b border-(--background-3)">
                             <p class="text-xs font-semibold text-(--text-primary)">{{ $authUser->name }}</p>
                             <p class="text-xs text-(--text-muted) truncate mb-2">{{ $authUser->email }}</p>
@@ -776,10 +776,11 @@ new class extends Component {}; ?>
                                         <div class="flex-1 min-w-0 flex flex-col justify-between">
                                             <div>
                                                 <div class="flex items-start justify-between gap-3">
-                                                    <div class="min-w-0">
+                                                    <div class="min-w-0 flex flex-col gap-2">
                                                         <p class="text-sm font-semibold text-(--text-primary) truncate"
                                                             x-text="booking.listing.title"></p>
-                                                        <p class="text-xs text-(--text-muted)"
+
+                                                        <p class="text-sm font-medium text-(--text-primary)"
                                                             x-text="booking.renter.name"></p>
                                                     </div>
                                                     <div class="text-right shrink-0">
