@@ -292,7 +292,7 @@ return [
     'back' => 'Înapoi',
 
     'upload_photos' => 'Încarcă fotografii',
-    'upload_photos_sub' => 'Până la 8 fotografii. Prima va fi coperta.',
+    'upload_photos_sub' => 'Adăugați fotografii. Prima fotografie va fi imaginea de copertă.',
     'main' => 'principal',
     'click_to_upload' => 'Apasă pentru a încărca',
     'photos_selected' => 'fotografie(i) selectată(e)',

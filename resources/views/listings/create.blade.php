@@ -36,6 +36,7 @@
             title: '{{ old('title') }}',
             description: '{{ old('description') }}',
             isSubmitting: false,
+            maxPhotos: {{ $maxPhotos }},
             images: [],
 
             init() {
@@ -58,7 +59,7 @@
             handleFiles(event) {
                 const files = Array.from(event.target.files);
                 files.forEach(file => {
-                    if (this.images.length >= 8) return;
+                    if (this.images.length >= this.maxPhotos) return;
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         this.images.push({ src: e.target.result, file: file });
@@ -457,7 +458,7 @@
                             </div>
                         </template>
 
-                        <label x-show="images.length < 8"
+                        <label x-show="images.length < maxPhotos"
                             class="aspect-square rounded-sm border border-dashed border-(--background-3) bg-(--background-2) flex items-center justify-center cursor-pointer hover:border-(--text-muted) transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-(--text-muted)" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -469,7 +470,8 @@
                     </div>
 
                     <p class="text-[10px] text-(--text-muted)" x-show="images.length > 0">
-                        <span x-text="images.length"></span>/8 {{ __('messages.photos_selected') }}
+                        <span x-text="images.length"></span>/<span x-text="maxPhotos"></span>
+                        {{ __('messages.photos_selected') }}
                     </p>
 
                     <input type="file" name="images[]" multiple accept="image/*" class="hidden" x-ref="fileInput">
