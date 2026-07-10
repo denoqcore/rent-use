@@ -4,49 +4,51 @@ Rental & Booking Platform built with Laravel, Octane (FrankenPHP), Redis, Livewi
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-Commands
+# Development commands
 
-docker exec -it rent_use_app
+## Container management
+
+```bash
+docker exec -it rent_use_app bash
 docker restart rent_use_app
+docker compose up -d --build
+```
 
+## Laravel
+
+```bash
 docker exec -it rent_use_app php artisan migrate:fresh --seed
-
-# Clear routes
-
 docker exec -it rent_use_app php artisan route:clear
-
-# Clear cache
-
 docker exec -it rent_use_app php artisan cache:clear
+```
 
-# Restart container
+## Octane / Reverb
 
-docker restart rent_use_app
-
-# Reload Octane
-
-docker exec -it rent_use_app php artisan octane:reload
-
-# Tinker admin
-
-php artisan tinker
-User::where('email', 'adminRentUse@gmail.com')->update(['is_admin' => true]);
-
-# Reverb
-
-docker exec -it rent_use_app php artisan reverb:start
-
-# Octane
-
+```bash
 docker exec -it rent_use_app php artisan octane:status
 docker exec -it rent_use_app php artisan octane:reload
+docker exec -it rent_use_app php artisan reverb:start
+```
 
-# Filament
+## Filament
 
+```bash
 docker exec -it rent_use_app php artisan make:filament-resource Listing --generate --view
 docker exec -it rent_use_app php artisan make:filament-resource User --generate
+```
 
-# Stripe
+## Admin access
 
-stripe listen --forward-to localhost:80/api/webhook/stripe
-docker compose exec app php artisan serve --host=0.0.0.0
+```bash
+# Recommended — safe, respects mass assignment protection
+docker exec -it rent_use_app php artisan user:make-admin your@email.com
+
+# Or via seeder (set ADMIN_EMAIL / ADMIN_PASSWORD in .env first)
+docker exec -it rent_use_app php artisan db:seed --class=AdminSeeder
+```
+
+## Stripe (local webhook testing)
+
+```bash
+stripe listen --forward-to localhost/webhook/stripe
+```
