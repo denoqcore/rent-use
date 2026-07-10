@@ -13,7 +13,7 @@ use App\Http\Controllers\ReviewVoteController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\BoostController;
 
-Route::get('/listings/create',function(){return 'CREATE OK';});
+
 Route::get('/',[HomeController::class,'index']);
 Route::get('/search',[SearchController::class,'index'])->name('search');
 Route::get('/listings',[ListingController::class,'index'])->name('listings.index');
@@ -41,13 +41,8 @@ Route::middleware('auth')->prefix('subscription')->group(function () {
     Route::post('/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 });
 
-// Without crf, auth
-// Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
-//     ->name('stripe.webhook')
-//     ->withoutMiddleware([
-//         \Illuminate\Session\Middleware\StartSession::class,
-//         \Illuminate\Cookie\Middleware\EncryptCookies::class,
-//     ]);
+Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
+    ->name('stripe.webhook');
 
 Route::middleware('auth')->group(function(){
 Route::get('/profile',[ProfileController::class,'show'])->name('profile');
@@ -88,9 +83,6 @@ Route::post('/chat/user/{user}', [ChatController::class, 'openOrCreate']);
 Route::post('/chat/{chat}/send', [ChatController::class, 'send'])->middleware('throttle:30,1');
 Route::patch('/chat/message/{message}', [ChatController::class, 'edit']);
 Route::delete('/chat/message/{message}', [ChatController::class, 'destroy']);
-Route::post('/chat/listing/{listing}', [ChatController::class, 'openOrCreate']);
-Route::post('/chat/user/{user}',       [ChatController::class, 'openOrCreate']);
-// Route::post('/user/{user}/message',[ChatController::class,'openOrCreateByUser'])->name('chat.user');
 
 Route::get('/api/bookings/pending-count',[BookingController::class,'pendingCount']);
 Route::get('/api/bookings',[BookingController::class,'apiIndex']);

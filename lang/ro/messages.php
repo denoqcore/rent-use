@@ -45,6 +45,7 @@ return [
     'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
 
     //favorite
+    'favorites' => 'Favorite',
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
     'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici',
 
@@ -112,6 +113,14 @@ return [
 
     'prof-bookings' => 'Rezervările mele',
     'prof-nobookings' => 'Nu ai încă rezervări',
+
+    'pricing-title' => 'Tarife',
+    'activate-demo-plan' => 'Activează planul demo',
+    'cancel-subscription' => 'Anulează abonamentul',
+    'days' => 'zile',
+    'active' => 'Активно',
+    'current-plan' => 'Planul curent',
+    'expires' => 'Expiră',
 
     'prof-current-plan' => 'Plan curent',
     'prof-until-plan' => 'Valabil până la',

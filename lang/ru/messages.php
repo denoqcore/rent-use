@@ -75,6 +75,7 @@ return [
     'message-edited' => '· изменено',
 
     //favorite
+    'favorites' => 'Избранное',
     'no_favorites_title' => 'Пока ничего не сохранено',
     'no_favorites_desc'  => 'Нажми на сердечко на любом объявлении, чтобы сохранить его здесь',
 
@@ -106,6 +107,14 @@ return [
 
     'prof-bookings' => 'Мои бронирования',
     'prof-nobookings' => 'Бронирований пока нет',
+
+    'pricing-title' => 'Тарифы',
+    'activate-demo-plan' => 'Активировать демо-план',
+    'cancel-subscription' => 'Отменить подписку',
+    'days' => 'дней',
+    'active' => 'Activ',
+    'current-plan' => 'Текущий тариф',
+    'expires' => 'Истекает',
 
     'prof-current-plan' => 'Текущий тариф',
     'prof-until-plan' => 'Действует до',

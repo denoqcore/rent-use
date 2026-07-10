@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 
 class BoostController extends Controller
 {
+
+use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
     public function boost(Request $request, Listing $listing)
 {
-    $user = auth()->user();
+    $this->authorize('update', $listing);
 
+    $user = auth()->user();
     if ($listing->status !== 'active') {
     abort(404);
 }

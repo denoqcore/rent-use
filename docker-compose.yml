@@ -4,14 +4,13 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rent_use_app
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - .:/app
+    env_file: .env
     environment:
-      - SERVER_NAME=:80
-      - APP_RUNTIME=Laravel\Octane\FrankenPhp\FrankenPhpRuntime
+      - SERVER_NAME=${APP_URL}
     depends_on:
       mysql:
         condition: service_healthy
@@ -23,29 +22,56 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rent_use_reverb
-    entrypoint: []
-    command: php artisan reverb:start --host=0.0.0.0 --port=8080
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app
     restart: unless-stopped
+    entrypoint:
+      ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    env_file: .env
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_started
 
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rent_use_queue
+    restart: unless-stopped
+    entrypoint: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rent_use_scheduler
+    restart: unless-stopped
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done",
+      ]
+    env_file: .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   mysql:
     image: mysql:8.0
     container_name: rent_mysql
-    ports:
-      - "3308:3306"
+    restart: unless-stopped
     environment:
-      MYSQL_DATABASE: rent_db
-      MYSQL_USER: rentdeni
-      MYSQL_PASSWORD: 8877
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -57,6 +83,7 @@ services:
   redis:
     image: redis:alpine
     container_name: rent_redis
+    restart: unless-stopped
 
 volumes:
   mysql_data:

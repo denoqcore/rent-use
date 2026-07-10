@@ -77,6 +77,7 @@ return [
     'message-send' => 'Type a message...',
 
     //favorite
+    'favorites' => 'Favorites',
     'no_favorites_title' => 'No saved listings yet',
     'no_favorites_desc'  => 'Tap the heart on any listing to save it here',
 
@@ -113,6 +114,14 @@ return [
 
     'prof-bookings' => 'My bookings',
     'prof-nobookings' => 'No bookings yet',
+
+    'pricing-title' => 'Pricing',
+    'activate-demo-plan' => 'Activate demo plan',
+    'cancel-subscription' => 'Cancel subscription',
+    'days' => 'days',
+    'active' => 'Active',
+    'current-plan' => 'Current plan',
+    'expires' => 'Expires',
 
     'prof-current-plan' => 'Current plan',
     'prof-until-plan' => 'Until',
