@@ -42,7 +42,6 @@ export default function shellComponent() {
 
        initNotifications() {
     if (!window.Echo) {
-        console.log('Echo not found');
         return;
     }
 
@@ -51,10 +50,9 @@ export default function shellComponent() {
 
     const channel = window.Echo.private(`user.${authId}`);
 
-    console.log('Channel:', channel);
 
     channel.subscribed(() => {
-        console.log('Successfully subscribed to user.' + authId);
+       // subscribed
     });
 
     channel.error((error) => {
@@ -62,7 +60,6 @@ export default function shellComponent() {
     });
 
     channel.listen('MessageSent', (e) => {
-        console.log('MessageSent received on user channel:', e);
         if (!this.chatsModal || this.activeChatId !== e.chat_id) {
             this.unreadTotal++;
             const chat = this.chats.find(c => c.id === e.chat_id);

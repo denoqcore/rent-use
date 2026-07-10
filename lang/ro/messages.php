@@ -14,6 +14,7 @@ return [
     'search' => 'Caută',
     'menu' => 'Menu',
     'profile' => 'Profil',
+    'remove' => 'Șterge',
     'login' => 'Autentificare',
     'favorite' => 'Favorite',
     'messages' => 'Mesaje',
@@ -319,7 +320,11 @@ return [
     'reset'              => 'Resetează',
     'no-results'         => 'Nu au fost găsite anunțuri',
 
-    // ro
+    //footer
+    'footer_disclaimer_title' => 'Acesta este un proiect de portofoliu',
+    'footer_disclaimer_text' => 'rent.use este un proiect demonstrativ realizat pentru a arăta abilități de dezvoltare, nu un serviciu real. Vă rugăm să nu folosiți numele real, numărul de telefon sau datele de plată — înregistrarea și rezervările sunt doar pentru testare.',
+
+    // 404
     '404-title' => 'Pagina nu a fost găsită',
     '404-description' => 'Pagina pe care o cauți nu există sau a fost mutată',
     '404-home' => 'Înapoi acasă',
@@ -366,7 +371,7 @@ return [
 
     //Review Controller
     'review-cannot-review-yourself' => 'You cannot review yourself',
-    'review-submited' => 'Review submitted',
+    'review-submitted' => 'Review submitted',
     'review-deleted' => 'Review deleted',
 
     //ReviewVote Controller

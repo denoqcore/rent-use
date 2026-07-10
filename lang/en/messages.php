@@ -14,6 +14,7 @@ return [
     'started' => 'Get Started',
     'search' => 'Search',
     'favorite' => 'Favorite',
+    'remove' => 'Remove',
     'messages' => 'Messages',
     'menu' => 'Menu',
     'profile' => 'Profile',
@@ -327,6 +328,11 @@ return [
     'apply'              => 'Apply',
     'reset'              => 'Reset',
     'no-results'         => 'No listings found',
+
+    //footer
+    'footer_disclaimer_title' => 'This is a portfolio project',
+    'footer_disclaimer_text' => 'rent.use is a demo built to showcase development skills, not a real, operating service. Please do not use your real name, phone number, or payment details — registration and bookings are for testing purposes only.',
+
     //404
     '404-title' => 'Page not found',
     '404-description' => 'The page you\'re looking for doesn\'t exist or may have been moved',
@@ -375,7 +381,7 @@ return [
 
     //Review Controller
     'review-cannot-review-yourself' => 'You cannot review yourself',
-    'review-submited' => 'Review submitted',
+    'review-submitted' => 'Review submitted',
     'review-deleted' => 'Review deleted',
 
     //ReviewVote Controller

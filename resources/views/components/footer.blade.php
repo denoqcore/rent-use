@@ -6,8 +6,20 @@ new class extends Component {};
 ?>
 <footer class="bg-(--background) border-t border-(--background-3)">
     <div class="max-w-6xl mx-auto px-6 py-6 pb-30">
-        <div class="flex flex-col md:flex-row justify-between items-center
-        gap-4">
+
+        <div class="flex items-start gap-3 p-4 mb-6 rounded-sm border border-(--background-3) bg-(--background-2)">
+            <x-heroicon-o-information-circle class="w-4 h-4 text-(--button) shrink-0 mt-0.5" />
+            <div class="flex flex-col gap-0.5">
+                <p class="text-xs font-semibold text-(--text-primary)">
+                    {{ __('messages.footer_disclaimer_title') }}
+                </p>
+                <p class="text-xs text-(--text-muted) leading-relaxed">
+                    {{ __('messages.footer_disclaimer_text') }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
 
             <div class="flex items-center gap-3">
                 <a href="/" class="text-sm flex items-center gap-1 font-black tracking-wide text-(--text-primary)">
