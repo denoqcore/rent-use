@@ -14,16 +14,11 @@ class User extends Authenticatable implements FilamentUser
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'is_admin',
         'name',
         'email',
         'phone',
         'avatar',
         'password',
-        // 'plan',
-        // 'plan_expires_at',
-        // 'boosts_used_today',
-        // 'boosts_reset_date',
         'is_online',
         'last_seen_at',
     ];

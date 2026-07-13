@@ -12,8 +12,7 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
-    'locale' => 'en',
-    'fallback_locale' => 'en',
+    'demo_mode' => (bool) env('DEMO_MODE', false),
 
     'name' => env('APP_NAME', 'Laravel'),
 

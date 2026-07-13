@@ -14,6 +14,7 @@ return [
     'search' => 'Caută',
     'menu' => 'Menu',
     'profile' => 'Profil',
+    'remove' => 'Șterge',
     'login' => 'Autentificare',
     'favorite' => 'Favorite',
     'messages' => 'Mesaje',
@@ -44,6 +45,7 @@ return [
     'empty-desc'  => 'Articolele și anunțurile vor apărea aici',
 
     //favorite
+    'favorites' => 'Favorite',
     'no_favorites_title' => 'Deocamdată nu s-a salvat nimic',
     'no_favorites_desc'  => 'Dă clic pe inimioară de lângă orice anunț pentru a-l salva aici',
 
@@ -112,6 +114,14 @@ return [
     'prof-bookings' => 'Rezervările mele',
     'prof-nobookings' => 'Nu ai încă rezervări',
 
+    'pricing-title' => 'Tarife',
+    'activate-demo-plan' => 'Activează planul demo',
+    'cancel-subscription' => 'Anulează abonamentul',
+    'days' => 'zile',
+    'active' => 'Active',
+    'current-plan' => 'Planul curent',
+    'expires' => 'Expiră',
+
     'prof-current-plan' => 'Plan curent',
     'prof-until-plan' => 'Valabil până la',
     'prof-expiring-plan' => 'expiră',
@@ -130,10 +140,20 @@ return [
     'plan-feature-20-listings' => 'Până la 20 de anunțuri',
     'plan-feature-8-photos' => 'Până la 8 fotografii',
     'plan-feature-1-boost' => '1 promovare în top',
+    'plan-feature-2-boost' => '2 promovări în top',
     'plan-feature-3-boosts' => '3 promovări în top',
     'plan-feature-priority-search' => 'Prioritate în căutare',
     'plan-feature-12-ads' => 'Până la 12 anunțuri',
     'plan-feature-6-photos' => 'Până la 6 fotografii per anunț',
+    'plan-feature-4-listings' => 'Până la 4 anunțuri',
+    'plan-feature-3-photos' => 'Până la 3 fotografii',
+    'plan-feature-standard-search' => 'Vizibilitate standard în căutare',
+    'prof-plan-free' => 'Gratuit',
+    'prof-plan-included' => 'Inclus implicit',
+    'prof-plan-cancel' => 'Anulează abonamentul',
+    'prof-plan-cancel-title' => 'Anulezi abonamentul?',
+    'prof-plan-cancel-confirm' => 'Anulează abonamentul',
+    'prof-plan-cancel-desc' => 'Abonamentul va fi anulat imediat și vei trece la Starter. Dacă ai mai multe anunțuri active decât permite Starter, cele în plus vor fi puse pe pauză imediat.',
 
     'plan-feature-20-ads' => 'Până la 20 de anunțuri',
     'plan-feature-highest-priority' => 'Cea mai înaltă prioritate în căutare',
@@ -319,7 +339,11 @@ return [
     'reset'              => 'Resetează',
     'no-results'         => 'Nu au fost găsite anunțuri',
 
-    // ro
+    //footer
+    'footer_disclaimer_title' => 'Acesta este un proiect de portofoliu',
+    'footer_disclaimer_text' => 'rent.use este un proiect demonstrativ realizat pentru a arăta abilități de dezvoltare, nu un serviciu real. Vă rugăm să nu folosiți numele real, numărul de telefon sau datele de plată — înregistrarea și rezervările sunt doar pentru testare.',
+
+    // 404
     '404-title' => 'Pagina nu a fost găsită',
     '404-description' => 'Pagina pe care o cauți nu există sau a fost mutată',
     '404-home' => 'Înapoi acasă',
@@ -366,7 +390,7 @@ return [
 
     //Review Controller
     'review-cannot-review-yourself' => 'You cannot review yourself',
-    'review-submited' => 'Review submitted',
+    'review-submitted' => 'Review submitted',
     'review-deleted' => 'Review deleted',
 
     //ReviewVote Controller

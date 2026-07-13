@@ -548,13 +548,14 @@ new class extends Component {}; ?>
                     @else
                         <div class="flex flex-col gap-2">
                             @foreach ($userFavorites as $fav)
-                                <div
-                                    class="relative flex items-center gap-3 p-2 rounded-sm transition-colors group hover:bg-(--background-3)
-                                     {{ $fav->trashed() || $fav->status !== 'active' ? 'opacity-60' : '' }}">
+                                @php $favActive = !$fav->trashed() && $fav->status === 'active'; @endphp
 
-                                    @if ($fav->trashed() || $fav->status !== 'active')
+                                <div
+                                    class="relative p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
+
+                                    @if (!$favActive)
                                         <div
-                                            class="absolute inset-0 left-60 z-10 flex items-center justify-center rounded-sm">
+                                            class="absolute inset-0 z-10 flex items-center justify-center rounded-sm bg-black/40">
                                             <span
                                                 class="px-3 py-1 text-xs font-semibold text-white bg-black/70 rounded-sm">
                                                 {{ $fav->trashed() ? 'Deleted' : 'Inactive' }}
@@ -562,608 +563,627 @@ new class extends Component {}; ?>
                                         </div>
                                     @endif
 
-                                    <div class="shrink-0 w-16 h-14 rounded-sm overflow-hidden bg-(--background-3)">
+                                    <div class="flex gap-3 group">
+                                        @if ($favActive)
+                                            <a href="{{ route('listings.show', $fav->slug) }}"
+                                                @click="favoritesModal = false"
+                                                class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
+                                            @else
+                                                <div
+                                                    class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
+                                        @endif
                                         @if ($fav->images->isNotEmpty())
                                             <img src="{{ asset('storage/' . $fav->images->first()->path) }}"
-                                                alt="{{ $fav->title }}" class="w-full h-full object-cover">
+                                                alt="{{ $fav->title }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center">
                                                 <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted) opacity-40" />
                                             </div>
                                         @endif
-                                    </div>
-
-                                    <div class="flex-1 min-w-0">
-                                        @if (!$fav->trashed() && $fav->status === 'active')
-                                            <a href="{{ route('listings.show', $fav->slug) }}"
-                                                @click="favoritesModal = false">
-                                                <p
-                                                    class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
-                                                    {{ $fav->title }}
-                                                </p>
+                                        @if ($favActive)
                                             </a>
                                         @else
-                                            <p class="text-sm font-semibold text-(--text-primary) truncate">
-                                                {{ $fav->title }}
-                                            </p>
-                                        @endif
+                                    </div>
+                            @endif
 
-                                        <div class="flex items-center gap-2 mt-0.5">
-                                            <span class="flex items-center gap-1 text-[11px] text-(--text-muted)">
-                                                <x-heroicon-s-map-pin class="w-2.5 h-2.5 shrink-0" />
-                                                {{ $fav->city->name }}
-                                            </span>
-                                            <span class="text-[11px] font-bold text-(--button)">
+                            <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            @if ($favActive)
+                                                <a href="{{ route('listings.show', $fav->slug) }}"
+                                                    @click="favoritesModal = false">
+                                                    <p
+                                                        class="text-sm font-semibold text-(--text-primary) truncate hover:underline">
+                                                        {{ $fav->title }}
+                                                    </p>
+                                                </a>
+                                            @else
+                                                <p class="text-sm font-semibold text-(--text-primary) truncate">
+                                                    {{ $fav->title }}
+                                                </p>
+                                            @endif
+                                            <p class="text-xs text-(--text-muted) mt-0.5">{{ $fav->city->name }}</p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <p class="text-sm font-bold text-(--button)">
                                                 @if ($fav->price_per_day)
                                                     {{ number_format($fav->price_per_day, 0, '.', ' ') }}
                                                     {{ $fav->currency }}
-                                                    <span class="text-(--text-muted) font-normal">/day</span>
+                                                    <span class="text-(--text-muted) font-normal text-xs">/day</span>
                                                 @elseif($fav->price_per_hour)
                                                     {{ number_format($fav->price_per_hour, 0, '.', ' ') }}
                                                     {{ $fav->currency }}
-                                                    <span class="text-(--text-muted) font-normal">/hr</span>
+                                                    <span class="text-(--text-muted) font-normal text-xs">/hr</span>
                                                 @endif
-                                            </span>
+                                            </p>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <form method="POST" action="{{ route('favorites.destroy', $fav) }}"
-                                        class="shrink-0 relative z-20">
+                                <div
+                                    class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between relative z-20">
+                                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                        <x-heroicon-s-heart class="w-3 h-3 text-(--button)" />
+                                        {{ __('messages.favorite') }}
+                                    </span>
+
+                                    <form method="POST" action="{{ route('favorites.destroy', $fav) }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="p-1.5 rounded-sm text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
-                                            <x-heroicon-o-x-mark class="w-4 h-4" />
+                                            class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                            {{ __('messages.remove') }}
                                         </button>
                                     </form>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
-                    @endif
+                </div>
+                @endforeach
+            </div>
+            @endif
+        </div>
+    </div>
+    </div>
+
+    <div x-show="bookingsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog" aria-modal="true">
+        <div x-show="bookingsModal" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="bookingsModal = false"
+            class="absolute inset-0 bg-black/30 transition-opacity">
+        </div>
+        <div x-show="bookingsModal" x-transition:enter="transform transition ease-in-out duration-300"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full" @keydown.escape.window="bookingsModal = false"
+            class="relative z-10 w-screen max-w-lg flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-calendar class="w-4 h-4 text-(--text-muted)" />
+                    <h2 class="text-sm font-bold text-(--text-primary)">{{ __('messages.rent') }}</h2>
+                </div>
+                <button @click="bookingsModal = false"
+                    class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                    <x-heroicon-o-x-mark class="w-4 h-4" />
+                </button>
+            </div>
+
+            <div class="flex border-b border-(--background-3) shrink-0">
+                <button @click="bookingsTab = 'renter'"
+                    :class="bookingsTab === 'renter' ? 'border-b-2 border-(--button) text-(--text-primary)' :
+                        'text-(--text-muted) hover:text-(--text-primary)'"
+                    class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
+                    {{ __('messages.my_rentals') }}
+                </button>
+                <button @click="bookingsTab = 'owner'"
+                    :class="bookingsTab === 'owner' ? 'border-b-2 border-(--button) text-(--text-primary)' :
+                        'text-(--text-muted) hover:text-(--text-primary)'"
+                    class="flex-1 px-4 py-3 text-xs font-semibold transition-colors relative">
+                    {{ __('messages.incoming_requests') }}
+                    <span x-show="incomingRequests.filter(b => b.status === 'pending').length > 0"
+                        x-text="incomingRequests.filter(b => b.status === 'pending').length"
+                        class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-(--button) text-(--button-text) rounded-full">
+                    </span>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto flex-1 p-4">
+                <div x-show="bookingsLoading" class="flex items-center justify-center py-16">
+                    <div class="w-5 h-5 border-2 border-(--button) border-t-transparent rounded-full animate-spin">
+                    </div>
+                </div>
+                <div x-show="!bookingsLoading && bookingsTab === 'renter'">
+                    <div x-show="myRentals.length === 0"
+                        class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                        <x-heroicon-o-calendar class="w-10 h-10 text-(--text-muted) opacity-30" />
+                        <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_rentals_title') }}</p>
+                        <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_rentals_desc') }}</p>
+                        <a href="{{ route('search') }}" @click="bookingsModal = false"
+                            class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
+                            {{ __('messages.browse') }}
+                        </a>
+                    </div>
+                    <div x-show="myRentals.length > 0" class="flex flex-col gap-2">
+                        <template x-for="booking in myRentals" :key="booking.id">
+                            <div
+                                class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
+                                <a :href="'/listings/' + booking.listing.slug" @click="bookingsModal = false"
+                                    class="flex gap-3 group">
+                                    <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
+                                        <template x-if="booking.listing.image">
+                                            <img :src="'/storage/' + booking.listing.image"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                        </template>
+                                        <template x-if="!booking.listing.image">
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-start justify-between gap-3">
+                                                <div class="min-w-0">
+                                                    <p class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline"
+                                                        x-text="booking.listing.title"></p>
+                                                    <p class="text-xs text-(--text-muted)" x-text="booking.listing.city">
+                                                    </p>
+                                                </div>
+                                                <div class="text-right shrink-0">
+                                                    <p class="text-sm font-bold text-(--text-price)"
+                                                        x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
+                                                <x-heroicon-o-calendar-days class="w-3 h-3" />
+                                                <span
+                                                    x-text="booking.pricing_mode === 'hour'
+                                                                ? booking.start_date + ' · ' + booking.start_hour + ' – ' + booking.end_hour
+                                                                : booking.start_date + ' — ' + booking.end_date">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
+                                            @click.prevent>
+                                            <span
+                                                class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                    :style="`background:${statusColor(booking.status)}`"></span>
+                                                <span x-text="statusLabel(booking.status)"></span>
+                                            </span>
+                                            <template x-if="booking.status === 'pending'">
+                                                <button @click.stop.prevent="cancelBooking(booking.id)"
+                                                    class="text-md md:text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                    {{ __('messages.cancel') }}
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div x-show="!bookingsLoading && bookingsTab === 'owner'">
+                    <div x-show="incomingRequests.length === 0"
+                        class="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                        <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) opacity-30" />
+                        <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_requests_title') }}
+                        </p>
+                        <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_requests_desc') }}</p>
+                    </div>
+
+                    <div x-show="incomingRequests.length > 0" class="flex flex-col gap-2">
+                        <template x-for="booking in incomingRequests" :key="booking.id">
+                            <div
+                                class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
+                                <div class="flex gap-3">
+                                    <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
+                                        <template x-if="booking.listing.image">
+                                            <img :src="'/storage/' + booking.listing.image"
+                                                class="w-full h-full object-cover">
+                                        </template>
+                                        <template x-if="!booking.listing.image">
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="flex-1 min-w-0 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-start justify-between gap-3">
+                                                <div class="min-w-0 flex flex-col gap-2">
+                                                    <p class="text-sm font-semibold text-(--text-primary) truncate"
+                                                        x-text="booking.listing.title"></p>
+
+                                                    <p class="text-sm font-medium text-(--text-primary)"
+                                                        x-text="booking.renter.name"></p>
+                                                </div>
+                                                <div class="text-right shrink-0">
+                                                    <p class="text-sm font-bold text-(--text-price)"
+                                                        x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
+                                                <x-heroicon-o-calendar-days class="w-3 h-3" />
+                                                <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between w-full"
+                                            @click.stop.prevent>
+                                            <span
+                                                class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
+                                                <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                                    :style="`background:${statusColor(booking.status)}`"></span>
+                                                <span x-text="statusLabel(booking.status)"></span>
+                                            </span>
+
+                                            <div class="flex gap-2">
+                                                <template x-if="booking.status === 'pending'">
+                                                    <div class="flex gap-2">
+                                                        <button @click="confirmBooking(booking.id)"
+                                                            class="py-0.5 px-2 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition">
+                                                            {{ __('messages.confirm') }}
+                                                        </button>
+                                                        <button @click="cancelBooking(booking.id)"
+                                                            class="py-0.5 px-2 text-xs font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-sm cursor-pointer transition">
+                                                            {{ __('messages.decline') }}
+                                                        </button>
+                                                    </div>
+                                                </template>
+                                                <template
+                                                    x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
+                                                    <button @click.stop.prevent="deleteBooking(booking.id)"
+                                                        class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
+                                                        {{ __('messages.delete') }}
+                                                    </button>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div x-show="bookingsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog"
-            aria-modal="true">
-            <div x-show="bookingsModal" x-transition:enter="ease-in-out duration-300"
-                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0" @click="bookingsModal = false"
-                class="absolute inset-0 bg-black/30 transition-opacity">
-            </div>
-            <div x-show="bookingsModal" x-transition:enter="transform transition ease-in-out duration-300"
-                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-                x-transition:leave="transform transition ease-in-out duration-300"
-                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
-                @keydown.escape.window="bookingsModal = false"
-                class="relative z-10 w-screen max-w-lg flex flex-col bg-(--background-2) border-l border-(--background-3) shadow-2xl h-full">
+    <div x-show="chatsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog" aria-modal="true">
+        <div x-show="chatsModal" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="chatsModal = false"
+            class="absolute inset-0 bg-black/30 transition-opacity">
+        </div>
 
-                <div class="flex items-center justify-between px-5 py-4 border-b border-(--background-3) shrink-0">
+        <div x-show="chatsModal" x-transition:enter="transform transition ease-in-out duration-300"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full" @keydown.escape.window="chatsModal = false"
+            class="relative z-10 flex h-full shadow-2xl bg-(--background-2) border-l border-(--background-3) w-[min(820px,90vw)]">
+
+            <div class="w-72 shrink-0 flex flex-col border-r border-(--background-3)"
+                :class="chatView === 'chat' ? 'hidden lg:flex' : 'flex'">
+
+                <div class="flex items-center justify-between px-4 py-4 border-b border-(--background-3) shrink-0">
                     <div class="flex items-center gap-2">
-                        <x-heroicon-o-calendar class="w-4 h-4 text-(--text-muted)" />
-                        <h2 class="text-sm font-bold text-(--text-primary)">{{ __('messages.rent') }}</h2>
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-4 h-4 text-(--text-muted)" />
+                        <h2 class="text-sm font-bold text-(--text-primary)">{{ __('messages.messages') }}</h2>
                     </div>
-                    <button @click="bookingsModal = false"
+                    <button @click="chatsModal = false"
                         class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
                         <x-heroicon-o-x-mark class="w-4 h-4" />
                     </button>
                 </div>
 
-                <div class="flex border-b border-(--background-3) shrink-0">
-                    <button @click="bookingsTab = 'renter'"
-                        :class="bookingsTab === 'renter' ? 'border-b-2 border-(--button) text-(--text-primary)' :
-                            'text-(--text-muted) hover:text-(--text-primary)'"
-                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors">
-                        {{ __('messages.my_rentals') }}
-                    </button>
-                    <button @click="bookingsTab = 'owner'"
-                        :class="bookingsTab === 'owner' ? 'border-b-2 border-(--button) text-(--text-primary)' :
-                            'text-(--text-muted) hover:text-(--text-primary)'"
-                        class="flex-1 px-4 py-3 text-xs font-semibold transition-colors relative">
-                        {{ __('messages.incoming_requests') }}
-                        <span x-show="incomingRequests.filter(b => b.status === 'pending').length > 0"
-                            x-text="incomingRequests.filter(b => b.status === 'pending').length"
-                            class="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-(--button) text-(--button-text) rounded-full">
-                        </span>
-                    </button>
-                </div>
-
-                <div class="overflow-y-auto flex-1 p-4">
-                    <div x-show="bookingsLoading" class="flex items-center justify-center py-16">
+                <div class="flex-1 overflow-y-auto">
+                    <div x-show="chatsLoading" class="flex items-center justify-center py-16">
                         <div class="w-5 h-5 border-2 border-(--button) border-t-transparent rounded-full animate-spin">
                         </div>
                     </div>
-                    <div x-show="!bookingsLoading && bookingsTab === 'renter'">
-                        <div x-show="myRentals.length === 0"
-                            class="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                            <x-heroicon-o-calendar class="w-10 h-10 text-(--text-muted) opacity-30" />
-                            <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_rentals_title') }}</p>
-                            <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_rentals_desc') }}</p>
-                            <a href="{{ route('search') }}" @click="bookingsModal = false"
-                                class="mt-2 px-4 py-2 text-xs font-medium bg-(--button) text-(--button-text) hover:bg-(--button-h) rounded-sm">
-                                {{ __('messages.browse') }}
-                            </a>
-                        </div>
-                        <div x-show="myRentals.length > 0" class="flex flex-col gap-2">
-                            <template x-for="booking in myRentals" :key="booking.id">
-                                <div
-                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
-                                    <a :href="'/listings/' + booking.listing.slug" @click="bookingsModal = false"
-                                        class="flex gap-3 group">
-                                        <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
-                                            <template x-if="booking.listing.image">
-                                                <img :src="'/storage/' + booking.listing.image"
-                                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                            </template>
-                                            <template x-if="!booking.listing.image">
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
-                                                </div>
-                                            </template>
-                                        </div>
-                                        <div class="flex-1 min-w-0 flex flex-col justify-between">
-                                            <div>
-                                                <div class="flex items-start justify-between gap-3">
-                                                    <div class="min-w-0">
-                                                        <p class="text-sm font-semibold text-(--text-primary) truncate group-hover:underline"
-                                                            x-text="booking.listing.title"></p>
-                                                        <p class="text-xs text-(--text-muted)"
-                                                            x-text="booking.listing.city"></p>
-                                                    </div>
-                                                    <div class="text-right shrink-0">
-                                                        <p class="text-sm font-bold text-(--text-price)"
-                                                            x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
-                                                    <x-heroicon-o-calendar-days class="w-3 h-3" />
-                                                    <span
-                                                        x-text="booking.pricing_mode === 'hour'
-                                                                ? booking.start_date + ' · ' + booking.start_hour + ' – ' + booking.end_hour
-                                                                : booking.start_date + ' — ' + booking.end_date">
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between"
-                                                @click.prevent>
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
-                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
-                                                        :style="`background:${statusColor(booking.status)}`"></span>
-                                                    <span x-text="statusLabel(booking.status)"></span>
-                                                </span>
-                                                <template x-if="booking.status === 'pending'">
-                                                    <button @click.stop.prevent="cancelBooking(booking.id)"
-                                                        class="text-md md:text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
-                                                        {{ __('messages.cancel') }}
-                                                    </button>
-                                                </template>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </template>
-                        </div>
+
+                    <div x-show="!chatsLoading && chats.length === 0"
+                        class="flex flex-col items-center justify-center gap-3 py-16 text-center px-6">
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-10 h-10 text-(--text-muted) opacity-20" />
+                        <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.status_messages') }}</p>
+                        <p class="text-xs text-(--text-muted)">{{ __('messages.status_desc_messages') }}</p>
                     </div>
 
-                    <div x-show="!bookingsLoading && bookingsTab === 'owner'">
-                        <div x-show="incomingRequests.length === 0"
-                            class="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                            <x-heroicon-o-inbox class="w-10 h-10 text-(--text-muted) opacity-30" />
-                            <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.no_requests_title') }}
-                            </p>
-                            <p class="text-xs text-(--text-muted) max-w-xs">{{ __('messages.no_requests_desc') }}</p>
-                        </div>
-
-                        <div x-show="incomingRequests.length > 0" class="flex flex-col gap-2">
-                            <template x-for="booking in incomingRequests" :key="booking.id">
-                                <div
-                                    class="p-3 rounded-sm border border-(--background-3) bg-(--background) hover:border-(--button)/30 transition">
-                                    <div class="flex gap-3">
-                                        <div class="shrink-0 w-34 h-30 rounded-sm overflow-hidden bg-(--background-3)">
-                                            <template x-if="booking.listing.image">
-                                                <img :src="'/storage/' + booking.listing.image"
-                                                    class="w-full h-full object-cover">
-                                            </template>
-                                            <template x-if="!booking.listing.image">
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <x-heroicon-o-photo class="w-5 h-5 text-(--text-muted)" />
-                                                </div>
-                                            </template>
-                                        </div>
-                                        <div class="flex-1 min-w-0 flex flex-col justify-between">
-                                            <div>
-                                                <div class="flex items-start justify-between gap-3">
-                                                    <div class="min-w-0 flex flex-col gap-2">
-                                                        <p class="text-sm font-semibold text-(--text-primary) truncate"
-                                                            x-text="booking.listing.title"></p>
-
-                                                        <p class="text-sm font-medium text-(--text-primary)"
-                                                            x-text="booking.renter.name"></p>
-                                                    </div>
-                                                    <div class="text-right shrink-0">
-                                                        <p class="text-sm font-bold text-(--text-price)"
-                                                            x-text="new Intl.NumberFormat('de-DE').format(booking.total_price) + ' ' + booking.currency">
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2 flex items-center gap-2 text-[11px] text-(--text-muted)">
-                                                    <x-heroicon-o-calendar-days class="w-3 h-3" />
-                                                    <span x-text="booking.start_date + ' — ' + booking.end_date"></span>
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 pt-3 border-t border-(--background-3) flex items-center justify-between w-full"
-                                                @click.stop.prevent>
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-(--text-muted)">
-                                                    <span class="w-1.5 h-1.5 rounded-full shrink-0"
-                                                        :style="`background:${statusColor(booking.status)}`"></span>
-                                                    <span x-text="statusLabel(booking.status)"></span>
-                                                </span>
-
-                                                <div class="flex gap-2">
-                                                    <template x-if="booking.status === 'pending'">
-                                                        <div class="flex gap-2">
-                                                            <button @click="confirmBooking(booking.id)"
-                                                                class="py-0.5 px-2 text-xs font-medium bg-green-500/10 text-green-500 hover:bg-green-500/20 rounded-sm cursor-pointer transition">
-                                                                {{ __('messages.confirm') }}
-                                                            </button>
-                                                            <button @click="cancelBooking(booking.id)"
-                                                                class="py-0.5 px-2 text-xs font-medium bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-sm cursor-pointer transition">
-                                                                {{ __('messages.decline') }}
-                                                            </button>
-                                                        </div>
-                                                    </template>
-                                                    <template
-                                                        x-if="booking.status === 'cancelled' || booking.status === 'confirmed'">
-                                                        <button @click.stop.prevent="deleteBooking(booking.id)"
-                                                            class="text-xs font-medium px-2 py-0.5 rounded-sm text-(--button-cancel) hover:underline hover:text-(--hvr-btn-cancel) transition cursor-pointer">
-                                                            {{ __('messages.delete') }}
-                                                        </button>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div x-show="chatsModal" x-cloak class="fixed inset-0 z-60 flex justify-end" role="dialog" aria-modal="true">
-            <div x-show="chatsModal" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
-                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="chatsModal = false"
-                class="absolute inset-0 bg-black/30 transition-opacity">
-            </div>
-
-            <div x-show="chatsModal" x-transition:enter="transform transition ease-in-out duration-300"
-                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-                x-transition:leave="transform transition ease-in-out duration-300"
-                x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
-                @keydown.escape.window="chatsModal = false"
-                class="relative z-10 flex h-full shadow-2xl bg-(--background-2) border-l border-(--background-3) w-[min(820px,90vw)]">
-
-                <div class="w-72 shrink-0 flex flex-col border-r border-(--background-3)"
-                    :class="chatView === 'chat' ? 'hidden lg:flex' : 'flex'">
-
-                    <div class="flex items-center justify-between px-4 py-4 border-b border-(--background-3) shrink-0">
-                        <div class="flex items-center gap-2">
-                            <x-heroicon-o-chat-bubble-bottom-center class="w-4 h-4 text-(--text-muted)" />
-                            <h2 class="text-sm font-bold text-(--text-primary)">{{ __('messages.messages') }}</h2>
-                        </div>
-                        <button @click="chatsModal = false"
-                            class="p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
-                            <x-heroicon-o-x-mark class="w-4 h-4" />
-                        </button>
-                    </div>
-
-                    <div class="flex-1 overflow-y-auto">
-                        <div x-show="chatsLoading" class="flex items-center justify-center py-16">
-                            <div class="w-5 h-5 border-2 border-(--button) border-t-transparent rounded-full animate-spin">
-                            </div>
-                        </div>
-
-                        <div x-show="!chatsLoading && chats.length === 0"
-                            class="flex flex-col items-center justify-center gap-3 py-16 text-center px-6">
-                            <x-heroicon-o-chat-bubble-bottom-center class="w-10 h-10 text-(--text-muted) opacity-20" />
-                            <p class="text-sm font-medium text-(--text-primary)">{{ __('messages.status_messages') }}</p>
-                            <p class="text-xs text-(--text-muted)">{{ __('messages.status_desc_messages') }}</p>
-                        </div>
-
-                        <div x-show="!chatsLoading && chats.length > 0" class="flex flex-col p-2 gap-0.5">
-                            <template x-for="chat in chats" :key="chat.id">
-                                <div @click="openChat(chat.id)"
-                                    class="flex items-center gap-3 p-3 rounded-sm cursor-pointer transition-colors hover:bg-(--background-3)"
-                                    :class="activeChatId === chat.id ? 'bg-(--background-3)' : ''">
-
-                                    <div
-                                        class="w-9 h-9 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
-                                        <template x-if="chat.other_user.avatar">
-                                            <img :src="'/storage/' + chat.other_user.avatar"
-                                                class="w-full h-full object-cover">
-                                        </template>
-                                        <template x-if="!chat.other_user.avatar">
-                                            <span x-text="chat.other_user.name.charAt(0).toUpperCase()"></span>
-                                        </template>
-                                    </div>
-
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between gap-1">
-                                            <p class="text-sm font-semibold text-(--text-primary) truncate"
-                                                x-text="chat.other_user.name"></p>
-                                            <span class="text-[10px] text-(--text-muted) shrink-0"
-                                                x-text="chat.last_message?.created_at ?? ''"></span>
-                                        </div>
-                                        <div class="flex items-center justify-between gap-1 mt-0.5">
-                                            <p class="text-xs text-(--text-muted) truncate">
-                                                <span x-show="chat.last_message?.is_mine" class="text-(--text-muted)">Ты:
-                                                </span>
-                                                <span x-text="chat.last_message?.body ?? '—'"></span>
-                                            </p>
-                                            <span x-show="chat.unread > 0" x-text="chat.unread"
-                                                class="shrink-0 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full bg-(--button) text-(--button-text)">
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex-1 flex flex-col min-h-0 min-w-0"
-                    :class="chatView === 'list' ? 'hidden lg:flex' : 'flex'">
-
-                    <template x-if="!activeChatId">
-                        <div class="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6">
-                            <x-heroicon-o-chat-bubble-bottom-center class="w-12 h-12 text-(--text-muted) opacity-20" />
-                            <p class="text-sm text-(--text-muted)">{{ __('messages.message-choose-chat') }}</p>
-                        </div>
-                    </template>
-
-                    <template x-if="activeChatId">
-                        <div class="flex flex-col h-full min-w-0">
-                            <div class="flex items-center gap-3 px-4 py-3 border-b border-(--background-3) shrink-0">
-                                <button
-                                    class="lg:hidden p-1 -ml-1 rounded-sm cursor-pointer hover:bg-(--background-3) text-(--text-muted)"
-                                    @click="chatView = 'list'; activeChatId = null">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
+                    <div x-show="!chatsLoading && chats.length > 0" class="flex flex-col p-2 gap-0.5">
+                        <template x-for="chat in chats" :key="chat.id">
+                            <div @click="openChat(chat.id)"
+                                class="flex items-center gap-3 p-3 rounded-sm cursor-pointer transition-colors hover:bg-(--background-3)"
+                                :class="activeChatId === chat.id ? 'bg-(--background-3)' : ''">
 
                                 <div
-                                    class="w-8 h-8 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
-                                    <template x-if="activeChatData?.other_user?.avatar">
-                                        <img :src="'/storage/' + activeChatData.other_user.avatar"
+                                    class="w-9 h-9 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
+                                    <template x-if="chat.other_user.avatar">
+                                        <img :src="'/storage/' + chat.other_user.avatar"
                                             class="w-full h-full object-cover">
                                     </template>
-                                    <template x-if="!activeChatData?.other_user?.avatar">
-                                        <span
-                                            x-text="activeChatData?.other_user?.name?.charAt(0)?.toUpperCase() ?? '?'"></span>
+                                    <template x-if="!chat.other_user.avatar">
+                                        <span x-text="chat.other_user.name.charAt(0).toUpperCase()"></span>
                                     </template>
                                 </div>
 
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-(--text-primary)"
-                                        x-text="activeChatData?.other_user?.name ?? ''"></p>
-                                </div>
-
-                                <button @click="chatsModal = false"
-                                    class="hidden lg:flex p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
-                                    <x-heroicon-o-x-mark class="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1 min-w-0">
-                                <template x-for="msg in activeMessages" :key="msg.id">
-                                    <div class="flex flex-col gap-0.5 group min-w-0 w-full"
-                                        :class="msg.is_mine ? 'items-end' : 'items-start'">
-
-                                        <template x-if="msg.listing && !msg.is_deleted">
-                                            <a :href="'/listings/' + msg.listing.slug"
-                                                class="text-[11px] px-1 mb-0.5 flex items-center gap-1 hover:underline text-(--button)"
-                                                :class="msg.is_mine ? 'self-end' : 'self-start'">
-                                                <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M14.828 14.828a4 4 0 015.656 0l4-4a4 4 0 01-5.656-5.656l-1.1 1.1" />
-                                                </svg>
-                                                <span x-text="msg.listing.title"></span>
-                                            </a>
-                                        </template>
-
-                                        <div class="flex max-w-full min-w-0"
-                                            :class="msg.is_mine ? 'justify-end' : 'justify-start'">
-                                            <div class="relative max-w-70 sm:max-w-90 min-w-0">
-
-                                                <template x-if="msg.is_mine && !msg.is_deleted">
-                                                    <div
-                                                        class="absolute -left-16 bottom-0 hidden group-hover:flex items-center gap-1">
-                                                        <button @click="startEdit(msg)"
-                                                            class="w-6 h-6 rounded-sm flex items-center justify-center text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
-                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                            </svg>
-                                                        </button>
-                                                        <button @click="deleteMessage(msg.id)"
-                                                            class="w-6 h-6 rounded-sm flex items-center justify-center text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
-                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </template>
-
-                                                <template x-if="msg.is_deleted">
-                                                    <div class="px-3 py-2 rounded-2xl text-sm italic leading-relaxed break-words [overflow-wrap:anywhere] min-w-0 bg-(--background-3) text-(--text-muted) rounded-bl-[4px]"
-                                                        :class="msg.is_mine ? 'rounded-br-[4px]' : 'rounded-bl-[4px]'">
-                                                        {{ __('messages.message-deleted') }}
-                                                    </div>
-                                                </template>
-
-                                                <template x-if="!msg.is_deleted">
-                                                    <div class="px-3 py-2 rounded-2xl text-sm leading-relaxed break-words [overflow-wrap:anywhere] min-w-0"
-                                                        :class="msg.is_mine ?
-                                                            'bg-(--button) text-(--button-text) rounded-br-[4px]' :
-                                                            'bg-(--background-3) text-(--text-primary) rounded-bl-[4px]'">
-
-                                                        <template x-if="editingMessageId === msg.id">
-                                                            <div>
-                                                                <textarea id="chatEditInput" x-model="editingBody" rows="2"
-                                                                    class="w-full bg-transparent border-0 outline-none resize-none text-sm text-(--button-text)"
-                                                                    @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
-                                                                <div
-                                                                    class="flex items-center gap-2 mt-1 pt-1 border-t border-white/20 text-xs">
-                                                                    <button @click="sendChatMessage()"
-                                                                        class="font-medium opacity-90 hover:opacity-100 cursor-pointer">
-                                                                        {{ __('messages.message-save') }}
-                                                                    </button>
-                                                                    <button @click="cancelEdit()"
-                                                                        class="opacity-60 hover:opacity-100 cursor-pointer">
-                                                                        {{ __('messages.message-cancel') }}
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </template>
-
-                                                        <template x-if="editingMessageId !== msg.id">
-                                                            <span x-text="msg.body"
-                                                                class="break-words [overflow-wrap:anywhere]"></span>
-                                                        </template>
-                                                    </div>
-                                                </template>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="flex items-center gap-1.5 px-1"
-                                            :class="msg.is_mine ? 'self-end' : 'self-start'">
-                                            <span class="text-[10px] text-(--text-muted)" x-text="msg.created_at"></span>
-                                            <template x-if="msg.edited_at && !msg.is_deleted">
-                                                <span
-                                                    class="text-[10px] text-(--text-muted)">{{ __('messages.message-edited') }}</span>
-                                            </template>
-                                            <template x-if="msg.is_mine && !msg.is_deleted">
-                                                <span class="text-[10px]">
-                                                    <template x-if="msg.read_at">
-                                                        <svg class="w-3 h-3 text-blue-400" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2.5" d="M4.5 12.75l4 4 9-9M4.5 8.25l4 4" />
-                                                        </svg>
-                                                    </template>
-                                                    <template x-if="!msg.read_at">
-                                                        <svg class="w-3 h-3 text-(--text-muted)" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2.5" d="M4.5 12.75l4 4 9-9" />
-                                                        </svg>
-                                                    </template>
-                                                </span>
-                                            </template>
-                                        </div>
-
+                                    <div class="flex items-center justify-between gap-1">
+                                        <p class="text-sm font-semibold text-(--text-primary) truncate"
+                                            x-text="chat.other_user.name"></p>
+                                        <span class="text-[10px] text-(--text-muted) shrink-0"
+                                            x-text="chat.last_message?.created_at ?? ''"></span>
                                     </div>
+                                    <div class="flex items-center justify-between gap-1 mt-0.5">
+                                        <p class="text-xs text-(--text-muted) truncate">
+                                            <span x-show="chat.last_message?.is_mine" class="text-(--text-muted)">Ты:
+                                            </span>
+                                            <span x-text="chat.last_message?.body ?? '—'"></span>
+                                        </p>
+                                        <span x-show="chat.unread > 0" x-text="chat.unread"
+                                            class="shrink-0 min-w-4 h-4 px-1 text-[10px] font-bold flex items-center justify-center rounded-full bg-(--button) text-(--button-text)">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col min-h-0 min-w-0"
+                :class="chatView === 'list' ? 'hidden lg:flex' : 'flex'">
+
+                <template x-if="!activeChatId">
+                    <div class="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6">
+                        <x-heroicon-o-chat-bubble-bottom-center class="w-12 h-12 text-(--text-muted) opacity-20" />
+                        <p class="text-sm text-(--text-muted)">{{ __('messages.message-choose-chat') }}</p>
+                    </div>
+                </template>
+
+                <template x-if="activeChatId">
+                    <div class="flex flex-col h-full min-w-0">
+                        <div class="flex items-center gap-3 px-4 py-3 border-b border-(--background-3) shrink-0">
+                            <button
+                                class="lg:hidden p-1 -ml-1 rounded-sm cursor-pointer hover:bg-(--background-3) text-(--text-muted)"
+                                @click="chatView = 'list'; activeChatId = null">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+
+                            <div
+                                class="w-8 h-8 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-semibold bg-blue-100 text-(--button)">
+                                <template x-if="activeChatData?.other_user?.avatar">
+                                    <img :src="'/storage/' + activeChatData.other_user.avatar"
+                                        class="w-full h-full object-cover">
+                                </template>
+                                <template x-if="!activeChatData?.other_user?.avatar">
+                                    <span
+                                        x-text="activeChatData?.other_user?.name?.charAt(0)?.toUpperCase() ?? '?'"></span>
                                 </template>
                             </div>
 
-                            <div x-show="editingMessageId" x-cloak
-                                class="px-4 py-2 border-t border-(--background-3) flex items-center gap-2 bg-(--background)">
-                                <svg class="w-4 h-4 shrink-0 text-(--button)" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                <span class="text-xs text-(--text-muted) flex-1">{{ __('messages.message-edit') }}</span>
-                                <button @click="cancelEdit()"
-                                    class="text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
-                                    <x-heroicon-o-x-mark class="w-4 h-4" />
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-(--text-primary)"
+                                    x-text="activeChatData?.other_user?.name ?? ''"></p>
+                            </div>
+
+                            <button @click="chatsModal = false"
+                                class="hidden lg:flex p-1 rounded-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                                <x-heroicon-o-x-mark class="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1 min-w-0">
+                            <template x-for="msg in activeMessages" :key="msg.id">
+                                <div class="flex flex-col gap-0.5 group min-w-0 w-full"
+                                    :class="msg.is_mine ? 'items-end' : 'items-start'">
+
+                                    <template x-if="msg.listing && !msg.is_deleted">
+                                        <a :href="'/listings/' + msg.listing.slug"
+                                            class="text-[11px] px-1 mb-0.5 flex items-center gap-1 hover:underline text-(--button)"
+                                            :class="msg.is_mine ? 'self-end' : 'self-start'">
+                                            <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M14.828 14.828a4 4 0 015.656 0l4-4a4 4 0 01-5.656-5.656l-1.1 1.1" />
+                                            </svg>
+                                            <span x-text="msg.listing.title"></span>
+                                        </a>
+                                    </template>
+
+                                    <div class="flex max-w-full min-w-0"
+                                        :class="msg.is_mine ? 'justify-end' : 'justify-start'">
+                                        <div class="relative max-w-70 sm:max-w-90 min-w-0">
+
+                                            <template x-if="msg.is_mine && !msg.is_deleted">
+                                                <div
+                                                    class="absolute -left-16 bottom-0 hidden group-hover:flex items-center gap-1">
+                                                    <button @click="startEdit(msg)"
+                                                        class="w-6 h-6 rounded-sm flex items-center justify-center text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) cursor-pointer">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button @click="deleteMessage(msg.id)"
+                                                        class="w-6 h-6 rounded-sm flex items-center justify-center text-(--text-muted) hover:text-red-400 hover:bg-red-400/10 cursor-pointer">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </template>
+
+                                            <template x-if="msg.is_deleted">
+                                                <div class="px-3 py-2 rounded-2xl text-sm italic leading-relaxed break-words [overflow-wrap:anywhere] min-w-0 bg-(--background-3) text-(--text-muted) rounded-bl-[4px]"
+                                                    :class="msg.is_mine ? 'rounded-br-[4px]' : 'rounded-bl-[4px]'">
+                                                    {{ __('messages.message-deleted') }}
+                                                </div>
+                                            </template>
+
+                                            <template x-if="!msg.is_deleted">
+                                                <div class="px-3 py-2 rounded-2xl text-sm leading-relaxed break-words [overflow-wrap:anywhere] min-w-0"
+                                                    :class="msg.is_mine ?
+                                                        'bg-(--button) text-(--button-text) rounded-br-[4px]' :
+                                                        'bg-(--background-3) text-(--text-primary) rounded-bl-[4px]'">
+
+                                                    <template x-if="editingMessageId === msg.id">
+                                                        <div>
+                                                            <textarea id="chatEditInput" x-model="editingBody" rows="2"
+                                                                class="w-full bg-transparent border-0 outline-none resize-none text-sm text-(--button-text)"
+                                                                @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
+                                                            <div
+                                                                class="flex items-center gap-2 mt-1 pt-1 border-t border-white/20 text-xs">
+                                                                <button @click="sendChatMessage()"
+                                                                    class="font-medium opacity-90 hover:opacity-100 cursor-pointer">
+                                                                    {{ __('messages.message-save') }}
+                                                                </button>
+                                                                <button @click="cancelEdit()"
+                                                                    class="opacity-60 hover:opacity-100 cursor-pointer">
+                                                                    {{ __('messages.message-cancel') }}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+
+                                                    <template x-if="editingMessageId !== msg.id">
+                                                        <span x-text="msg.body"
+                                                            class="break-words [overflow-wrap:anywhere]"></span>
+                                                    </template>
+                                                </div>
+                                            </template>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-1.5 px-1"
+                                        :class="msg.is_mine ? 'self-end' : 'self-start'">
+                                        <span class="text-[10px] text-(--text-muted)" x-text="msg.created_at"></span>
+                                        <template x-if="msg.edited_at && !msg.is_deleted">
+                                            <span
+                                                class="text-[10px] text-(--text-muted)">{{ __('messages.message-edited') }}</span>
+                                        </template>
+                                        <template x-if="msg.is_mine && !msg.is_deleted">
+                                            <span class="text-[10px]">
+                                                <template x-if="msg.read_at">
+                                                    <svg class="w-3 h-3 text-blue-400" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2.5" d="M4.5 12.75l4 4 9-9M4.5 8.25l4 4" />
+                                                    </svg>
+                                                </template>
+                                                <template x-if="!msg.read_at">
+                                                    <svg class="w-3 h-3 text-(--text-muted)" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2.5" d="M4.5 12.75l4 4 9-9" />
+                                                    </svg>
+                                                </template>
+                                            </span>
+                                        </template>
+                                    </div>
+
+                                </div>
+                            </template>
+                        </div>
+
+                        <div x-show="editingMessageId" x-cloak
+                            class="px-4 py-2 border-t border-(--background-3) flex items-center gap-2 bg-(--background)">
+                            <svg class="w-4 h-4 shrink-0 text-(--button)" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span class="text-xs text-(--text-muted) flex-1">{{ __('messages.message-edit') }}</span>
+                            <button @click="cancelEdit()"
+                                class="text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                                <x-heroicon-o-x-mark class="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div class="px-4 py-3 shrink-0 border-t border-(--background-3)">
+                            <div class="flex items-end gap-2">
+                                <textarea x-show="!editingMessageId" x-model="chatInput" placeholder="{{ __('messages.message-send') }}"
+                                    rows="1"
+                                    class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
+                                    @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()"></textarea>
+
+                                <textarea x-show="editingMessageId" x-model="editingBody" placeholder="{{ __('messages.message-send') }}"
+                                    rows="1"
+                                    class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
+                                    @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
+
+                                <button @click="sendChatMessage()"
+                                    class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 cursor-pointer bg-(--button) hover:bg-(--button-h)">
+                                    <x-heroicon-o-paper-airplane class="w-4 h-4 text-(--button-text)" />
                                 </button>
                             </div>
-
-                            <div class="px-4 py-3 shrink-0 border-t border-(--background-3)">
-                                <div class="flex items-end gap-2">
-                                    <textarea x-show="!editingMessageId" x-model="chatInput" placeholder="{{ __('messages.message-send') }}"
-                                        rows="1"
-                                        class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
-                                        @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()"></textarea>
-
-                                    <textarea x-show="editingMessageId" x-model="editingBody" placeholder="{{ __('messages.message-send') }}"
-                                        rows="1"
-                                        class="flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm outline-none transition-colors bg-(--background) text-(--text-primary) max-h-[120px] border border-(--background-3) focus:border-(--button)"
-                                        @keydown.enter.prevent="if(!$event.shiftKey) sendChatMessage()" @keydown.escape="cancelEdit()"></textarea>
-
-                                    <button @click="sendChatMessage()"
-                                        class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 cursor-pointer bg-(--button) hover:bg-(--button-h)">
-                                        <x-heroicon-o-paper-airplane class="w-4 h-4 text-(--button-text)" />
-                                    </button>
-                                </div>
-                            </div>
                         </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-
-
-        <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutModal = false"></div>
-            <div
-                class="relative z-10 w-full sm:max-w-sm p-6 bg-(--background-2) border border-(--background-3) rounded-sm shadow-2xl">
-                <div class="flex items-center gap-4 mb-6">
-                    <div
-                        class="w-10 h-10 rounded-sm bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/10">
-                        <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 text-red-500" />
                     </div>
-                    <h2 class="text-base font-bold text-(--text-primary) leading-tight">
-                        {{ __('messages.sign-out-confirm-title') }}</h2>
-                </div>
-                <div class="flex gap-2">
-                    <button type="button" @click="logoutModal = false"
-                        class="flex-1 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm cursor-pointer">
-                        {{ __('messages.back') }}
-                    </button>
-                    <form method="POST" action="{{ route('logout') }}" class="flex-1">
-                        @csrf
-                        <button type="submit"
-                            class="w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 rounded-sm cursor-pointer">
-                            {{ __('messages.sign-out') }}
-                        </button>
-                    </form>
-                </div>
+                </template>
             </div>
         </div>
+    </div>
 
-    @endauth
 
-    <script>
-        const header = document.querySelector('header.headroom');
-        if (header) {
-            const headroom = new Headroom(header, {
-                offset: 80,
-                tolerance: {
-                    up: 5,
-                    down: 5
-                }
-            });
-            headroom.init();
-        }
-    </script>
+    <div x-show="logoutModal" x-cloak class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutModal = false"></div>
+        <div
+            class="relative z-10 w-full sm:max-w-sm p-6 bg-(--background-2) border border-(--background-3) rounded-sm shadow-2xl">
+            <div class="flex items-center gap-4 mb-6">
+                <div
+                    class="w-10 h-10 rounded-sm bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/10">
+                    <x-heroicon-o-arrow-left-on-rectangle class="w-5 h-5 text-red-500" />
+                </div>
+                <h2 class="text-base font-bold text-(--text-primary) leading-tight">
+                    {{ __('messages.sign-out-confirm-title') }}</h2>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" @click="logoutModal = false"
+                    class="flex-1 px-3 py-2 text-sm text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background-3) rounded-sm cursor-pointer">
+                    {{ __('messages.back') }}
+                </button>
+                <form method="POST" action="{{ route('logout') }}" class="flex-1">
+                    @csrf
+                    <button type="submit"
+                        class="w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 bg-red-400/5 hover:bg-red-400/10 rounded-sm cursor-pointer">
+                        {{ __('messages.sign-out') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+@endauth
+
+<script>
+    const header = document.querySelector('header.headroom');
+    if (header) {
+        const headroom = new Headroom(header, {
+            offset: 80,
+            tolerance: {
+                up: 5,
+                down: 5
+            }
+        });
+        headroom.init();
+    }
+</script>
 
 </div>

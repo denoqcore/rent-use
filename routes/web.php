@@ -13,14 +13,13 @@ use App\Http\Controllers\ReviewVoteController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\BoostController;
 
-Route::get('/listings/create',function(){return 'CREATE OK';});
+
 Route::get('/',[HomeController::class,'index']);
 Route::get('/search',[SearchController::class,'index'])->name('search');
 Route::get('/listings',[ListingController::class,'index'])->name('listings.index');
-Route::get('/listings/{slug}',[ListingController::class,'show'])->name('listings.show');
 Route::get('/profile/{user:name}',[ProfileController::class,'showPublic'])->name('profile.public');
 
-Route::get('/pricing', [SubscriptionController::class, 'index'])->name('subscription.index');
+// Route::get('/pricing', [SubscriptionController::class, 'index'])->name('subscription.index');
 Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success')->middleware('auth');
 
 Route::get('/lang/{locale}',function($locale){if(!in_array($locale,['en','ro','ru']))abort(400);session(['locale'=>$locale]);return redirect()->back();})->name('lang.switch');
@@ -41,13 +40,8 @@ Route::middleware('auth')->prefix('subscription')->group(function () {
     Route::post('/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 });
 
-// Without crf, auth
-// Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
-//     ->name('stripe.webhook')
-//     ->withoutMiddleware([
-//         \Illuminate\Session\Middleware\StartSession::class,
-//         \Illuminate\Cookie\Middleware\EncryptCookies::class,
-//     ]);
+Route::post('/webhook/stripe', [SubscriptionController::class, 'webhook'])
+    ->name('stripe.webhook');
 
 Route::middleware('auth')->group(function(){
 Route::get('/profile',[ProfileController::class,'show'])->name('profile');
@@ -67,7 +61,7 @@ Route::prefix('listings')->group(function(){
         Route::patch('/{listing:slug}',[ListingController::class,'update'])->name('listings.update');
 });
 
-Route::get('/favorites',[FavoriteController::class,'index'])->name('favorites.index');
+// Route::get('/favorites',[FavoriteController::class,'index'])->name('favorites.index');
 Route::post('/favorites/{listing}',[FavoriteController::class,'store'])->name('favorites.store');
 Route::delete('/favorites/{listing}',[FavoriteController::class,'destroy'])->name('favorites.destroy');
 
@@ -88,12 +82,10 @@ Route::post('/chat/user/{user}', [ChatController::class, 'openOrCreate']);
 Route::post('/chat/{chat}/send', [ChatController::class, 'send'])->middleware('throttle:30,1');
 Route::patch('/chat/message/{message}', [ChatController::class, 'edit']);
 Route::delete('/chat/message/{message}', [ChatController::class, 'destroy']);
-Route::post('/chat/listing/{listing}', [ChatController::class, 'openOrCreate']);
-Route::post('/chat/user/{user}',       [ChatController::class, 'openOrCreate']);
-// Route::post('/user/{user}/message',[ChatController::class,'openOrCreateByUser'])->name('chat.user');
 
 Route::get('/api/bookings/pending-count',[BookingController::class,'pendingCount']);
 Route::get('/api/bookings',[BookingController::class,'apiIndex']);
 
 Route::post('/logout',[AuthController::class,'logout'])->name('logout');
+Route::get('/listings/{slug}',[ListingController::class,'show'])->name('listings.show');
 });

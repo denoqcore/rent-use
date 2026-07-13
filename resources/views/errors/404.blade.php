@@ -27,12 +27,12 @@
 
             <div class="flex items-center gap-3">
                 <a href="/"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-colors">
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm text-sm font-semibold bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-colors">
                     <x-heroicon-o-home class="w-4 h-4" />
                     {{ __('messages.404-home') }}
                 </a>
                 <a href="{{ route('search') }}"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border border-(--background-3) text-(--text-primary) hover:bg-(--background-2) transition-colors">
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm text-sm font-medium border border-(--background-3) text-(--text-primary) hover:bg-(--background-2) transition-colors">
                     <x-heroicon-o-magnifying-glass class="w-4 h-4" />
                     {{ __('messages.404-browse') }}
                 </a>

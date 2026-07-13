@@ -16,6 +16,7 @@ return [
     'profile' => 'Профиль',
     'search' => 'Поиск',
     'favorite' => 'Избранное',
+    'remove' => 'Удалить',
     'messages' => 'Сообщения',
     'rent' => 'Аренда',
     'sign-out' => 'Выйти',
@@ -74,6 +75,7 @@ return [
     'message-edited' => '· изменено',
 
     //favorite
+    'favorites' => 'Избранное',
     'no_favorites_title' => 'Пока ничего не сохранено',
     'no_favorites_desc'  => 'Нажми на сердечко на любом объявлении, чтобы сохранить его здесь',
 
@@ -106,6 +108,14 @@ return [
     'prof-bookings' => 'Мои бронирования',
     'prof-nobookings' => 'Бронирований пока нет',
 
+    'pricing-title' => 'Тарифы',
+    'activate-demo-plan' => 'Активировать демо-план',
+    'cancel-subscription' => 'Отменить подписку',
+    'days' => 'дней',
+    'active' => 'Activ',
+    'current-plan' => 'Текущий тариф',
+    'expires' => 'Истекает',
+
     'prof-current-plan' => 'Текущий тариф',
     'prof-until-plan' => 'Действует до',
     'prof-expiring-plan' => 'истекает',
@@ -124,10 +134,20 @@ return [
     'plan-feature-20-listings' => 'До 20 объявлений',
     'plan-feature-8-photos' => 'До 8 фотографий',
     'plan-feature-1-boost' => '1 поднятие в топ',
+    'plan-feature-2-boost' => '2 поднятия в топ',
     'plan-feature-3-boosts' => '3 поднятия в топ',
     'plan-feature-priority-search' => 'Приоритет в поиске',
     'plan-feature-12-ads' => 'До 12 объявлений',
     'plan-feature-6-photos' => 'До 6 фотографий на объявление',
+    'plan-feature-4-listings' => 'До 4 объявлений',
+    'plan-feature-3-photos' => 'До 3 фото',
+    'plan-feature-standard-search' => 'Стандартная видимость в поиске',
+    'prof-plan-free' => 'Бесплатно',
+    'prof-plan-included' => 'Включён по умолчанию',
+    'prof-plan-cancel' => 'Отменить подписку',
+    'prof-plan-cancel-title' => 'Отменить подписку?',
+    'prof-plan-cancel-confirm' => 'Отменить подписку',
+    'prof-plan-cancel-desc' => 'Подписка будет отменена немедленно, аккаунт перейдёт на Starter. Если активных объявлений больше, чем разрешено на Starter, лишние сразу будут поставлены на паузу.',
 
     'plan-feature-20-ads' => 'До 20 объявлений',
     'plan-feature-highest-priority' => 'Наивысший приоритет в поиске',
@@ -317,6 +337,10 @@ return [
     'reset'              => 'Сбросить',
     'no-results'         => 'Объявлений не найдено',
 
+    // footer
+    'footer_disclaimer_title' => 'Это проект-портфолио',
+    'footer_disclaimer_text' => 'rent.use — демонстрационный проект, созданный для показа навыков разработки, а не реальный работающий сервис. Пожалуйста, не используйте настоящее имя, номер телефона или платёжные данные — регистрация и бронирования нужны только для тестирования.',
+
     // 404
     '404-title' => 'Страница не найдена',
     '404-description' => 'Страница, которую вы ищете, не существует или была перемещена',
@@ -365,7 +389,7 @@ return [
 
     //Review Controller
     'review-cannot-review-yourself' => 'Нельзя оставить отзыв самому себе',
-    'review-submited' => 'Отзыв отправлен',
+    'review-submitted' => 'Отзыв отправлен',
     'review-deleted' => 'Отзыв удалён',
 
     //ReviewVote Controller

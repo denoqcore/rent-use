@@ -3,7 +3,7 @@
 @section('title', 'rent.use | ' . $user->name)
 
 @section('content')
-    <section class="min-h-[calc(100vh-72px)] w-full pt-20 lg:pt-40 py-12 bg-(--background)" x-data="{
+    <section class="min-h-[calc(100vh-72px)] w-full pt-40 lg:pt-40 py-12 bg-(--background)" x-data="{
         tab: {
             '#listings': 'listings',
             '#bookings': 'bookings',
@@ -555,140 +555,113 @@
                                         </div>
                                     </div>
                                 @endforeach
-
-                                {{-- <div x-show="confirmDelete" x-cloak
-                                    class="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-xs"
-                                    x-transition:enter="transition ease-out duration-200"
-                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                    x-transition:leave="transition ease-in duration-150">
-                                    <div @click.away="confirmDelete = false"
-                                        class="w-full sm:max-w-md p-6 bg-(--background-2) border-t sm:border border-(--background-3) rounded-t-lg sm:rounded-lg shadow-2xl"
-                                        x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95"
-                                        x-transition:enter-end="translate-y-0 sm:scale-100">
-                                        <div class="w-12 h-1 bg-(--background-3) rounded-full mx-auto mb-5 sm:hidden">
-                                        </div>
-                                        <h3 class="text-base font-bold text-(--text-primary) mb-2">Delete booking?</h3>
-                                        <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
-                                            This will remove the booking from your history.
-                                        </p>
-                                        <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
-                                            <button type="button" @click="confirmDelete = false"
-                                                class="w-full sm:w-auto order-2 sm:order-1 px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-md border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) hover:bg-(--background) cursor-pointer transition-colors">
-                                                Cancel
-                                            </button>
-                                            <form method="POST" :action="deleteUrl"
-                                                class="w-full sm:w-auto order-1 sm:order-2">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium text-center rounded-md bg-red-500 hover:bg-red-600 text-white cursor-pointer transition-colors">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                         @endif
                     </div>
                 </div>
 
-                <div x-show="tab === 'subscription'" x-cloak>
-                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6 mb-4">
-                        <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">
-                            {{ __('messages.prof-current-plan') }}
-                        </h2>
+                <div x-show="tab === 'subscription'" x-cloak x-data="{ confirmCancel: false }">
 
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                @if ($user->plan === 'premium')
-                                    <span
-                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">PREMIUM</span>
-                                @elseif($user->plan === 'pro')
-                                    <span
-                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-blue-400/10 text-blue-400 border border-blue-400/20">PRO</span>
-                                @else
-                                    <span
-                                        class="px-2.5 py-1 rounded-sm text-xs font-bold bg-(--background-3) text-(--text-muted) border border-(--background-3)">STARTER</span>
-                                @endif
+                    {{-- Current plan summary --}}
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-5 mb-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex items-center gap-2 text-xs text-(--text-muted)">
+                                <span class="text-sm font-semibold text-(--text-primary)">{{ $user->planLabel() }}</span>
+                                <span>·</span>
+                                <span>{{ $user->maxListings() }} {{ __('messages.prof-plan-listing') }}</span>
+                                <span>·</span>
+                                <span>{{ $user->maxPhotos() }} {{ __('messages.prof-plan-photo') }}</span>
+                                <span>·</span>
+                                <span>{{ $user->maxBoostedListings() }} {{ __('messages.prof-plan-boost') }}</span>
+                            </div>
 
-                                @if ($user->plan_expires_at && $user->plan_expires_at->isFuture() && now()->diffInDays($user->plan_expires_at) <= 5)
-                                    <span class="text-xs text-(--text-muted)">
-                                        {{ __('messages.prof-until-plan') }}
-                                        {{ $user->plan_expires_at->format('d.m.Y') }}
-                                        <span class="text-red-400 ml-1">{{ __('messages.prof-plan-expiring') }}</span>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="mt-4 grid grid-cols-3 gap-3">
-                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
-                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-listing') }}
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
-                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxPhotos() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-photo') }}
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-sm bg-(--background) border border-(--background-3) text-center">
-                                <p class="text-lg font-black text-(--text-primary)">{{ $user->maxBoostedListings() }}</p>
-                                <p class="text-[11px] text-(--text-muted) mt-0.5">{{ __('messages.prof-plan-boost') }}
-                                </p>
-                            </div>
+                            @if ($user->plan !== 'starter' && $user->isActivePlan())
+                                <div class="flex items-center gap-3">
+                                    @if ($user->plan_expires_at && now()->diffInDays($user->plan_expires_at) <= 5)
+                                        <span class="text-xs text-red-400">
+                                            {{ __('messages.prof-plan-expiring') }} ·
+                                            {{ $user->plan_expires_at->format('d.m.Y') }}
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-(--text-muted)">
+                                            {{ __('messages.prof-until-plan') }}
+                                            {{ $user->plan_expires_at->format('d.m.Y') }}
+                                        </span>
+                                    @endif
+                                    <button @click="confirmCancel = true"
+                                        class="text-xs font-medium text-(--button-cancel) hover:underline cursor-pointer">
+                                        {{ __('messages.prof-plan-cancel') }}
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        @foreach ([
-            'pro' => [
-                'label' => 'PRO',
-                'price' => '199 MDL',
-                'color' => 'blue',
-                'features' => ['plan-feature-12-listings', 'plan-feature-8-photos', 'plan-feature-1-boost', 'plan-feature-priority-search'],
-            ],
-            'premium' => [
-                'label' => 'PREMIUM',
-                'price' => '349 MDL',
-                'color' => 'yellow',
-                'features' => ['plan-feature-20-listings', 'plan-feature-8-photos', 'plan-feature-3-boosts', 'plan-feature-priority-search'],
-            ],
-        ] as $key => $plan)
-                            @php $isCurrent = $user->plan === $key && $user->isActivePlan(); @endphp
+                    {{-- Plans grid --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                        @php
+                            $plans = [
+                                'starter' => [
+                                    'label' => 'STARTER',
+                                    'price' => __('messages.prof-plan-free'),
+                                    'features' => [
+                                        'plan-feature-4-listings',
+                                        'plan-feature-3-photos',
+                                        'plan-feature-1-boost',
+                                        'plan-feature-standard-search',
+                                    ],
+                                ],
+                                'pro' => [
+                                    'label' => 'PRO',
+                                    'price' => '199 MDL',
+                                    'features' => [
+                                        'plan-feature-12-listings',
+                                        'plan-feature-6-photos',
+                                        'plan-feature-2-boost',
+                                        'plan-feature-priority-search',
+                                    ],
+                                ],
+                                'premium' => [
+                                    'label' => 'PREMIUM',
+                                    'price' => '349 MDL',
+                                    'features' => [
+                                        'plan-feature-20-listings',
+                                        'plan-feature-8-photos',
+                                        'plan-feature-4-boosts',
+                                        'plan-feature-priority-search',
+                                    ],
+                                ],
+                            ];
+                        @endphp
+
+                        @foreach ($plans as $key => $plan)
+                            @php $isCurrent = $user->plan === $key && ($key === 'starter' || $user->isActivePlan()); @endphp
                             <div
-                                class="rounded-sm border p-5 flex flex-col gap-4
-                             {{ $isCurrent
-                                 ? ($key === 'premium'
-                                     ? 'border-yellow-400/30 bg-yellow-400/5'
-                                     : 'border-blue-400/30 bg-blue-400/5')
-                                 : 'border-(--background-3) bg-(--background-2)' }}">
+                                class="rounded-sm border p-5 flex flex-col gap-4 bg-(--background-2) {{ $isCurrent ? 'border-(--button)' : 'border-(--background-3)' }}">
 
                                 <div class="flex items-center justify-between">
-                                    <span
-                                        class="text-sm font-bold
-                                        {{ $key === 'premium' ? 'text-yellow-400' : 'text-blue-400' }}">
-                                        {{ $plan['label'] }}
-                                    </span>
+                                    <span class="text-sm font-semibold text-(--text-primary)">{{ $plan['label'] }}</span>
                                     @if ($isCurrent)
                                         <span
-                                            class="text-[11px] px-2 py-0.5 rounded-sm
-                                               {{ $key === 'premium' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20' : 'bg-blue-400/10 text-blue-400 border border-blue-400/20' }}">
+                                            class="text-[10px] font-medium px-2 py-0.5 rounded-sm bg-(--button)/10 text-(--button)">
                                             {{ __('messages.prof-plan-active') }}
                                         </span>
                                     @endif
                                 </div>
 
-                                <p class="text-2xl font-black text-(--text-primary)">{{ $plan['price'] }}<span
-                                        class="text-sm font-normal text-(--text-muted)">{{ __('messages.prof-plan-month') }}</span>
+                                <p class="text-xl font-bold text-(--text-primary)">
+                                    {{ $plan['price'] }}
+                                    @if ($key !== 'starter')
+                                        <span
+                                            class="text-xs font-normal text-(--text-muted)">{{ __('messages.prof-plan-month') }}</span>
+                                    @endif
                                 </p>
 
                                 <ul class="flex flex-col gap-2">
                                     @foreach ($plan['features'] as $feature)
                                         <li class="flex items-center gap-2 text-xs text-(--text-muted)">
-                                            <x-heroicon-o-check class="w-3.5 h-3.5 text-green-400 shrink-0" />
-                                            {{ $feature }}
+                                            <x-heroicon-o-check class="w-3.5 h-3.5 text-(--text-muted) shrink-0" />
+                                            {{ __('messages.' . $feature) }}
                                         </li>
                                     @endforeach
                                 </ul>
@@ -698,6 +671,11 @@
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm">
                                         {{ __('messages.prof-current-plan') }}
                                     </span>
+                                @elseif ($key === 'starter')
+                                    <span
+                                        class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm opacity-50">
+                                        {{ __('messages.prof-plan-included') }}
+                                    </span>
                                 @elseif ($user->isActivePlan() && $user->plan !== 'starter')
                                     <span
                                         class="mt-auto text-center py-2 text-xs text-(--text-muted) border border-(--background-3) rounded-sm opacity-50 cursor-not-allowed">
@@ -705,10 +683,7 @@
                                     </span>
                                 @else
                                     <a href="{{ route('subscription.checkout', $key) }}"
-                                        class="mt-auto text-center py-2 text-xs font-semibold rounded-sm transition-colors
-                                        {{ $key === 'premium'
-                                            ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 hover:bg-yellow-400/20'
-                                            : 'bg-blue-400/10 text-blue-400 border border-blue-400/20 hover:bg-blue-400/20' }}">
+                                        class="mt-auto text-center py-2 text-xs font-semibold rounded-sm bg-(--button) text-(--button-text) hover:bg-(--button-h) transition-colors">
                                         {{ __('messages.prof-plan-choose') }} {{ $plan['label'] }}
                                     </a>
                                 @endif
@@ -716,7 +691,34 @@
                         @endforeach
                     </div>
 
-                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-6">
+                    {{-- Cancel confirm modal --}}
+                    <div x-show="confirmCancel" x-cloak
+                        class="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-xs">
+                        <div @click.away="confirmCancel = false"
+                            class="w-full sm:max-w-md p-6 bg-(--background-2) border-t sm:border border-(--background-3) rounded-t-lg sm:rounded-sm shadow-2xl">
+                            <h3 class="text-base font-bold text-(--text-primary) mb-2">
+                                {{ __('messages.prof-plan-cancel-title') }}</h3>
+                            <p class="text-sm text-(--text-muted) mb-6 leading-relaxed">
+                                {{ __('messages.prof-plan-cancel-desc') }}</p>
+                            <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
+                                <button type="button" @click="confirmCancel = false"
+                                    class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium rounded-sm border border-(--background-3) text-(--text-muted) hover:text-(--text-primary) cursor-pointer">
+                                    {{ __('messages.message-cancel') }}
+                                </button>
+                                <form method="POST" action="{{ route('subscription.cancel') }}"
+                                    class="w-full sm:w-auto">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full sm:w-auto px-5 py-3 sm:py-2 text-sm font-medium rounded-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer">
+                                        {{ __('messages.prof-plan-cancel-confirm') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Payment history --}}
+                    <div class="rounded-sm border border-(--background-3) bg-(--background-2) p-5">
                         <h2 class="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-4">
                             {{ __('messages.prof-plan-history') }}
                         </h2>
@@ -727,26 +729,25 @@
                             <p class="text-sm text-(--text-muted) text-center py-8">
                                 {{ __('messages.prof-plan-history-none') }}</p>
                         @else
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col">
                                 @foreach ($payments as $payment)
                                     <div
-                                        class="flex items-center justify-between py-3 border-b border-(--background-3) last:border-0 text-xs">
+                                        class="flex items-center justify-between py-3 border-b border-(--background-3) last:border-0">
                                         <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-(--status-success) shrink-0"></span>
                                             <span
-                                                class="font-semibold text-(--text-primary) uppercase">{{ $payment->plan }}</span>
+                                                class="text-xs font-medium text-(--text-primary) uppercase">{{ $payment->plan }}</span>
                                             <span
-                                                class="text-(--text-muted)">{{ $payment->created_at->format('d.m.Y') }}</span>
+                                                class="text-xs text-(--text-muted)">{{ $payment->created_at->format('d.m.Y') }}</span>
                                         </div>
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-(--text-primary) font-semibold">{{ $payment->amount }}
-                                                {{ $payment->currency }}</span>
-                                        </div>
+                                        <span class="text-xs font-semibold text-(--text-primary)">
+                                            {{ number_format($payment->amount, 2, '.', ' ') }} {{ $payment->currency }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </div>
                         @endif
                     </div>
-
                 </div>
 
                 <div x-show="tab === 'support'" x-cloak>

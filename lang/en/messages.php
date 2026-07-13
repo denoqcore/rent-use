@@ -14,6 +14,7 @@ return [
     'started' => 'Get Started',
     'search' => 'Search',
     'favorite' => 'Favorite',
+    'remove' => 'Remove',
     'messages' => 'Messages',
     'menu' => 'Menu',
     'profile' => 'Profile',
@@ -76,6 +77,7 @@ return [
     'message-send' => 'Type a message...',
 
     //favorite
+    'favorites' => 'Favorites',
     'no_favorites_title' => 'No saved listings yet',
     'no_favorites_desc'  => 'Tap the heart on any listing to save it here',
 
@@ -113,6 +115,14 @@ return [
     'prof-bookings' => 'My bookings',
     'prof-nobookings' => 'No bookings yet',
 
+    'pricing-title' => 'Pricing',
+    'activate-demo-plan' => 'Activate demo plan',
+    'cancel-subscription' => 'Cancel subscription',
+    'days' => 'days',
+    'active' => 'Active',
+    'current-plan' => 'Current plan',
+    'expires' => 'Expires',
+
     'prof-current-plan' => 'Current plan',
     'prof-until-plan' => 'Until',
     'prof-expiring-plan' => 'is expiring',
@@ -130,9 +140,19 @@ return [
     'plan-feature-12-listings' => 'Up to 12 listings',
     'plan-feature-20-listings' => 'Up to 20 listings',
     'plan-feature-8-photos' => 'Up to 8 photos',
+    'plan-feature-1-boost' => '1 boost to the top',
     'plan-feature-2-boost' => '2 boost to the top',
     'plan-feature-4-boosts' => '4 boosts to the top',
     'plan-feature-priority-search' => 'Search priority',
+    'plan-feature-4-listings' => 'Up to 4 listings',
+    'plan-feature-3-photos' => 'Up to 3 photos',
+    'plan-feature-standard-search' => 'Standard search visibility',
+    'prof-plan-free' => 'Free',
+    'prof-plan-included' => 'Included by default',
+    'prof-plan-cancel' => 'Cancel plan',
+    'prof-plan-cancel-title' => 'Cancel your subscription?',
+    'prof-plan-cancel-confirm' => 'Cancel subscription',
+    'prof-plan-cancel-desc' => 'Your plan will be cancelled immediately and you\'ll be switched to Starter. If you have more active listings than Starter allows, the extra ones will be paused right away.',
 
     'plan-feature-12-ads' => 'Up to 12 ads',
     'plan-feature-6-photos' => 'Up to 6 photos per ad',
@@ -327,6 +347,11 @@ return [
     'apply'              => 'Apply',
     'reset'              => 'Reset',
     'no-results'         => 'No listings found',
+
+    //footer
+    'footer_disclaimer_title' => 'This is a portfolio project',
+    'footer_disclaimer_text' => 'rent.use is a demo built to showcase development skills, not a real, operating service. Please do not use your real name, phone number, or payment details — registration and bookings are for testing purposes only.',
+
     //404
     '404-title' => 'Page not found',
     '404-description' => 'The page you\'re looking for doesn\'t exist or may have been moved',
@@ -375,7 +400,7 @@ return [
 
     //Review Controller
     'review-cannot-review-yourself' => 'You cannot review yourself',
-    'review-submited' => 'Review submitted',
+    'review-submitted' => 'Review submitted',
     'review-deleted' => 'Review deleted',
 
     //ReviewVote Controller
