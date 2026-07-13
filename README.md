@@ -37,16 +37,6 @@ docker exec -it rent_use_app php artisan make:filament-resource Listing --genera
 docker exec -it rent_use_app php artisan make:filament-resource User --generate
 ```
 
-## Admin access
-
-```bash
-# Recommended — safe, respects mass assignment protection
-docker exec -it rent_use_app php artisan user:make-admin your@email.com
-
-# Or via seeder (set ADMIN_EMAIL / ADMIN_PASSWORD in .env first)
-docker exec -it rent_use_app php artisan db:seed --class=AdminSeeder
-```
-
 ## Stripe (local webhook testing)
 
 ```bash
