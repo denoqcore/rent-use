@@ -74,6 +74,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+      - storage_data:/app/storage/app/public
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -87,3 +88,4 @@ services:
 
 volumes:
   mysql_data:
+  storage_data:
