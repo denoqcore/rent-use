@@ -2,6 +2,12 @@
 
 Rental & Booking Platform built with Laravel, Octane (FrankenPHP), Redis, Livewire, Docker.
 
+## UI Preview
+
+<p align="center">
+  <img src="public/rent-use-preview.jpg" width="900" alt="Preview">
+</p>
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 # Development commands
